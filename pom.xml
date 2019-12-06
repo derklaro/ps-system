@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.derklaro.privateservers</groupId>
+    <artifactId>privateservers</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+    </properties>
+
+    <repositories>
+        <!-- reformcloud -->
+        <repository>
+            <id>reformcloud</id>
+            <url>https://repo.reformcloud.systems/</url>
+        </repository>
+
+        <!-- cloudnet -->
+        <repository>
+            <id>cloudnet</id>
+            <url>https://cloudnetservice.eu/repositories/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.6</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- spigot -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.8</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- reformcloud -->
+        <dependency>
+            <groupId>systems.reformcloud</groupId>
+            <artifactId>reformcloud-api-spigot</artifactId>
+            <version>1.13</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- reformcloud2 -->
+        <dependency>
+            <groupId>systems.reformcloud.reformcloud2</groupId>
+            <artifactId>reformcloud2-executor-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- cloudnet 2 -->
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-api-bridge</artifactId>
+            <version>2.1.17</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- cloudnet 3 root -->
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet</artifactId>
+            <version>3.1.0-RELEASE</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- cloudnet 3 wrapper -->
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-wrapper-jvm</artifactId>
+            <version>3.1.0-RELEASE</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- cloudnet 3 bridge -->
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-bridge</artifactId>
+            <version>3.1.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- junit for tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>ps-${project.version}</finalName>
+
+        <plugins>
+            <!-- maven compiler plugin to set the target and source version (1.8) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

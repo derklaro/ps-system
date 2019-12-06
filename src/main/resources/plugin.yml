@@ -1,0 +1,25 @@
+name: PrivateServers
+version: '1.1'
+main: de.derklaro.privateservers.PrivateServers
+author: derklaro
+load: POSTWORLD
+website: reformcloud.systems
+description: A simple private server system
+
+softdepend:
+  - ReformCloudAPI
+  - CloudNetAPI
+  - CloudNet-Bridge
+  - ReformCloud2SpigotExecutor
+
+commands:
+  plugin:
+    description: Install or uninstall a plugin from your current server if you are the owner
+    aliases:
+      - install
+      - uninstall
+  privateservers:
+    permission: privateservers.main
+    description: Create a mob to start / stop private servers
+    aliases:
+      - ps
