@@ -96,7 +96,7 @@ public final class PrivateServers extends JavaPlugin {
             return;
         }
 
-        Preconditions.checkArgument(new File("plugins/privateservers/database").mkdirs());
+        new File("plugins/privateservers/database").mkdirs();
 
         this.mobConfig = new MobConfig();
         MessageConfig messageConfig = new MessageConfig(this.mobConfig.getMobConfig());
