@@ -35,7 +35,7 @@ public class ReformCloudV2 extends CloudSystem {
 
     @Override
     public Double<Boolean, Object> startPrivateServer(UUID requester, String template) {
-        ProcessGroup group = ExecutorAPI.getInstance().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
+        ProcessGroup group = ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
         if (group == null) {
             return new Double<>(false, PrivateServers.getInstance().getMessages().getServerGroupNotFound());
         }
@@ -58,7 +58,7 @@ public class ReformCloudV2 extends CloudSystem {
                         Version.PAPER_1_8_8
                 );
                 group.getTemplates().add(reformCloudCopy);
-                ExecutorAPI.getInstance().updateProcessGroup(group);
+                ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().updateProcessGroup(group);
             }
         } else {
             reformCloudCopy = CollectionUtils.filter(group.getTemplates(), e -> e.getName().equals(template));
@@ -75,12 +75,12 @@ public class ReformCloudV2 extends CloudSystem {
                             Version.PAPER_1_8_8
                     );
                     group.getTemplates().add(reformCloudCopy);
-                    ExecutorAPI.getInstance().updateProcessGroup(group);
+                    ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().updateProcessGroup(group);
                 }
             }
         }
 
-        ExecutorAPI.getInstance().startProcess(
+        ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().startProcess(
                 group.getName(),
                 reformCloudCopy.getName(),
                 new JsonConfiguration()
@@ -101,7 +101,7 @@ public class ReformCloudV2 extends CloudSystem {
             return;
         }
 
-        ExecutorAPI.getInstance().stopProcess(server.getProcessUniqueID());
+        ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().stopProcess(server.getProcessUniqueID());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ReformCloudV2 extends CloudSystem {
             return false;
         }
 
-        ExecutorAPI.getInstance().connect(owner, server);
+        ExecutorAPI.getInstance().getSyncAPI().getPlayerSyncAPI().connect(owner, server);
         return true;
     }
 
@@ -157,7 +157,7 @@ public class ReformCloudV2 extends CloudSystem {
 
     @Override
     public boolean hasCustomTemplate(UUID uuid) {
-        ProcessGroup group = ExecutorAPI.getInstance().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
+        ProcessGroup group = ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
         if (group == null) {
             return false;
         }
@@ -167,7 +167,7 @@ public class ReformCloudV2 extends CloudSystem {
 
     @Override
     public void deleteCustomTemplate(UUID uuid) {
-        ProcessGroup group = ExecutorAPI.getInstance().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
+        ProcessGroup group = ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().getProcessGroup(PrivateServers.getInstance().getPrivateServerGroup());
         if (group == null) {
             return;
         }
@@ -178,7 +178,7 @@ public class ReformCloudV2 extends CloudSystem {
         }
 
         group.getTemplates().remove(template);
-        ExecutorAPI.getInstance().updateProcessGroup(group);
+        ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().updateProcessGroup(group);
     }
 
     @Override
@@ -187,13 +187,13 @@ public class ReformCloudV2 extends CloudSystem {
     }
 
     private ProcessInformation getSelf() {
-        ProcessInformation self = ExecutorAPI.getInstance().getThisProcessInformation();
+        ProcessInformation self = ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().getThisProcessInformation();
         Preconditions.checkNotNull(self);
         return self;
     }
 
     private ProcessInformation of(UUID uuid) {
-        return CollectionUtils.filter(ExecutorAPI.getInstance().getAllProcesses(),
+        return CollectionUtils.filter(ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().getAllProcesses(),
                 e -> e.getExtra().getOrDefault("owner", UUID.class, UUID.randomUUID()).equals(uuid));
     }
 }
