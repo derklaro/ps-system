@@ -4,9 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.derklaro.privateservers</groupId>
+    <groupId>com.github.derklaro</groupId>
     <artifactId>privateservers</artifactId>
-    <version>1.0</version>
+    <packaging>pom</packaging>
+    <version>1.1.0</version>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>ps-core</module>
+        <module>ps-reformcloud2</module>
+        <module>ps-cloudnet2</module>
+        <module>ps-cloudnet3</module>
+        <module>ps-api</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -16,121 +32,64 @@
         <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
     </properties>
 
-    <repositories>
-        <!-- reformcloud -->
-        <repository>
-            <id>reformcloud</id>
-            <url>https://repo.reformcloud.systems/</url>
-        </repository>
-
-        <!-- cloudnet -->
-        <repository>
-            <id>cloudnet</id>
-            <url>https://cloudnetservice.eu/repositories/</url>
-        </repository>
-
-        <!-- SpigotMC -->
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <!-- lombok -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- spigot ( 1.8.8 to ensure capability ) -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- reformcloud -->
-        <dependency>
-            <groupId>systems.reformcloud</groupId>
-            <artifactId>reformcloud-api-spigot</artifactId>
-            <version>1.13</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- reformcloud2 -->
-        <dependency>
-            <groupId>systems.reformcloud.reformcloud2</groupId>
-            <artifactId>reformcloud2-executor-api</artifactId>
-            <version>2.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- cloudnet 2 -->
-        <dependency>
-            <groupId>de.dytanic.cloudnet</groupId>
-            <artifactId>cloudnet-api-bridge</artifactId>
-            <version>2.1.17</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- cloudnet 3 root -->
-        <dependency>
-            <groupId>de.dytanic.cloudnet</groupId>
-            <artifactId>cloudnet</artifactId>
-            <version>3.2.0-RELEASE</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- cloudnet 3 wrapper -->
-        <dependency>
-            <groupId>de.dytanic.cloudnet</groupId>
-            <artifactId>cloudnet-wrapper-jvm</artifactId>
-            <version>3.2.0-RELEASE</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- cloudnet 3 bridge -->
-        <dependency>
-            <groupId>de.dytanic.cloudnet</groupId>
-            <artifactId>cloudnet-bridge</artifactId>
-            <version>3.2.0-RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- junit for tests -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13</version>
-            <scope>test</scope>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>19.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
-        <finalName>ps-${project.version}</finalName>
-
         <plugins>
-            <!-- maven compiler plugin to set the target and source version (1.8) -->
+            <plugin>
+                <groupId>net.md-5</groupId>
+                <artifactId>scriptus</artifactId>
+                <version>0.4.1</version>
+                <configuration>
+                    <format>%s</format>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>describe</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
