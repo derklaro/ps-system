@@ -30,7 +30,7 @@ pipeline {
 
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'ps-core/target/ps-core.jar'
+                archiveArtifacts artifacts: 'ps-plugin-spigot/target/ps-plugin-spigot.jar'
                 archiveArtifacts artifacts: 'ps-api/target/ps-api.jar'
                 archiveArtifacts artifacts: 'ps-cloudnet2/target/ps-cloudnet2.jar'
                 archiveArtifacts artifacts: 'ps-cloudnet3/target/ps-cloudnet3.jar'

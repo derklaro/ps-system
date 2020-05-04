@@ -9,18 +9,32 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ps-core</artifactId>
+    <artifactId>ps-plugin-spigot</artifactId>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.github.derklaro</groupId>
-            <artifactId>ps-api</artifactId>
+            <artifactId>ps-common</artifactId>
             <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>ps-core</finalName>
+        <finalName>ps-plugin-spigot</finalName>
 
         <plugins>
             <plugin>
@@ -37,6 +51,18 @@
                             <filters>
                                 <filter>
                                     <artifact>org.jetbrains:annotations</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.github.derklaro:ps-common</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.github.derklaro:ps-api</artifact>
                                     <excludes>
                                         <exclude>META-INF/*.MF</exclude>
                                     </excludes>

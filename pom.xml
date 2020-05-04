@@ -17,11 +17,12 @@
     </licenses>
 
     <modules>
-        <module>ps-core</module>
+        <module>ps-api</module>
+        <module>ps-common</module>
+        <module>ps-plugin-spigot</module>
         <module>ps-reformcloud2</module>
         <module>ps-cloudnet2</module>
         <module>ps-cloudnet3</module>
-        <module>ps-api</module>
     </modules>
 
     <properties>
@@ -41,6 +42,8 @@
     </dependencies>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>net.md-5</groupId>

@@ -1,0 +1,6 @@
+name: PrivateServerSystem
+version: '1.1.0'
+author: derklaro
+main: com.github.derklaro.privateservers.PrivateServersSpigot
+description: A private server system with cloud as module support
+website: https://github.com/derklaro/ps-system
