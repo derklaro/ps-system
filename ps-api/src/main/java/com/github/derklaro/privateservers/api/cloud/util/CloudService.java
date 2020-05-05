@@ -46,6 +46,8 @@ public interface CloudService {
 
     void publishCloudServiceInfoUpdate();
 
+    void shutdown();
+
     boolean equals(@NotNull Object other);
 
     int hashCode();

@@ -64,4 +64,9 @@ public final class CloudNetV2CloudService extends DefaultCloudService {
         serverInfo.getServerConfig().getProperties().append("cloudServiceConfiguration", super.cloudServiceConfiguration);
         CloudAPI.getInstance().update(serverInfo);
     }
+
+    @Override
+    public void shutdown() {
+        CloudAPI.getInstance().stopServer(serverInfo.getServiceId().getServerId());
+    }
 }

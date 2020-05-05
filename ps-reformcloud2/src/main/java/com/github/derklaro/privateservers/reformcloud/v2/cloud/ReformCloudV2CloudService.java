@@ -64,4 +64,9 @@ public final class ReformCloudV2CloudService extends DefaultCloudService {
         this.processInformation.getExtra().add("cloudServiceConfiguration", super.cloudServiceConfiguration);
         ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().update(this.processInformation);
     }
+
+    @Override
+    public void shutdown() {
+        this.processInformation.toWrapped().stop();
+    }
 }

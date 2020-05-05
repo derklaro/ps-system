@@ -29,6 +29,7 @@ import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
 import com.github.derklaro.privateservers.cloudnet.v3.connection.CloudNetV3ConnectionRequest;
 import com.github.derklaro.privateservers.cloudnet.v3.util.CloudNetV3Constants;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
@@ -62,5 +63,10 @@ public final class CloudNetV3CloudService extends DefaultCloudService {
     public void publishCloudServiceInfoUpdate() {
         CloudNetV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY.set(this.serviceInfoSnapshot, super.cloudServiceConfiguration);
         Wrapper.getInstance().publishServiceInfoUpdate(this.serviceInfoSnapshot);
+    }
+
+    @Override
+    public void shutdown() {
+        CloudNetDriver.getInstance().getCloudServiceProvider(this.serviceInfoSnapshot).stop();
     }
 }
