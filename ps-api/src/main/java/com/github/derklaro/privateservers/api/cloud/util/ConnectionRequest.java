@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
+package com.github.derklaro.privateservers.api.cloud.util;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface CloudSystem {
+import java.util.UUID;
 
-    @NotNull String getIdentifierClass();
+public interface ConnectionRequest {
 
-    @NotNull String getName();
+    @NotNull CloudService getTargetService();
 
-    @NotNull CloudServiceManager getCloudServiceManager();
+    @NotNull UUID getTargetPlayer();
+
+    void fire();
 }

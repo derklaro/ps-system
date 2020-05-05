@@ -21,15 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
+package com.github.derklaro.privateservers.cloudnet.v3.cloud;
 
+import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import org.jetbrains.annotations.NotNull;
 
-public interface CloudSystem {
+public class CloudNetV3CloudSystem implements CloudSystem {
 
-    @NotNull String getIdentifierClass();
+    @Override
+    public @NotNull String getIdentifierClass() {
+        return "de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty";
+    }
 
-    @NotNull String getName();
+    @Override
+    public @NotNull String getName() {
+        return "CloudNETV3";
+    }
 
-    @NotNull CloudServiceManager getCloudServiceManager();
+    @Override
+    public @NotNull CloudServiceManager getCloudServiceManager() {
+        return CloudNETV3CloudServiceManager.INSTANCE;
+    }
 }

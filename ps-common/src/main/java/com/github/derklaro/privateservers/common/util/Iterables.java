@@ -21,15 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
+package com.github.derklaro.privateservers.common.util;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface CloudSystem {
+import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-    @NotNull String getIdentifierClass();
+public final class Iterables {
 
-    @NotNull String getName();
+    private Iterables() {
+        throw new UnsupportedOperationException();
+    }
 
-    @NotNull CloudServiceManager getCloudServiceManager();
+    @NotNull
+    public static <T> Optional<T> first(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
+        for (T t : collection) {
+            if (filter.test(t)) {
+                return Optional.of(t);
+            }
+        }
+
+        return Optional.empty();
+    }
 }

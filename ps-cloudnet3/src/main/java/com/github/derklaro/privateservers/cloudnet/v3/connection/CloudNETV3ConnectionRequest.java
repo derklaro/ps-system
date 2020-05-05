@@ -21,15 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
+package com.github.derklaro.privateservers.cloudnet.v3.connection;
 
-import org.jetbrains.annotations.NotNull;
+import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
+import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager;
 
-public interface CloudSystem {
+import java.util.UUID;
 
-    @NotNull String getIdentifierClass();
+public class CloudNETV3ConnectionRequest extends DefaultConnectionRequest {
 
-    @NotNull String getName();
+    public CloudNETV3ConnectionRequest(CloudService targetService, UUID targetPlayer) {
+        super(targetService, targetPlayer);
+    }
 
-    @NotNull CloudServiceManager getCloudServiceManager();
+    @Override
+    public void fire() {
+        CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class)
+                .getPlayerExecutor(super.getTargetPlayer())
+                .connect(super.getTargetService().getName());
+    }
 }

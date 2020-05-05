@@ -21,15 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
+package com.github.derklaro.privateservers.cloudnet.v3;
 
+import com.github.derklaro.privateservers.api.Plugin;
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.cloudnet.v3.cloud.CloudNetV3CloudSystem;
+import com.github.derklaro.privateservers.cloudnet.v3.listeners.CloudServiceListener;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
 import org.jetbrains.annotations.NotNull;
 
-public interface CloudSystem {
+@Module(
+        id = "com.github.derklaro.privateservers.cloudnet.v3",
+        displayName = "CloudNetV3PrivateServerModule",
+        version = "1.1.0",
+        description = "Module for private servers cloudnet v3 integration",
+        authors = "derklaro"
+)
+public class CloudNetV3Module {
 
-    @NotNull String getIdentifierClass();
+    public CloudNetV3Module(@NotNull Plugin plugin) {
+        CloudSystem cloudSystem = new CloudNetV3CloudSystem();
 
-    @NotNull String getName();
-
-    @NotNull CloudServiceManager getCloudServiceManager();
+        plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
+        CloudNetDriver.getInstance().getEventManager().registerListener(new CloudServiceListener(cloudSystem));
+    }
 }

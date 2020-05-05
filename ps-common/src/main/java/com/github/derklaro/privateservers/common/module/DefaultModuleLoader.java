@@ -23,6 +23,7 @@
  */
 package com.github.derklaro.privateservers.common.module;
 
+import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.module.ModuleContainer;
 import com.github.derklaro.privateservers.api.module.ModuleLoader;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
@@ -74,7 +75,7 @@ public class DefaultModuleLoader implements ModuleLoader {
     }
 
     @Override
-    public void loadModules() throws ModuleMainClassNotFoundException {
+    public void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException {
         for (Path path : this.toLoad) {
             try {
                 URLClassLoader classLoader = new URLClassLoader(new URL[]{path.toUri().toURL()});
@@ -88,9 +89,9 @@ public class DefaultModuleLoader implements ModuleLoader {
 
                 Object instance;
                 try {
-                    instance = keyValueAccessor.getLeft().getDeclaredConstructor().newInstance();
+                    instance = keyValueAccessor.getLeft().getDeclaredConstructor(Plugin.class).newInstance(loader);
                 } catch (final NoSuchMethodException exception) {
-                    System.err.println("No NoArgsConstructor in module " + path.toString());
+                    System.err.println("No constructor with plugin as single argument in module " + path.toString());
                     continue;
                 } catch (final InstantiationException | IllegalAccessException | InvocationTargetException exception) {
                     exception.printStackTrace();

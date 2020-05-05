@@ -23,6 +23,7 @@
  */
 package com.github.derklaro.privateservers.api.module;
 
+import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.module.exception.ModuleMainClassNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -34,7 +35,7 @@ public interface ModuleLoader {
 
     void detectModules();
 
-    void loadModules() throws ModuleMainClassNotFoundException;
+    void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException;
 
     void disableModules();
 

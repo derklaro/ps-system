@@ -21,15 +21,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud;
-
-import org.jetbrains.annotations.NotNull;
-
-public interface CloudSystem {
-
-    @NotNull String getIdentifierClass();
-
-    @NotNull String getName();
-
-    @NotNull CloudServiceManager getCloudServiceManager();
-}
+package com.github.derklaro.privateservers.common.cloud.util;
