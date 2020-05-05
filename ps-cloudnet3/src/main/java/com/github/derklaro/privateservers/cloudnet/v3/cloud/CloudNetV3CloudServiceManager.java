@@ -34,11 +34,15 @@ import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
 import de.dytanic.cloudnet.driver.service.ServiceTemplate;
+import de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 class CloudNetV3CloudServiceManager extends DefaultCloudServiceManager {
 
@@ -95,5 +99,15 @@ class CloudNetV3CloudServiceManager extends DefaultCloudServiceManager {
                 future.completeExceptionally(th);
             }
         };
+    }
+
+    @Override
+    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+        return CloudNetDriver.getInstance().getCloudServiceProvider().getCloudServices()
+                .stream()
+                .filter(e -> e.getProperty(BridgeServiceProperty.IS_ONLINE).orElse(false))
+                .map(e -> CloudNetV3CloudService.fromServiceInfoSnapshot(e).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

@@ -38,8 +38,11 @@ import systems.reformcloud.reformcloud2.executor.api.common.groups.template.Vers
 import systems.reformcloud.reformcloud2.executor.api.common.process.api.ProcessConfiguration;
 import systems.reformcloud.reformcloud2.executor.api.common.process.api.ProcessConfigurationBuilder;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
 
@@ -92,5 +95,15 @@ class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
                 .onComplete(processInformation -> future.complete(ReformCloudV2CloudService.fromProcessInformation(processInformation).orElse(null)))
                 .onFailure(exception -> future.completeExceptionally(exception));
         return future;
+    }
+
+    @Override
+    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+        return ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().getAllProcesses()
+                .stream()
+                .filter(e -> e.getProcessDetail().getProcessState().isReady())
+                .map(e -> ReformCloudV2CloudService.fromProcessInformation(e).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

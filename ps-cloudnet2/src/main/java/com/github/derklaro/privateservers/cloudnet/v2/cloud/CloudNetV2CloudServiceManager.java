@@ -37,7 +37,10 @@ import de.dytanic.cloudnet.lib.server.template.TemplateResource;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
@@ -78,5 +81,15 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
             return null;
         });
         return future;
+    }
+
+    @Override
+    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+        return CloudAPI.getInstance().getServers()
+                .stream()
+                .filter(ServerInfo::isOnline)
+                .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

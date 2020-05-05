@@ -32,14 +32,18 @@ import com.github.derklaro.privateservers.common.util.EnumUtil;
 import de.dytanic.cloudnet.api.CloudAPI;
 import de.dytanic.cloudnet.lib.server.ServerConfig;
 import de.dytanic.cloudnet.lib.server.ServerGroup;
+import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import de.dytanic.cloudnet.lib.server.template.Template;
 import de.dytanic.cloudnet.lib.server.template.TemplateResource;
 import de.dytanic.cloudnet.lib.utility.document.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
@@ -82,5 +86,15 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
                 new Document("cloudServiceConfiguration", cloudServiceConfiguration).append("ps::wait", waitUniqueID.toString()),
                 System.currentTimeMillis()
         );
+    }
+
+    @Override
+    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+        return CloudAPI.getInstance().getServers()
+                .stream()
+                .filter(ServerInfo::isOnline)
+                .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

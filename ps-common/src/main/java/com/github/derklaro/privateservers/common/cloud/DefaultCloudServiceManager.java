@@ -34,6 +34,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class DefaultCloudServiceManager implements CloudServiceManager {
 
+    public DefaultCloudServiceManager() {
+        this.cloudServices.addAll(this.getAllCurrentlyRunningPrivateServersFromCloudSystem());
+    }
+
     protected final Set<CloudService> cloudServices = ConcurrentHashMap.newKeySet();
 
     @Override
@@ -80,4 +84,7 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager 
     public @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices() {
         return Collections.unmodifiableSet(this.cloudServices);
     }
+
+    @NotNull
+    public abstract Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem();
 }
