@@ -4,3 +4,7 @@ author: derklaro
 main: com.github.derklaro.privateservers.PrivateServersSpigot
 description: A private server system with cloud as module support
 website: https://github.com/derklaro/ps-system
+
+softdepend:
+  - CloudNetAPI
+  - ReformCloud2SpigotExecutor
