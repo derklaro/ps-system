@@ -21,26 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.cloud;
+package com.github.derklaro.privateservers.cloudnet.v3.util;
 
-import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import org.jetbrains.annotations.NotNull;
+import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import de.dytanic.cloudnet.driver.service.property.ServiceProperty;
 
-public class CloudNetV3CloudSystem implements CloudSystem {
+import static de.dytanic.cloudnet.driver.service.property.DefaultJsonServiceProperty.createFromType;
 
-    @Override
-    public @NotNull String getIdentifierClass() {
-        return "de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty";
+public final class CloudNetV3Constants {
+
+    private CloudNetV3Constants() {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public @NotNull String getName() {
-        return "CloudNETV3";
-    }
-
-    @Override
-    public @NotNull CloudServiceManager getCloudServiceManager() {
-        return CloudNetV3CloudServiceManager.INSTANCE;
-    }
+    public static final ServiceProperty<CloudServiceConfiguration> CLOUD_SERVICE_CONFIG_PROPERTY = createFromType("cloudServiceConfiguration", CloudServiceConfiguration.class);
 }

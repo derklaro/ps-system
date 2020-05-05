@@ -21,17 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.listeners;
+package com.github.derklaro.privateservers.cloudnet.v2.listeners;
 
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v3.cloud.CloudNetV3CloudService;
-import de.dytanic.cloudnet.driver.event.EventListener;
-import de.dytanic.cloudnet.driver.event.events.service.CloudServiceInfoUpdateEvent;
-import de.dytanic.cloudnet.driver.event.events.service.CloudServiceStartEvent;
-import de.dytanic.cloudnet.driver.event.events.service.CloudServiceStopEvent;
+import com.github.derklaro.privateservers.cloudnet.v2.cloud.CloudNetV2CloudService;
+import de.dytanic.cloudnet.bridge.event.bukkit.BukkitServerAddEvent;
+import de.dytanic.cloudnet.bridge.event.bukkit.BukkitServerInfoUpdateEvent;
+import de.dytanic.cloudnet.bridge.event.bukkit.BukkitServerRemoveEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-public class CloudServiceListener {
+public class CloudServiceListener implements Listener {
 
     public CloudServiceListener(CloudSystem cloudSystem) {
         this.cloudSystem = cloudSystem;
@@ -39,23 +40,23 @@ public class CloudServiceListener {
 
     private final CloudSystem cloudSystem;
 
-    @EventListener
-    public void handleStart(@NotNull CloudServiceStartEvent event) {
-        CloudNetV3CloudService.fromServiceInfoSnapshot(event.getServiceInfo()).ifPresent(
+    @EventHandler
+    public void handleStart(@NotNull BukkitServerAddEvent event) {
+        CloudNetV2CloudService.fromServerInfo(event.getServerInfo()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceStart(cloudService)
         );
     }
 
-    @EventListener
-    public void handleUpdate(@NotNull CloudServiceInfoUpdateEvent event) {
-        CloudNetV3CloudService.fromServiceInfoSnapshot(event.getServiceInfo()).ifPresent(
+    @EventHandler
+    public void handleUpdate(@NotNull BukkitServerInfoUpdateEvent event) {
+        CloudNetV2CloudService.fromServerInfo(event.getServerInfo()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceUpdate(cloudService)
         );
     }
 
-    @EventListener
-    public void handleStop(@NotNull CloudServiceStopEvent event) {
-        CloudNetV3CloudService.fromServiceInfoSnapshot(event.getServiceInfo()).ifPresent(
+    @EventHandler
+    public void handleStop(@NotNull BukkitServerRemoveEvent event) {
+        CloudNetV2CloudService.fromServerInfo(event.getServerInfo()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceStop(cloudService)
         );
     }

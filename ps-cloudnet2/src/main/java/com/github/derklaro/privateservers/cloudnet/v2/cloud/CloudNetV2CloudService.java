@@ -21,46 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.cloud;
+package com.github.derklaro.privateservers.cloudnet.v2.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
-import com.github.derklaro.privateservers.cloudnet.v3.connection.CloudNETV3ConnectionRequest;
-import com.github.derklaro.privateservers.cloudnet.v3.util.CloudNETV3Constants;
+import com.github.derklaro.privateservers.cloudnet.v2.connection.CloudNetV2ConnectionRequest;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;
-import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
-import de.dytanic.cloudnet.wrapper.Wrapper;
+import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public final class CloudNETV3CloudService extends DefaultCloudService {
+public final class CloudNetV2CloudService extends DefaultCloudService {
 
     @NotNull
-    public static Optional<CloudService> fromServiceInfoSnapshot(@NotNull ServiceInfoSnapshot serviceInfoSnapshot) {
-        return serviceInfoSnapshot.getProperty(CloudNETV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY).map(serviceConfiguration -> new CloudNETV3CloudService(
-                serviceInfoSnapshot,
-                serviceConfiguration
-        ));
+    public static Optional<CloudService> fromServerInfo(@NotNull ServerInfo serverInfo) {
+        CloudServiceConfiguration configuration = serverInfo.getServerConfig().getProperties().getObject("cloudServiceConfiguration", CloudServiceConfiguration.class);
+        if (configuration == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new CloudNetV2CloudService(serverInfo, configuration));
     }
 
-    private CloudNETV3CloudService(@NotNull ServiceInfoSnapshot serviceInfoSnapshot, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        super(serviceInfoSnapshot.getServiceId().getName(), serviceInfoSnapshot.getServiceId().getUniqueId(), cloudServiceConfiguration);
-        this.serviceInfoSnapshot = serviceInfoSnapshot;
+    private CloudNetV2CloudService(@NotNull ServerInfo serverInfo, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+        super(serverInfo.getServiceId().getServerId(), serverInfo.getServiceId().getUniqueId(), cloudServiceConfiguration);
+        this.serverInfo = serverInfo;
     }
 
-    private final ServiceInfoSnapshot serviceInfoSnapshot;
+    private final ServerInfo serverInfo;
 
     @Override
     public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
-        return new CloudNETV3ConnectionRequest(this, targetPlayerUniqueID);
+        return new CloudNetV2ConnectionRequest(this, targetPlayerUniqueID);
     }
 
     @Override
     public void publishCloudServiceInfoUpdate() {
-        CloudNETV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY.set(this.serviceInfoSnapshot, super.cloudServiceConfiguration);
-        Wrapper.getInstance().publishServiceInfoUpdate(this.serviceInfoSnapshot);
+        serverInfo.getServerConfig().getProperties().append("cloudServiceConfiguration", super.cloudServiceConfiguration);
+        CloudAPI.getInstance().update(serverInfo);
     }
 }

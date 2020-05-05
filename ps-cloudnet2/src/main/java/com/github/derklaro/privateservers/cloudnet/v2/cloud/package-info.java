@@ -21,18 +21,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.util;
-
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import de.dytanic.cloudnet.driver.service.property.ServiceProperty;
-
-import static de.dytanic.cloudnet.driver.service.property.DefaultJsonServiceProperty.createFromType;
-
-public final class CloudNETV3Constants {
-
-    private CloudNETV3Constants() {
-        throw new UnsupportedOperationException();
-    }
-
-    public static final ServiceProperty<CloudServiceConfiguration> CLOUD_SERVICE_CONFIG_PROPERTY = createFromType("cloudServiceConfiguration", CloudServiceConfiguration.class);
-}
+package com.github.derklaro.privateservers.cloudnet.v2.cloud;

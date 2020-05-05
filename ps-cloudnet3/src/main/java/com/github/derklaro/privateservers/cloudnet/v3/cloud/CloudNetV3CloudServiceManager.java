@@ -40,9 +40,9 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
-class CloudNETV3CloudServiceManager extends DefaultCloudServiceManager {
+class CloudNetV3CloudServiceManager extends DefaultCloudServiceManager {
 
-    static final DefaultCloudServiceManager INSTANCE = new CloudNETV3CloudServiceManager();
+    static final DefaultCloudServiceManager INSTANCE = new CloudNetV3CloudServiceManager();
 
     @Override
     public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName, @NotNull String templateBackend,
@@ -82,7 +82,7 @@ class CloudNETV3CloudServiceManager extends DefaultCloudServiceManager {
             @Override
             public void onComplete(ITask<ServiceInfoSnapshot> task, ServiceInfoSnapshot serviceInfoSnapshot) {
                 CloudNetDriver.getInstance().getCloudServiceProvider(serviceInfoSnapshot).start();
-                future.complete(CloudNETV3CloudService.fromServiceInfoSnapshot(serviceInfoSnapshot).orElse(null));
+                future.complete(CloudNetV3CloudService.fromServiceInfoSnapshot(serviceInfoSnapshot).orElse(null));
             }
 
             @Override

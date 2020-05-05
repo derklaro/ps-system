@@ -21,26 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.cloud;
+package com.github.derklaro.privateservers.cloudnet.v2.connection;
 
-import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import org.jetbrains.annotations.NotNull;
+import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
+import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.utility.document.Document;
 
-public class CloudNetV3CloudSystem implements CloudSystem {
+import java.util.UUID;
 
-    @Override
-    public @NotNull String getIdentifierClass() {
-        return "de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty";
+public class CloudNetV2ConnectionRequest extends DefaultConnectionRequest {
+
+    public CloudNetV2ConnectionRequest(CloudService targetService, UUID targetPlayer) {
+        super(targetService, targetPlayer);
     }
 
     @Override
-    public @NotNull String getName() {
-        return "CloudNETV3";
-    }
-
-    @Override
-    public @NotNull CloudServiceManager getCloudServiceManager() {
-        return CloudNetV3CloudServiceManager.INSTANCE;
+    public void fire() {
+        CloudAPI.getInstance().sendCustomSubProxyMessage(
+                "cloudnet_internal",
+                "sendPlayer",
+                new Document("uniqueId", super.getTargetPlayer()).append("server", super.getTargetService().getName())
+        );
     }
 }

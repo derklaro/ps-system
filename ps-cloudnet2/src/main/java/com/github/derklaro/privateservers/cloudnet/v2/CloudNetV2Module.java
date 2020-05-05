@@ -21,26 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v3.cloud;
+package com.github.derklaro.privateservers.cloudnet.v2;
 
-import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
+import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.cloudnet.v2.cloud.CloudNetV2CloudSystem;
+import com.github.derklaro.privateservers.cloudnet.v2.listeners.CloudServiceListener;
+import de.dytanic.cloudnet.bridge.CloudServer;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
-public class CloudNetV3CloudSystem implements CloudSystem {
+@Module(
+        id = "com.github.derklaro.privateservers.cloudnet.v2",
+        displayName = "CloudNetV2PrivateServerModule",
+        version = "1.1.0",
+        description = "Module for private servers cloudnet v2 integration",
+        authors = "derklaro"
+)
+public class CloudNetV2Module {
 
-    @Override
-    public @NotNull String getIdentifierClass() {
-        return "de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty";
-    }
+    public CloudNetV2Module(@NotNull Plugin plugin) {
+        CloudSystem cloudSystem = new CloudNetV2CloudSystem();
 
-    @Override
-    public @NotNull String getName() {
-        return "CloudNETV3";
-    }
-
-    @Override
-    public @NotNull CloudServiceManager getCloudServiceManager() {
-        return CloudNetV3CloudServiceManager.INSTANCE;
+        plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
+        Bukkit.getPluginManager().registerEvents(new CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
     }
 }
