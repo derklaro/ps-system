@@ -21,30 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v2;
+package com.github.derklaro.privateservers.cloudnet.v2.legacy.connection;
 
-import com.github.derklaro.privateservers.api.Plugin;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import com.github.derklaro.privateservers.api.module.annotation.Module;
-import com.github.derklaro.privateservers.cloudnet.v2.cloud.CloudNetV2CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v2.listeners.CloudServiceListener;
-import de.dytanic.cloudnet.bridge.CloudServer;
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
+import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
+import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.utility.document.Document;
 
-@Module(
-        id = "com.github.derklaro.privateservers.cloudnet.v2",
-        displayName = "CloudNetV2PrivateServerModule",
-        version = "1.1.0",
-        description = "Module for private servers cloudnet v2.2 integration",
-        authors = "derklaro"
-)
-public class CloudNetV2Module {
+import java.util.UUID;
 
-    public CloudNetV2Module(@NotNull Plugin plugin) {
-        CloudSystem cloudSystem = new CloudNetV2CloudSystem();
+public class CloudNetV2ConnectionRequest extends DefaultConnectionRequest {
 
-        plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-        Bukkit.getPluginManager().registerEvents(new CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
+    public CloudNetV2ConnectionRequest(CloudService targetService, UUID targetPlayer) {
+        super(targetService, targetPlayer);
+    }
+
+    @Override
+    public void fire() {
+        CloudAPI.getInstance().sendCustomSubProxyMessage(
+                "cloudnet_internal",
+                "sendPlayer",
+                new Document("uniqueId", super.getTargetPlayer()).append("server", super.getTargetService().getName())
+        );
     }
 }

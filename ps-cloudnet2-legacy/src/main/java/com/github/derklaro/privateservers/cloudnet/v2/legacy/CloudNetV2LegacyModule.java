@@ -21,30 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v2;
+package com.github.derklaro.privateservers.cloudnet.v2.legacy;
 
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
-import com.github.derklaro.privateservers.cloudnet.v2.cloud.CloudNetV2CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v2.listeners.CloudServiceListener;
+import com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud.CloudNetV2CloudSystem;
+import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudServiceListener;
+import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudServiceStartAwaitListener;
 import de.dytanic.cloudnet.bridge.CloudServer;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
         id = "com.github.derklaro.privateservers.cloudnet.v2",
-        displayName = "CloudNetV2PrivateServerModule",
+        displayName = "CloudNetV2LegacyPrivateServerModule",
         version = "1.1.0",
-        description = "Module for private servers cloudnet v2.2 integration",
+        description = "Module for private servers cloudnet v2 integration",
         authors = "derklaro"
 )
-public class CloudNetV2Module {
+public class CloudNetV2LegacyModule {
 
-    public CloudNetV2Module(@NotNull Plugin plugin) {
+    public CloudNetV2LegacyModule(@NotNull Plugin plugin) {
         CloudSystem cloudSystem = new CloudNetV2CloudSystem();
 
         plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
+
         Bukkit.getPluginManager().registerEvents(new CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
+        Bukkit.getPluginManager().registerEvents(new CloudServiceStartAwaitListener(), CloudServer.getInstance().getPlugin());
     }
 }
