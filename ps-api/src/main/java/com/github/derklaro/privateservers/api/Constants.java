@@ -30,4 +30,6 @@ public final class Constants {
     }
 
     public static final String WHITELIST_JOIN_PERM = "system.join.whitelist";
+
+    public static final String WHITELIST_COMMAND_USE_PERM = "system.command.whitelist";
 }

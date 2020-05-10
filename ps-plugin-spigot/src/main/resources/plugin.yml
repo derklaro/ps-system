@@ -8,3 +8,7 @@ website: https://github.com/derklaro/ps-system
 softdepend:
   - CloudNetAPI
   - ReformCloud2SpigotExecutor
+
+commands:
+  whitelist:
+    description: Manage the whitelist of your private server

@@ -23,11 +23,13 @@
  */
 package com.github.derklaro.privateservers.runner.command;
 
+import com.github.derklaro.privateservers.api.Constants;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
@@ -42,8 +44,14 @@ public class WhitelistCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         CloudService cloudService = this.cloudSystem.getCloudServiceManager().getCurrentCloudService().orElse(null);
-        if (cloudService == null) {
+        if (cloudService == null || !(commandSender instanceof Player)) {
             commandSender.sendMessage("§cUnable to process command");
+            return true;
+        }
+
+        Player player = (Player) commandSender;
+        if (!commandSender.hasPermission(Constants.WHITELIST_COMMAND_USE_PERM) && !player.getUniqueId().equals(cloudService.getOwnerUniqueID())) {
+            commandSender.sendMessage("§cYou are not allowed to use this command");
             return true;
         }
 
