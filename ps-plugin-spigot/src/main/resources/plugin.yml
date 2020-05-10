@@ -12,3 +12,13 @@ softdepend:
 commands:
   whitelist:
     description: Manage the whitelist of your private server
+  removenpc:
+    description: Set you in the mode that you are allowed to remove npcs
+    permission: ps.command.rmnpc
+    aliases:
+      - rmnpc
+  createnpc:
+    description: Create a new private server system npc
+    permission: ps.command.cnpc
+    aliases:
+      - cnpc
