@@ -26,9 +26,14 @@ package com.github.derklaro.privateservers.runner;
 import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.runner.command.WhitelistCommand;
 import com.github.derklaro.privateservers.runner.listeners.CloudSystemPickedListener;
+import com.github.derklaro.privateservers.runner.listeners.PlayerLoginListener;
+import com.github.derklaro.privateservers.runner.listeners.PlayerQuitListener;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
@@ -50,6 +55,15 @@ public class PrivateServersSpigotRunner {
             return;
         }
 
+        CloudService cloudService = cloudSystem.getCloudServiceManager().getCurrentCloudService().get();
+        cloudService.createConnectionRequest(cloudService.getOwnerUniqueID()).fire();
 
+        Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(cloudSystem), PrivateServersSpigot.getInstance());
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(cloudSystem), PrivateServersSpigot.getInstance());
+
+        PluginCommand command = PrivateServersSpigot.getInstance().getCommand("whitelist");
+        if (command != null) {
+            command.setExecutor(new WhitelistCommand(cloudSystem));
+        }
     }
 }

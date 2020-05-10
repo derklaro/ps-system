@@ -66,7 +66,16 @@ public final class ReformCloudV2CloudService extends DefaultCloudService {
     }
 
     @Override
+    public void copyCloudService() {
+        this.processInformation.toWrapped().copy();
+    }
+
+    @Override
     public void shutdown() {
+        if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
+            this.copyCloudService();
+        }
+
         this.processInformation.toWrapped().stop();
     }
 }

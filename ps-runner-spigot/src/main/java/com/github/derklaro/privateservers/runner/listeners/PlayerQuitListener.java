@@ -21,36 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
+package com.github.derklaro.privateservers.runner.listeners;
 
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+public class PlayerQuitListener implements Listener {
 
-public interface CloudService {
+    public PlayerQuitListener(CloudSystem cloudSystem) {
+        this.cloudSystem = cloudSystem;
+    }
 
-    @NotNull String getName();
+    private final CloudSystem cloudSystem;
 
-    @NotNull UUID getUniqueID();
-
-    @NotNull UUID getOwnerUniqueID();
-
-    @NotNull String getOwnerName();
-
-    @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
-
-    void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-    @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
-
-    void publishCloudServiceInfoUpdate();
-
-    void copyCloudService();
-
-    void shutdown();
-
-    boolean equals(@NotNull Object other);
-
-    int hashCode();
+    @EventHandler
+    public void handle(final @NotNull PlayerQuitEvent event) {
+        this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
+            if (cloudServiceConfiguration.isAutoDeleteAfterOwnerLeave() && event.getPlayer().getUniqueId().equals(cloudServiceConfiguration.getOwnerUniqueID())) {
+                this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(CloudService::shutdown);
+            }
+        });
+    }
 }

@@ -21,36 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
+package com.github.derklaro.privateservers.api;
 
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import org.jetbrains.annotations.NotNull;
+public final class Constants {
 
-import java.util.UUID;
+    private Constants() {
+        throw new UnsupportedOperationException();
+    }
 
-public interface CloudService {
-
-    @NotNull String getName();
-
-    @NotNull UUID getUniqueID();
-
-    @NotNull UUID getOwnerUniqueID();
-
-    @NotNull String getOwnerName();
-
-    @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
-
-    void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-    @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
-
-    void publishCloudServiceInfoUpdate();
-
-    void copyCloudService();
-
-    void shutdown();
-
-    boolean equals(@NotNull Object other);
-
-    int hashCode();
+    public static final String WHITELIST_JOIN_PERM = "system.join.whitelist";
 }

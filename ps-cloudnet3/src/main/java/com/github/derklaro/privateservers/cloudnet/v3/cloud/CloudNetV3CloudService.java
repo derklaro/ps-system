@@ -36,6 +36,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public final class CloudNetV3CloudService extends DefaultCloudService {
 
@@ -66,7 +69,19 @@ public final class CloudNetV3CloudService extends DefaultCloudService {
     }
 
     @Override
+    public void copyCloudService() {
+        try {
+            this.serviceInfoSnapshot.provider().deployResourcesAsync(false).get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException ignored) {
+        }
+    }
+
+    @Override
     public void shutdown() {
+        if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
+            this.copyCloudService();
+        }
+
         CloudNetDriver.getInstance().getCloudServiceProvider(this.serviceInfoSnapshot).stop();
     }
 }

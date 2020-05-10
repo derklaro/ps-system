@@ -66,7 +66,21 @@ public final class CloudNetV2CloudService extends DefaultCloudService {
     }
 
     @Override
+    public void copyCloudService() {
+        CloudAPI.getInstance().sendCloudCommand("copy " + serverInfo.getServiceId().getServerId());
+
+        try {
+            Thread.sleep(5000);
+        } catch (final InterruptedException ignored) {
+        }
+    }
+
+    @Override
     public void shutdown() {
+        if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
+            this.copyCloudService();
+        }
+
         CloudAPI.getInstance().stopServer(serverInfo.getServiceId().getServerId());
     }
 }

@@ -21,36 +21,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
-
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.UUID;
-
-public interface CloudService {
-
-    @NotNull String getName();
-
-    @NotNull UUID getUniqueID();
-
-    @NotNull UUID getOwnerUniqueID();
-
-    @NotNull String getOwnerName();
-
-    @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
-
-    void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-    @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
-
-    void publishCloudServiceInfoUpdate();
-
-    void copyCloudService();
-
-    void shutdown();
-
-    boolean equals(@NotNull Object other);
-
-    int hashCode();
-}
+package com.github.derklaro.privateservers.runner.listeners;

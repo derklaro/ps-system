@@ -23,6 +23,10 @@
  */
 package com.github.derklaro.privateservers.api.cloud.configuration;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 public class CloudServiceConfiguration {
@@ -32,6 +36,7 @@ public class CloudServiceConfiguration {
         this.hasWhitelist = hasWhitelist;
         this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
         this.autoSaveBeforeStop = autoSaveBeforeStop;
+        this.whitelistedPlayers = new ArrayList<>();
         this.ownerUniqueID = ownerUniqueID;
         this.ownerName = ownerName;
     }
@@ -43,6 +48,8 @@ public class CloudServiceConfiguration {
     private final boolean autoDeleteAfterOwnerLeave;
 
     private final boolean autoSaveBeforeStop;
+
+    private final Collection<String> whitelistedPlayers;
 
     private final UUID ownerUniqueID;
 
@@ -62,6 +69,11 @@ public class CloudServiceConfiguration {
 
     public boolean isAutoSaveBeforeStop() {
         return autoSaveBeforeStop;
+    }
+
+    @NotNull
+    public Collection<String> getWhitelistedPlayers() {
+        return whitelistedPlayers;
     }
 
     public UUID getOwnerUniqueID() {
