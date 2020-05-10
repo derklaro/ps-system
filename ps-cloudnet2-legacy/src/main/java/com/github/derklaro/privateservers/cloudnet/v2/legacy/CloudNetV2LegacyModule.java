@@ -34,7 +34,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
-        id = "com.github.derklaro.privateservers.cloudnet.v2",
+        id = "com.github.derklaro.privateservers.cloudnet.v2.legacy",
         displayName = "CloudNetV2LegacyPrivateServerModule",
         version = "1.1.0",
         description = "Module for private servers cloudnet v2 integration",

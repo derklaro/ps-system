@@ -21,35 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.reformcloud.v2;
+package com.github.derklaro.privateservers.runner;
 
+import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
-import com.github.derklaro.privateservers.reformcloud.v2.cloud.ReformCloudV2CloudSystem;
-import com.github.derklaro.privateservers.reformcloud.v2.listeners.CloudServiceListener;
+import com.github.derklaro.privateservers.runner.listeners.CloudSystemPickedListener;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
-import systems.reformcloud.reformcloud2.executor.api.common.network.channel.manager.DefaultChannelManager;
-import systems.reformcloud.reformcloud2.executor.api.common.utility.thread.AbsoluteThread;
 
 @Module(
-        id = "com.github.derklaro.privateservers.reformcloud.v2",
-        displayName = "ReformCloudV2PrivateServerModule",
+        id = "com.github.derklaro.privateservers.runner",
+        displayName = "PrivateServerRunner",
         version = "1.1.0",
-        description = "Module for private servers reformcloud v2 integration",
+        description = "Module for the management on the private servers",
         authors = "derklaro"
 )
-public class ReformCloudV2Module {
+public class PrivateServersSpigotRunner {
 
-    public ReformCloudV2Module(@NotNull Plugin plugin) {
-        while (!DefaultChannelManager.INSTANCE.get("Controller").isPresent()) {
-            AbsoluteThread.sleep(20);
+    public PrivateServersSpigotRunner(@NotNull Plugin plugin) {
+        Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
+    }
+
+    public void handleCloudSystemPick() {
+        CloudSystem cloudSystem = PrivateServersSpigot.getInstance().getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
+        if (cloudSystem == null || !cloudSystem.getCloudServiceManager().getCurrentCloudService().isPresent()) {
+            return;
         }
 
-        CloudSystem cloudSystem = new ReformCloudV2CloudSystem();
 
-        plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-        ExecutorAPI.getInstance().getEventManager().registerListener(new CloudServiceListener(cloudSystem));
     }
 }

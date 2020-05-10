@@ -29,7 +29,9 @@ import com.github.derklaro.privateservers.api.module.ModuleLoader;
 import com.github.derklaro.privateservers.api.task.TaskManager;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudSystemDetector;
 import com.github.derklaro.privateservers.common.module.DefaultModuleLoader;
+import com.github.derklaro.privateservers.event.CloudSystemPickedEvent;
 import com.github.derklaro.privateservers.task.SpigotTaskManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +50,8 @@ public class PrivateServersSpigot extends JavaPlugin implements Plugin {
     public void onEnable() {
         this.getModuleLoader().loadModules(this);
         this.getCloudSystemDetector().detectCloudSystem();
+
+        Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent());
     }
 
     @Override

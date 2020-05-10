@@ -97,4 +97,9 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public @NotNull UUID getCurrentServiceUniqueID() {
+        return CloudAPI.getInstance().getServiceId().getUniqueId();
+    }
 }

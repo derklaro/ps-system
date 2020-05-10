@@ -48,6 +48,8 @@ public interface CloudServiceManager {
     @ApiStatus.Internal
     void handleCloudServiceStop(@NotNull CloudService cloudService);
 
+    @NotNull Optional<CloudService> getCurrentCloudService();
+
     @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID);
 
     @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name);

@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -91,5 +92,10 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
                 .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public @NotNull UUID getCurrentServiceUniqueID() {
+        return CloudAPI.getInstance().getServiceId().getUniqueId();
     }
 }

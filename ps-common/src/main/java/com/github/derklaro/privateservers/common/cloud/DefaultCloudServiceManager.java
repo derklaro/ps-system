@@ -61,6 +61,11 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager 
     }
 
     @Override
+    public @NotNull Optional<CloudService> getCurrentCloudService() {
+        return this.getCloudServiceByUniqueID(this.getCurrentServiceUniqueID());
+    }
+
+    @Override
     public @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID) {
         return Iterables.first(this.cloudServices, cloudService -> cloudService.getUniqueID().equals(uniqueID));
     }
@@ -87,4 +92,7 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager 
 
     @NotNull
     public abstract Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem();
+
+    @NotNull
+    public abstract UUID getCurrentServiceUniqueID();
 }

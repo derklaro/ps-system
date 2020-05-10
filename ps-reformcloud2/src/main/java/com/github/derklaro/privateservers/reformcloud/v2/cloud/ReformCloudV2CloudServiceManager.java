@@ -29,6 +29,7 @@ import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudServiceManager;
 import com.github.derklaro.privateservers.common.util.EmptyArrayList;
 import org.jetbrains.annotations.NotNull;
+import systems.reformcloud.reformcloud2.executor.api.api.API;
 import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
 import systems.reformcloud.reformcloud2.executor.api.common.configuration.JsonConfiguration;
 import systems.reformcloud.reformcloud2.executor.api.common.groups.ProcessGroup;
@@ -41,6 +42,7 @@ import systems.reformcloud.reformcloud2.executor.api.common.process.api.ProcessC
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -105,5 +107,10 @@ class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
                 .map(e -> ReformCloudV2CloudService.fromProcessInformation(e).orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public @NotNull UUID getCurrentServiceUniqueID() {
+        return API.getInstance().getCurrentProcessInformation().getProcessDetail().getProcessUniqueID();
     }
 }

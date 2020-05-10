@@ -24,6 +24,8 @@
         <module>ps-cloudnet2</module>
         <module>ps-cloudnet3</module>
         <module>ps-cloudnet2-legacy</module>
+        <module>ps-lobby-spigot</module>
+        <module>ps-runner-spigot</module>
     </modules>
 
     <properties>
