@@ -25,7 +25,7 @@ package com.github.derklaro.privateservers.reformcloud.v2.connection;
 
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
-import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
+import systems.refomcloud.reformcloud2.embedded.Embedded;
 
 import java.util.UUID;
 
@@ -37,9 +37,6 @@ public class ReformCloudV2ConnectionRequest extends DefaultConnectionRequest {
 
     @Override
     public void fire() {
-        ExecutorAPI.getInstance().getSyncAPI().getPlayerSyncAPI().connect(
-                super.getTargetPlayer(),
-                super.getTargetService().getUniqueID()
-        );
+        Embedded.getInstance().getPlayerProvider().getPlayer(this.getTargetPlayer()).ifPresent(wrapper -> wrapper.connect(this.getTargetService().getName()));
     }
 }

@@ -29,9 +29,8 @@ import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.reformcloud.v2.cloud.ReformCloudV2CloudSystem;
 import com.github.derklaro.privateservers.reformcloud.v2.listeners.CloudServiceListener;
 import org.jetbrains.annotations.NotNull;
-import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
-import systems.reformcloud.reformcloud2.executor.api.common.network.channel.manager.DefaultChannelManager;
-import systems.reformcloud.reformcloud2.executor.api.common.utility.thread.AbsoluteThread;
+import systems.refomcloud.reformcloud2.embedded.Embedded;
+import systems.reformcloud.reformcloud2.executor.api.event.EventManager;
 
 @Module(
         id = "com.github.derklaro.privateservers.reformcloud.v2",
@@ -43,13 +42,9 @@ import systems.reformcloud.reformcloud2.executor.api.common.utility.thread.Absol
 public class ReformCloudV2Module {
 
     public ReformCloudV2Module(@NotNull Plugin plugin) {
-        while (!DefaultChannelManager.INSTANCE.get("Controller").isPresent()) {
-            AbsoluteThread.sleep(20);
-        }
-
         CloudSystem cloudSystem = new ReformCloudV2CloudSystem();
 
         plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-        ExecutorAPI.getInstance().getEventManager().registerListener(new CloudServiceListener(cloudSystem));
+        Embedded.getInstance().getServiceRegistry().getProviderUnchecked(EventManager.class).registerListener(new CloudServiceListener(cloudSystem));
     }
 }

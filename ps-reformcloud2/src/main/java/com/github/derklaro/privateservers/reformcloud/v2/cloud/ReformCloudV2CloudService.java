@@ -29,8 +29,11 @@ import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;
 import com.github.derklaro.privateservers.reformcloud.v2.connection.ReformCloudV2ConnectionRequest;
 import org.jetbrains.annotations.NotNull;
-import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
-import systems.reformcloud.reformcloud2.executor.api.common.process.ProcessInformation;
+import systems.refomcloud.reformcloud2.embedded.Embedded;
+import systems.refomcloud.reformcloud2.embedded.process.DefaultEmbeddedProcessWrapper;
+import systems.reformcloud.reformcloud2.executor.api.process.ProcessInformation;
+import systems.reformcloud.reformcloud2.executor.api.process.ProcessState;
+import systems.reformcloud.reformcloud2.executor.api.wrappers.ProcessWrapper;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -49,10 +52,10 @@ public final class ReformCloudV2CloudService extends DefaultCloudService {
 
     private ReformCloudV2CloudService(@NotNull ProcessInformation processInformation, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
         super(processInformation.getProcessDetail().getName(), processInformation.getProcessDetail().getProcessUniqueID(), cloudServiceConfiguration);
-        this.processInformation = processInformation;
+        this.processWrapper = new DefaultEmbeddedProcessWrapper(processInformation);
     }
 
-    private final ProcessInformation processInformation;
+    private final ProcessWrapper processWrapper;
 
     @Override
     public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
@@ -61,13 +64,13 @@ public final class ReformCloudV2CloudService extends DefaultCloudService {
 
     @Override
     public void publishCloudServiceInfoUpdate() {
-        this.processInformation.getExtra().add("cloudServiceConfiguration", super.cloudServiceConfiguration);
-        ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().update(this.processInformation);
+        this.processWrapper.getProcessInformation().getExtra().add("cloudServiceConfiguration", super.cloudServiceConfiguration);
+        Embedded.getInstance().getProcessProvider().updateProcessInformation(this.processWrapper.getProcessInformation());
     }
 
     @Override
     public void copyCloudService() {
-        this.processInformation.toWrapped().copy();
+        this.processWrapper.copy(this.processWrapper.getProcessInformation().getProcessDetail().getTemplate());
     }
 
     @Override
@@ -76,6 +79,6 @@ public final class ReformCloudV2CloudService extends DefaultCloudService {
             this.copyCloudService();
         }
 
-        this.processInformation.toWrapped().stop();
+        this.processWrapper.setRuntimeStateAsync(ProcessState.STOPPED);
     }
 }

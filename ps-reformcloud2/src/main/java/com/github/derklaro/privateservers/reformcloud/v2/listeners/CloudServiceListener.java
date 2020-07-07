@@ -26,10 +26,10 @@ package com.github.derklaro.privateservers.reformcloud.v2.listeners;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.reformcloud.v2.cloud.ReformCloudV2CloudService;
 import org.jetbrains.annotations.NotNull;
-import systems.reformcloud.reformcloud2.executor.api.common.api.basic.events.ProcessStartedEvent;
-import systems.reformcloud.reformcloud2.executor.api.common.api.basic.events.ProcessStoppedEvent;
-import systems.reformcloud.reformcloud2.executor.api.common.api.basic.events.ProcessUpdatedEvent;
-import systems.reformcloud.reformcloud2.executor.api.common.event.handler.Listener;
+import systems.reformcloud.reformcloud2.executor.api.event.events.process.ProcessRegisterEvent;
+import systems.reformcloud.reformcloud2.executor.api.event.events.process.ProcessUnregisterEvent;
+import systems.reformcloud.reformcloud2.executor.api.event.events.process.ProcessUpdateEvent;
+import systems.reformcloud.reformcloud2.executor.api.event.handler.Listener;
 
 public class CloudServiceListener {
 
@@ -40,21 +40,21 @@ public class CloudServiceListener {
     private final CloudSystem cloudSystem;
 
     @Listener
-    public void handleStart(@NotNull ProcessStartedEvent event) {
+    public void handleStart(@NotNull ProcessRegisterEvent event) {
         ReformCloudV2CloudService.fromProcessInformation(event.getProcessInformation()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceStart(cloudService)
         );
     }
 
     @Listener
-    public void handleUpdate(@NotNull ProcessUpdatedEvent event) {
+    public void handleUpdate(@NotNull ProcessUpdateEvent event) {
         ReformCloudV2CloudService.fromProcessInformation(event.getProcessInformation()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceUpdate(cloudService)
         );
     }
 
     @Listener
-    public void handleStop(@NotNull ProcessStoppedEvent event) {
+    public void handleStop(@NotNull ProcessUnregisterEvent event) {
         ReformCloudV2CloudService.fromProcessInformation(event.getProcessInformation()).ifPresent(
                 cloudService -> this.cloudSystem.getCloudServiceManager().handleCloudServiceStop(cloudService)
         );

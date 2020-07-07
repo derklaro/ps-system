@@ -29,20 +29,16 @@ import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudServiceManager;
 import com.github.derklaro.privateservers.common.util.EmptyArrayList;
 import org.jetbrains.annotations.NotNull;
-import systems.reformcloud.reformcloud2.executor.api.api.API;
-import systems.reformcloud.reformcloud2.executor.api.common.ExecutorAPI;
-import systems.reformcloud.reformcloud2.executor.api.common.configuration.JsonConfiguration;
-import systems.reformcloud.reformcloud2.executor.api.common.groups.ProcessGroup;
-import systems.reformcloud.reformcloud2.executor.api.common.groups.template.RuntimeConfiguration;
-import systems.reformcloud.reformcloud2.executor.api.common.groups.template.Template;
-import systems.reformcloud.reformcloud2.executor.api.common.groups.template.Version;
-import systems.reformcloud.reformcloud2.executor.api.common.process.api.ProcessConfiguration;
-import systems.reformcloud.reformcloud2.executor.api.common.process.api.ProcessConfigurationBuilder;
+import systems.refomcloud.reformcloud2.embedded.Embedded;
+import systems.reformcloud.reformcloud2.executor.api.ExecutorAPI;
+import systems.reformcloud.reformcloud2.executor.api.configuration.gson.JsonConfiguration;
+import systems.reformcloud.reformcloud2.executor.api.groups.ProcessGroup;
+import systems.reformcloud.reformcloud2.executor.api.groups.template.RuntimeConfiguration;
+import systems.reformcloud.reformcloud2.executor.api.groups.template.Template;
+import systems.reformcloud.reformcloud2.executor.api.groups.template.Version;
+import systems.reformcloud.reformcloud2.executor.api.process.ProcessState;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -53,16 +49,20 @@ class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
     @Override
     public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
                                                                        @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        ProcessGroup processGroup = ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().getProcessGroup(group);
-        if (processGroup == null) {
+        Optional<ProcessGroup> processGroup = ExecutorAPI.getInstance().getProcessGroupProvider().getProcessGroup(group);
+        if (!processGroup.isPresent()) {
             return CompletableFuture.completedFuture(null);
         }
 
-        ProcessConfiguration configuration = ProcessConfigurationBuilder.newBuilder(processGroup)
+        return ExecutorAPI.getInstance().getProcessProvider().createProcess().group(processGroup.get())
                 .extra(new JsonConfiguration().add("cloudServiceConfiguration", cloudServiceConfiguration))
-                .template(this.getOrCreateTemplate(templateName, templateBackend, processGroup))
-                .build();
-        return this.startService(configuration);
+                .template(this.getOrCreateTemplate(templateName, templateBackend, processGroup.get()))
+                .prepare()
+                .thenApplyAsync(processWrapper -> {
+                    processWrapper.setRuntimeStateAsync(ProcessState.STARTED);
+                    return ReformCloudV2CloudService.fromProcessInformation(processWrapper.getProcessInformation())
+                            .orElseThrow(() -> new RuntimeException("Unable to create CloudService from ProcessWrapper"));
+                });
     }
 
     @NotNull
@@ -85,25 +85,15 @@ class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
                 ), Version.PAPER_1_8_8
         );
         processGroup.getTemplates().add(template);
-        ExecutorAPI.getInstance().getSyncAPI().getGroupSyncAPI().updateProcessGroup(processGroup);
-
+        ExecutorAPI.getInstance().getProcessGroupProvider().updateProcessGroup(processGroup);
         return template;
-    }
-
-    @NotNull
-    private CompletableFuture<CloudService> startService(@NotNull ProcessConfiguration configuration) {
-        CompletableFuture<CloudService> future = new CompletableFuture<>();
-        ExecutorAPI.getInstance().getAsyncAPI().getProcessAsyncAPI().startProcessAsync(configuration)
-                .onComplete(processInformation -> future.complete(ReformCloudV2CloudService.fromProcessInformation(processInformation).orElse(null)))
-                .onFailure(exception -> future.completeExceptionally(exception));
-        return future;
     }
 
     @Override
     public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
-        return ExecutorAPI.getInstance().getSyncAPI().getProcessSyncAPI().getAllProcesses()
+        return ExecutorAPI.getInstance().getProcessProvider().getProcesses()
                 .stream()
-                .filter(e -> e.getProcessDetail().getProcessState().isReady())
+                .filter(e -> e.getProcessDetail().getProcessState().isStartedOrOnline())
                 .map(e -> ReformCloudV2CloudService.fromProcessInformation(e).orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -111,6 +101,6 @@ class ReformCloudV2CloudServiceManager extends DefaultCloudServiceManager {
 
     @Override
     public @NotNull UUID getCurrentServiceUniqueID() {
-        return API.getInstance().getCurrentProcessInformation().getProcessDetail().getProcessUniqueID();
+        return Embedded.getInstance().getCurrentProcessInformation().getProcessDetail().getProcessUniqueID();
     }
 }
