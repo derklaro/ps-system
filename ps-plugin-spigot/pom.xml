@@ -54,6 +54,10 @@
                   <pattern>com.google.gson</pattern>
                   <shadedPattern>com.github.derklaro.relocation.gson</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>net.kyori.adventure</pattern>
+                  <shadedPattern>com.github.derklaro.relocation.adventure</shadedPattern>
+                </relocation>
               </relocations>
               <filters>
                 <filter>
