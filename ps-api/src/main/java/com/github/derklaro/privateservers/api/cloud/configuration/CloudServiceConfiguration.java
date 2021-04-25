@@ -102,7 +102,7 @@ public class CloudServiceConfiguration {
     this.publicService = publicService;
   }
 
-  public boolean isHasWhitelist() {
+  public boolean hasWhitelist() {
     return this.hasWhitelist;
   }
 
