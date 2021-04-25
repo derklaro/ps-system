@@ -32,6 +32,7 @@ import com.github.derklaro.privateservers.configuration.JsonConfigurationLoader;
 import com.github.derklaro.privateservers.lobby.command.CommandCreateNPC;
 import com.github.derklaro.privateservers.lobby.command.CommandRemoveNPC;
 import com.github.derklaro.privateservers.lobby.event.DatabaseChooseEvent;
+import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
 import com.github.derklaro.privateservers.lobby.listeners.CloudSystemPickedListener;
 import com.github.derklaro.privateservers.lobby.listeners.PlayerListener;
 import com.github.derklaro.privateservers.lobby.npc.DefaultNpcManager;
@@ -85,6 +86,8 @@ public class PrivateServersLobby {
       createNPCCommand.setExecutor(new CommandCreateNPC());
     }
 
-    Bukkit.getPluginManager().registerEvents(new PlayerListener(npcManager, database), PrivateServersSpigot.getInstance());
+    Bukkit.getPluginManager().registerEvents(new PlayerListener(
+      npcManager, database, new InventoryHandler(configuration, cloudSystem.getCloudServiceManager())
+    ), PrivateServersSpigot.getInstance());
   }
 }
