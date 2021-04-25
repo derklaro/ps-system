@@ -36,7 +36,7 @@ public class CloudServiceConfiguration {
   private final boolean autoDeleteAfterOwnerLeave;
   private final boolean autoSaveBeforeStop;
   private final Collection<String> whitelistedPlayers;
-  private final UUID ownerUniqueID;
+  private final UUID ownerUniqueId;
   private final String ownerName;
 
   private final String initialGroup;
@@ -47,13 +47,13 @@ public class CloudServiceConfiguration {
   private boolean hasWhitelist;
 
   public CloudServiceConfiguration(boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop,
-                                   Collection<String> whitelistedPlayers, UUID ownerUniqueID, String ownerName,
+                                   Collection<String> whitelistedPlayers, UUID ownerUniqueId, String ownerName,
                                    String initialGroup, String initialTemplate, String initialTemplateBackend,
                                    boolean publicService, boolean hasWhitelist) {
     this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
     this.autoSaveBeforeStop = autoSaveBeforeStop;
     this.whitelistedPlayers = whitelistedPlayers;
-    this.ownerUniqueID = ownerUniqueID;
+    this.ownerUniqueId = ownerUniqueId;
     this.ownerName = ownerName;
     this.initialGroup = initialGroup;
     this.initialTemplate = initialTemplate;
@@ -63,39 +63,39 @@ public class CloudServiceConfiguration {
   }
 
   public boolean isAutoDeleteAfterOwnerLeave() {
-    return autoDeleteAfterOwnerLeave;
+    return this.autoDeleteAfterOwnerLeave;
   }
 
   public boolean isAutoSaveBeforeStop() {
-    return autoSaveBeforeStop;
+    return this.autoSaveBeforeStop;
   }
 
   public Collection<String> getWhitelistedPlayers() {
-    return whitelistedPlayers;
+    return this.whitelistedPlayers;
   }
 
-  public UUID getOwnerUniqueID() {
-    return ownerUniqueID;
+  public UUID getOwnerUniqueId() {
+    return this.ownerUniqueId;
   }
 
   public String getOwnerName() {
-    return ownerName;
+    return this.ownerName;
   }
 
   public String getInitialGroup() {
-    return initialGroup;
+    return this.initialGroup;
   }
 
   public String getInitialTemplate() {
-    return initialTemplate;
+    return this.initialTemplate;
   }
 
   public String getInitialTemplateBackend() {
-    return initialTemplateBackend;
+    return this.initialTemplateBackend;
   }
 
   public boolean isPublicService() {
-    return publicService;
+    return this.publicService;
   }
 
   public void setPublicService(boolean publicService) {
@@ -103,7 +103,7 @@ public class CloudServiceConfiguration {
   }
 
   public boolean isHasWhitelist() {
-    return hasWhitelist;
+    return this.hasWhitelist;
   }
 
   public void setHasWhitelist(boolean hasWhitelist) {

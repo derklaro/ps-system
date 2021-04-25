@@ -139,7 +139,7 @@ public class InventoryConfiguration {
     }
 
     public Collection<ServiceItemMapping> getServiceItems() {
-      return serviceItems;
+      return this.serviceItems;
     }
 
     public void setServiceItems(Collection<ServiceItemMapping> serviceItems) {
@@ -164,7 +164,7 @@ public class InventoryConfiguration {
     }
 
     public String getGroupName() {
-      return groupName;
+      return this.groupName;
     }
 
     public void setGroupName(String groupName) {
@@ -172,7 +172,7 @@ public class InventoryConfiguration {
     }
 
     public String getTemplateName() {
-      return templateName;
+      return this.templateName;
     }
 
     public void setTemplateName(String templateName) {
@@ -180,7 +180,7 @@ public class InventoryConfiguration {
     }
 
     public String getTemplateBackend() {
-      return templateBackend;
+      return this.templateBackend;
     }
 
     public void setTemplateBackend(String templateBackend) {
@@ -188,7 +188,7 @@ public class InventoryConfiguration {
     }
 
     public boolean isCopyAfterStop() {
-      return copyAfterStop;
+      return this.copyAfterStop;
     }
 
     public void setCopyAfterStop(boolean copyAfterStop) {
@@ -196,7 +196,7 @@ public class InventoryConfiguration {
     }
 
     public ItemLayout getItemLayout() {
-      return itemLayout;
+      return this.itemLayout;
     }
 
     public void setItemLayout(ItemLayout itemLayout) {

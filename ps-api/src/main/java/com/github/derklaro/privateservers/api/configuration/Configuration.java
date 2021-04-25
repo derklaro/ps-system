@@ -96,7 +96,7 @@ public class Configuration {
   }
 
   public InventoryConfiguration.ServiceTypeStartInventory getServiceTemplateStartItems() {
-    return serviceTemplateStartItems;
+    return this.serviceTemplateStartItems;
   }
 
   public void setServiceTemplateStartItems(InventoryConfiguration.ServiceTypeStartInventory serviceTemplateStartItems) {
