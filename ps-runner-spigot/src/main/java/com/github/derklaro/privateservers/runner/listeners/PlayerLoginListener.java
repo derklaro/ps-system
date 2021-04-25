@@ -41,7 +41,7 @@ public class PlayerLoginListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
-  public void handle(final @NotNull PlayerLoginEvent event) {
+  public void handle(@NotNull PlayerLoginEvent event) {
     if (event.getPlayer().hasPermission(Constants.WHITELIST_JOIN_PERM)) {
       return;
     }

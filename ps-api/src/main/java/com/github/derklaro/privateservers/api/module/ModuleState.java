@@ -25,9 +25,6 @@ package com.github.derklaro.privateservers.api.module;
 
 public enum ModuleState {
 
-  LOADED,
-
   ENABLED,
-
   DISABLED
 }

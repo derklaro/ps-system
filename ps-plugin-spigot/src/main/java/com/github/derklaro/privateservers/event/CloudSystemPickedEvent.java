@@ -23,6 +23,7 @@
  */
 package com.github.derklaro.privateservers.event;
 
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -30,8 +31,18 @@ public class CloudSystemPickedEvent extends Event {
 
   private static final HandlerList HANDLER_LIST = new HandlerList();
 
+  private final CloudSystem cloudSystem;
+
+  public CloudSystemPickedEvent(CloudSystem cloudSystem) {
+    this.cloudSystem = cloudSystem;
+  }
+
   public static HandlerList getHandlerList() {
     return HANDLER_LIST;
+  }
+
+  public CloudSystem getCloudSystem() {
+    return this.cloudSystem;
   }
 
   @Override

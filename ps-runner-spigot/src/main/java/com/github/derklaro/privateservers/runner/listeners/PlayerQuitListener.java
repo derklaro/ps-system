@@ -39,7 +39,7 @@ public class PlayerQuitListener implements Listener {
   }
 
   @EventHandler
-  public void handle(final @NotNull PlayerQuitEvent event) {
+  public void handle(@NotNull PlayerQuitEvent event) {
     this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
       if (cloudServiceConfiguration.isAutoDeleteAfterOwnerLeave() && event.getPlayer().getUniqueId().equals(cloudServiceConfiguration.getOwnerUniqueId())) {
         this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(CloudService::shutdown);

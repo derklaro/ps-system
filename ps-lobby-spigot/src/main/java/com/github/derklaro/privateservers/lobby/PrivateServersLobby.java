@@ -57,12 +57,7 @@ public class PrivateServersLobby {
     Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
   }
 
-  public void handleCloudSystemPick() {
-    CloudSystem cloudSystem = PrivateServersSpigot.getInstance().getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
-    if (cloudSystem == null || !cloudSystem.getCloudServiceManager().getCurrentCloudService().isPresent()) {
-      return;
-    }
-
+  public void handleCloudSystemPick(@NotNull CloudSystem cloudSystem) {
     Configuration configuration = JsonConfigurationLoader.loadConfiguration();
 
     DatabaseChooseEvent databaseChooseEvent = new DatabaseChooseEvent(new JsonNpcDatabase(), configuration.getDatabaseProvider());

@@ -23,7 +23,6 @@
  */
 package com.github.derklaro.privateservers.runner.listeners;
 
-import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.event.CloudSystemPickedEvent;
 import com.github.derklaro.privateservers.runner.PrivateServersSpigotRunner;
 import org.bukkit.event.EventHandler;
@@ -40,8 +39,6 @@ public class CloudSystemPickedListener implements Listener {
 
   @EventHandler
   public void handle(@NotNull CloudSystemPickedEvent event) {
-    if (PrivateServersSpigot.getInstance().getCloudSystemDetector().isCloudSystemDetected()) {
-      this.runner.handleCloudSystemPick();
-    }
+    this.runner.handleCloudSystemPick(event.getCloudSystem());
   }
 }

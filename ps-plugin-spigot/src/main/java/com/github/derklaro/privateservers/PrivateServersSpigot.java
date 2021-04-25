@@ -25,6 +25,7 @@ package com.github.derklaro.privateservers;
 
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudDetector;
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.ModuleLoader;
 import com.github.derklaro.privateservers.api.task.TaskManager;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudSystemDetector;
@@ -54,7 +55,14 @@ public class PrivateServersSpigot extends JavaPlugin implements Plugin {
     this.getModuleLoader().loadModules(this);
     this.getCloudSystemDetector().detectCloudSystem();
 
-    Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent());
+    CloudSystem cloudSystem = this.getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
+    if (cloudSystem == null) {
+      this.getLogger().info("No cloud system detected, disabling plugin. Ensure you have a cloud system module added");
+      this.getPluginLoader().disablePlugin(this);
+      return;
+    }
+
+    Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent(cloudSystem));
   }
 
   @Override

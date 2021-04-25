@@ -49,13 +49,12 @@ public class PrivateServersSpigotRunner {
     Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
   }
 
-  public void handleCloudSystemPick() {
-    CloudSystem cloudSystem = PrivateServersSpigot.getInstance().getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
-    if (cloudSystem == null || !cloudSystem.getCloudServiceManager().getCurrentCloudService().isPresent()) {
+  public void handleCloudSystemPick(@NotNull CloudSystem cloudSystem) {
+    CloudService cloudService = cloudSystem.getCloudServiceManager().getCurrentCloudService().orElse(null);
+    if (cloudService == null) {
       return;
     }
 
-    CloudService cloudService = cloudSystem.getCloudServiceManager().getCurrentCloudService().get();
     cloudService.createConnectionRequest(cloudService.getOwnerUniqueId()).fire();
 
     Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(cloudSystem), PrivateServersSpigot.getInstance());

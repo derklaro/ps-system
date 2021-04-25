@@ -46,7 +46,7 @@ class DefaultModuleContainer implements ModuleContainer {
     this.classLoader = classLoader;
     this.path = path;
     this.instance = instance;
-    this.state = ModuleState.LOADED;
+    this.state = ModuleState.ENABLED;
   }
 
   @NotNull @Override
