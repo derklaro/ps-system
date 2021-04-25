@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,77 +33,78 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
+// TODO: translations
 public class WhitelistCommand implements CommandExecutor {
 
-    public WhitelistCommand(CloudSystem cloudSystem) {
-        this.cloudSystem = cloudSystem;
+  private final CloudSystem cloudSystem;
+
+  public WhitelistCommand(CloudSystem cloudSystem) {
+    this.cloudSystem = cloudSystem;
+  }
+
+  @Override
+  public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    CloudService cloudService = this.cloudSystem.getCloudServiceManager().getCurrentCloudService().orElse(null);
+    if (cloudService == null || !(commandSender instanceof Player)) {
+      commandSender.sendMessage("§cUnable to process command");
+      return true;
     }
 
-    private final CloudSystem cloudSystem;
+    Player player = (Player) commandSender;
+    if (!commandSender.hasPermission(Constants.WHITELIST_COMMAND_USE_PERM) && !player.getUniqueId().equals(cloudService.getOwnerUniqueId())) {
+      commandSender.sendMessage("§cYou are not allowed to use this command");
+      return true;
+    }
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        CloudService cloudService = this.cloudSystem.getCloudServiceManager().getCurrentCloudService().orElse(null);
-        if (cloudService == null || !(commandSender instanceof Player)) {
-            commandSender.sendMessage("§cUnable to process command");
-            return true;
+    if (strings.length == 0 || strings.length > 2) {
+      commandSender.sendMessage("§7/whitelist add <name>");
+      commandSender.sendMessage("§7/whitelist remove <name>");
+      commandSender.sendMessage("§7/whitelist list");
+      return true;
+    }
+
+    if (strings.length == 1 && strings[0].equalsIgnoreCase("list")) {
+      Collection<String> whitelistedPlayers = cloudService.getCloudServiceConfiguration().getWhitelistedPlayers();
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("§7Whitelisted players (").append(whitelistedPlayers.size()).append("): ");
+      for (String whitelistedPlayer : whitelistedPlayers) {
+        builder.append(whitelistedPlayer).append(", ");
+      }
+
+      commandSender.sendMessage(builder.substring(0, builder.length() - 2));
+      return true;
+    }
+
+    if (strings.length == 2) {
+      if (strings[0].equalsIgnoreCase("add")) {
+        if (cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
+          commandSender.sendMessage("§cThis player is already whitelisted");
+          return true;
         }
 
-        Player player = (Player) commandSender;
-        if (!commandSender.hasPermission(Constants.WHITELIST_COMMAND_USE_PERM) && !player.getUniqueId().equals(cloudService.getOwnerUniqueID())) {
-            commandSender.sendMessage("§cYou are not allowed to use this command");
-            return true;
-        }
-
-        if (strings.length == 0 || strings.length > 2) {
-            commandSender.sendMessage("§7/whitelist add <name>");
-            commandSender.sendMessage("§7/whitelist remove <name>");
-            commandSender.sendMessage("§7/whitelist list");
-            return true;
-        }
-
-        if (strings.length == 1 && strings[0].equalsIgnoreCase("list")) {
-            Collection<String> whitelistedPlayers = cloudService.getCloudServiceConfiguration().getWhitelistedPlayers();
-            StringBuilder builder = new StringBuilder();
-
-            builder.append("§7Whitelisted players (").append(whitelistedPlayers.size()).append("): ");
-            for (String whitelistedPlayer : whitelistedPlayers) {
-                builder.append(whitelistedPlayer).append(", ");
-            }
-
-            commandSender.sendMessage(builder.substring(0, builder.length() - 2));
-            return true;
-        }
-
-        if (strings.length == 2) {
-            if (strings[0].equalsIgnoreCase("add")) {
-                if (cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
-                    commandSender.sendMessage("§cThis player is already whitelisted");
-                    return true;
-                }
-
-                cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().add(strings[1]);
-                cloudService.publishCloudServiceInfoUpdate();
-                commandSender.sendMessage("§aSuccessfully §7whitelisted player " + strings[1]);
-                return true;
-            }
-
-            if (strings[0].equalsIgnoreCase("remove")) {
-                if (!cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
-                    commandSender.sendMessage("§cThis player is not whitelisted");
-                    return true;
-                }
-
-                cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().remove(strings[1]);
-                cloudService.publishCloudServiceInfoUpdate();
-                commandSender.sendMessage("§cRemoved §7whitelisted player " + strings[1]);
-                return true;
-            }
-        }
-
-        commandSender.sendMessage("§7/whitelist add <name>");
-        commandSender.sendMessage("§7/whitelist remove <name>");
-        commandSender.sendMessage("§7/whitelist list");
+        cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().add(strings[1]);
+        cloudService.publishCloudServiceInfoUpdate();
+        commandSender.sendMessage("§aSuccessfully §7whitelisted player " + strings[1]);
         return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("remove")) {
+        if (!cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
+          commandSender.sendMessage("§cThis player is not whitelisted");
+          return true;
+        }
+
+        cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().remove(strings[1]);
+        cloudService.publishCloudServiceInfoUpdate();
+        commandSender.sendMessage("§cRemoved §7whitelisted player " + strings[1]);
+        return true;
+      }
     }
+
+    commandSender.sendMessage("§7/whitelist add <name>");
+    commandSender.sendMessage("§7/whitelist remove <name>");
+    commandSender.sendMessage("§7/whitelist list");
+    return true;
+  }
 }

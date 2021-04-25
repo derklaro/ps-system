@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,70 +29,83 @@ import com.github.derklaro.privateservers.common.util.Iterables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class DefaultCloudServiceManager implements CloudServiceManager {
+public abstract class DefaultCloudServiceManager implements CloudServiceManager, CloudServiceManager.Unsafe {
 
-    public DefaultCloudServiceManager() {
-        this.cloudServices.addAll(this.getAllCurrentlyRunningPrivateServersFromCloudSystem());
+  protected final Set<CloudService> cloudServices = ConcurrentHashMap.newKeySet();
+
+  public DefaultCloudServiceManager() {
+    this.cloudServices.addAll(this.getAllCurrentlyRunningPrivateServersFromCloudSystem());
+  }
+
+  @Override
+  public @NotNull Unsafe getUnsafe() {
+    return this;
+  }
+
+  @Override
+  public @NotNull Optional<CloudService> getCurrentCloudService() {
+    return this.getCloudServiceByUniqueID(this.getCurrentServiceUniqueID());
+  }
+
+  @Override
+  public @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getServiceUniqueId().equals(uniqueID));
+  }
+
+  @Override
+  public @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getName().equals(name));
+  }
+
+  @Override
+  public @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerUniqueId().equals(ownerUniqueID));
+  }
+
+  @Override
+  public @NotNull Optional<CloudService> getCloudServiceByOwnerName(@NotNull String ownerName) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerName().equals(ownerName));
+  }
+
+  @Override
+  public @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices() {
+    return Collections.unmodifiableSet(this.cloudServices);
+  }
+
+  // CloudServiceManager.Unsafe
+
+  @Override
+  public void handleCloudServiceStart(@NotNull CloudService cloudService) {
+    if (this.cloudServices.contains(cloudService)) {
+      return;
     }
 
-    protected final Set<CloudService> cloudServices = ConcurrentHashMap.newKeySet();
+    this.cloudServices.add(cloudService);
+  }
 
-    @Override
-    public void handleCloudServiceStart(@NotNull CloudService cloudService) {
-        if (this.cloudServices.contains(cloudService)) {
-            return;
-        }
+  @Override
+  public void handleCloudServiceUpdate(@NotNull CloudService cloudService) {
+    this.cloudServices.remove(cloudService);
+    this.cloudServices.add(cloudService);
+  }
 
-        this.cloudServices.add(cloudService);
-    }
+  @Override
+  public void handleCloudServiceStop(@NotNull CloudService cloudService) {
+    this.cloudServices.remove(cloudService);
+  }
 
-    @Override
-    public void handleCloudServiceUpdate(@NotNull CloudService cloudService) {
-        this.cloudServices.remove(cloudService);
-        this.cloudServices.add(cloudService);
-    }
+  // abstract methods
 
-    @Override
-    public void handleCloudServiceStop(@NotNull CloudService cloudService) {
-        this.cloudServices.remove(cloudService);
-    }
+  @NotNull
+  public abstract Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem();
 
-    @Override
-    public @NotNull Optional<CloudService> getCurrentCloudService() {
-        return this.getCloudServiceByUniqueID(this.getCurrentServiceUniqueID());
-    }
-
-    @Override
-    public @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID) {
-        return Iterables.first(this.cloudServices, cloudService -> cloudService.getUniqueID().equals(uniqueID));
-    }
-
-    @Override
-    public @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name) {
-        return Iterables.first(this.cloudServices, cloudService -> cloudService.getName().equals(name));
-    }
-
-    @Override
-    public @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID) {
-        return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerUniqueID().equals(ownerUniqueID));
-    }
-
-    @Override
-    public @NotNull Optional<CloudService> getCloudServiceByOwnerName(@NotNull String ownerName) {
-        return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerName().equals(ownerName));
-    }
-
-    @Override
-    public @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices() {
-        return Collections.unmodifiableSet(this.cloudServices);
-    }
-
-    @NotNull
-    public abstract Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem();
-
-    @NotNull
-    public abstract UUID getCurrentServiceUniqueID();
+  @NotNull
+  public abstract UUID getCurrentServiceUniqueID();
 }

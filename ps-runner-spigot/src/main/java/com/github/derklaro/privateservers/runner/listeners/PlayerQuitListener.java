@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,18 +32,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerQuitListener implements Listener {
 
-    public PlayerQuitListener(CloudSystem cloudSystem) {
-        this.cloudSystem = cloudSystem;
-    }
+  private final CloudSystem cloudSystem;
 
-    private final CloudSystem cloudSystem;
+  public PlayerQuitListener(CloudSystem cloudSystem) {
+    this.cloudSystem = cloudSystem;
+  }
 
-    @EventHandler
-    public void handle(final @NotNull PlayerQuitEvent event) {
-        this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
-            if (cloudServiceConfiguration.isAutoDeleteAfterOwnerLeave() && event.getPlayer().getUniqueId().equals(cloudServiceConfiguration.getOwnerUniqueID())) {
-                this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(CloudService::shutdown);
-            }
-        });
-    }
+  @EventHandler
+  public void handle(final @NotNull PlayerQuitEvent event) {
+    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
+      if (cloudServiceConfiguration.isAutoDeleteAfterOwnerLeave() && event.getPlayer().getUniqueId().equals(cloudServiceConfiguration.getOwnerUniqueId())) {
+        this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(CloudService::shutdown);
+      }
+    });
+  }
 }

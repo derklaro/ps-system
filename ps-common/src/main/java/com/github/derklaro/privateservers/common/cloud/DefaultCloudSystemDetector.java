@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,49 +35,47 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class DefaultCloudSystemDetector implements CloudDetector {
 
-    public static final CloudDetector DEFAULT_INSTANCE = new DefaultCloudSystemDetector();
+  public static final CloudDetector DEFAULT_INSTANCE = new DefaultCloudSystemDetector();
+  private final Collection<CloudSystem> allCloudSystems = new CopyOnWriteArrayList<>();
+  private CloudSystem detectedCloudSystem;
 
-    private DefaultCloudSystemDetector() {
+  private DefaultCloudSystemDetector() {
+  }
+
+  @Override
+  public void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException {
+    for (CloudSystem allCloudSystem : this.allCloudSystems) {
+      if (allCloudSystem.getName().equals(cloudSystem.getName())) {
+        throw new CloudSystemAlreadyRegisteredException();
+      }
     }
 
-    private final Collection<CloudSystem> allCloudSystems = new CopyOnWriteArrayList<>();
+    this.allCloudSystems.add(cloudSystem);
+  }
 
-    private CloudSystem detectedCloudSystem;
-
-    @Override
-    public void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException {
-        for (CloudSystem allCloudSystem : this.allCloudSystems) {
-            if (allCloudSystem.getName().equals(cloudSystem.getName())) {
-                throw new CloudSystemAlreadyRegisteredException();
-            }
-        }
-
-        this.allCloudSystems.add(cloudSystem);
+  @Override
+  public void detectCloudSystem() throws CloudSystemAlreadyDetectedException {
+    if (this.isCloudSystemDetected()) {
+      throw new CloudSystemAlreadyDetectedException();
     }
 
-    @Override
-    public void detectCloudSystem() throws CloudSystemAlreadyDetectedException {
-        if (this.isCloudSystemDetected()) {
-            throw new CloudSystemAlreadyDetectedException();
-        }
-
-        for (CloudSystem cloudSystem : this.allCloudSystems) {
-            try {
-                Class.forName(cloudSystem.getIdentifierClass());
-                this.detectedCloudSystem = cloudSystem;
-                break;
-            } catch (final ClassNotFoundException ignored) {
-            }
-        }
+    for (CloudSystem cloudSystem : this.allCloudSystems) {
+      try {
+        Class.forName(cloudSystem.getIdentifierClass());
+        this.detectedCloudSystem = cloudSystem;
+        break;
+      } catch (ClassNotFoundException ignored) {
+      }
     }
+  }
 
-    @Override
-    public boolean isCloudSystemDetected() {
-        return this.detectedCloudSystem != null;
-    }
+  @Override
+  public boolean isCloudSystemDetected() {
+    return this.detectedCloudSystem != null;
+  }
 
-    @Override
-    public @NotNull Optional<CloudSystem> getDetectedCloudSystem() {
-        return Optional.ofNullable(this.detectedCloudSystem);
-    }
+  @Override
+  public @NotNull Optional<CloudSystem> getDetectedCloudSystem() {
+    return Optional.ofNullable(this.detectedCloudSystem);
+  }
 }

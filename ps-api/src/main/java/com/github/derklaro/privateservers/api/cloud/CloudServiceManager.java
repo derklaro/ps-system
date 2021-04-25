@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package com.github.derklaro.privateservers.api.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -39,27 +38,29 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface CloudServiceManager {
 
-    @ApiStatus.Internal
+  @NotNull Unsafe getUnsafe();
+
+  @NotNull Optional<CloudService> getCurrentCloudService();
+
+  @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID);
+
+  @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name);
+
+  @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID);
+
+  @NotNull Optional<CloudService> getCloudServiceByOwnerName(@NotNull String ownerName);
+
+  @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName, @NotNull String templateBackend,
+                                                              @NotNull CloudServiceConfiguration cloudServiceConfiguration);
+
+  @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices();
+
+  interface Unsafe {
+
     void handleCloudServiceStart(@NotNull CloudService cloudService);
 
-    @ApiStatus.Internal
     void handleCloudServiceUpdate(@NotNull CloudService cloudService);
 
-    @ApiStatus.Internal
     void handleCloudServiceStop(@NotNull CloudService cloudService);
-
-    @NotNull Optional<CloudService> getCurrentCloudService();
-
-    @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID);
-
-    @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name);
-
-    @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID);
-
-    @NotNull Optional<CloudService> getCloudServiceByOwnerName(@NotNull String ownerName);
-
-    @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName, @NotNull String templateBackend,
-                                                                @NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-    @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices();
+  }
 }

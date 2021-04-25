@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,51 +30,50 @@ import com.github.derklaro.privateservers.api.task.TaskManager;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudSystemDetector;
 import com.github.derklaro.privateservers.common.module.DefaultModuleLoader;
 import com.github.derklaro.privateservers.event.CloudSystemPickedEvent;
-import com.github.derklaro.privateservers.task.SpigotTaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class PrivateServersSpigot extends JavaPlugin implements Plugin {
 
-    private static PrivateServersSpigot instance;
+  private static PrivateServersSpigot instance;
 
-    @Override
-    public void onLoad() {
-        instance = this;
+  public static PrivateServersSpigot getInstance() {
+    return instance;
+  }
 
-        this.getModuleLoader().detectModules();
-    }
+  @Override
+  public void onLoad() {
+    instance = this;
 
-    @Override
-    public void onEnable() {
-        this.getModuleLoader().loadModules(this);
-        this.getCloudSystemDetector().detectCloudSystem();
+    this.getModuleLoader().detectModules();
+  }
 
-        Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent());
-    }
+  @Override
+  public void onEnable() {
+    this.getModuleLoader().loadModules(this);
+    this.getCloudSystemDetector().detectCloudSystem();
 
-    @Override
-    public void onDisable() {
-        this.getModuleLoader().disableModules();
-    }
+    Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent());
+  }
 
-    public static PrivateServersSpigot getInstance() {
-        return instance;
-    }
+  @Override
+  public void onDisable() {
+    this.getModuleLoader().disableModules();
+  }
 
-    @Override
-    public @NotNull TaskManager getTaskManager() {
-        return SpigotTaskManager.INSTANCE;
-    }
+  @Override
+  public @NotNull TaskManager getTaskManager() {
+    return SpigotTaskManager.INSTANCE;
+  }
 
-    @Override
-    public @NotNull CloudDetector getCloudSystemDetector() {
-        return DefaultCloudSystemDetector.DEFAULT_INSTANCE;
-    }
+  @Override
+  public @NotNull CloudDetector getCloudSystemDetector() {
+    return DefaultCloudSystemDetector.DEFAULT_INSTANCE;
+  }
 
-    @Override
-    public @NotNull ModuleLoader getModuleLoader() {
-        return DefaultModuleLoader.INSTANCE;
-    }
+  @Override
+  public @NotNull ModuleLoader getModuleLoader() {
+    return DefaultModuleLoader.INSTANCE;
+  }
 }

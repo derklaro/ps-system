@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,14 @@ import org.bukkit.event.HandlerList;
 
 public class CloudSystemPickedEvent extends Event {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
+  private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
 
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
 }

@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,66 +25,53 @@ package com.github.derklaro.privateservers.common.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@ToString
+@EqualsAndHashCode
 public abstract class DefaultCloudService implements CloudService {
 
-    public DefaultCloudService(String name, UUID uniqueID, CloudServiceConfiguration cloudServiceConfiguration) {
-        this.name = name;
-        this.uniqueID = uniqueID;
-        this.cloudServiceConfiguration = cloudServiceConfiguration;
-    }
+  protected final String name;
+  protected final UUID uniqueID;
+  protected CloudServiceConfiguration cloudServiceConfiguration;
 
-    protected final String name;
+  public DefaultCloudService(String name, UUID uniqueID, CloudServiceConfiguration cloudServiceConfiguration) {
+    this.name = name;
+    this.uniqueID = uniqueID;
+    this.cloudServiceConfiguration = cloudServiceConfiguration;
+  }
 
-    protected final UUID uniqueID;
+  @Override
+  public @NotNull String getName() {
+    return this.name;
+  }
 
-    protected CloudServiceConfiguration cloudServiceConfiguration;
+  @Override
+  public @NotNull UUID getServiceUniqueId() {
+    return this.uniqueID;
+  }
 
-    @Override
-    public @NotNull String getName() {
-        return this.name;
-    }
+  @Override
+  public @NotNull UUID getOwnerUniqueId() {
+    return this.cloudServiceConfiguration.getOwnerUniqueId();
+  }
 
-    @Override
-    public @NotNull UUID getUniqueID() {
-        return this.uniqueID;
-    }
+  @Override
+  public @NotNull String getOwnerName() {
+    return this.cloudServiceConfiguration.getOwnerName();
+  }
 
-    @Override
-    public @NotNull UUID getOwnerUniqueID() {
-        return this.cloudServiceConfiguration.getOwnerUniqueID();
-    }
+  @Override
+  public @NotNull CloudServiceConfiguration getCloudServiceConfiguration() {
+    return this.cloudServiceConfiguration;
+  }
 
-    @Override
-    public @NotNull String getOwnerName() {
-        return this.cloudServiceConfiguration.getOwnerName();
-    }
-
-    @Override
-    public @NotNull CloudServiceConfiguration getCloudServiceConfiguration() {
-        return this.cloudServiceConfiguration;
-    }
-
-    @Override
-    public void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        this.cloudServiceConfiguration = cloudServiceConfiguration;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getUniqueID().hashCode();
-    }
-
-    @Override
-    public boolean equals(@NotNull Object obj) {
-        if (!(obj instanceof CloudService)) {
-            return false;
-        }
-
-        return ((CloudService) obj).getUniqueID().equals(this.getUniqueID());
-    }
-
+  @Override
+  public void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+    this.cloudServiceConfiguration = cloudServiceConfiguration;
+  }
 }

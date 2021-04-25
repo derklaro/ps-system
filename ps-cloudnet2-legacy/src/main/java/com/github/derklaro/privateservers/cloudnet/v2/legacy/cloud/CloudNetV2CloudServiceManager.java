@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,59 +47,59 @@ import java.util.stream.Collectors;
 
 class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
-    static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
+  static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
 
-    @Override
-    public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
-                                                                       @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        ServerGroup serverGroup = CloudAPI.getInstance().getServerGroup(group);
-        if (serverGroup == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        UUID waitUniqueID = UUID.randomUUID();
-        CloudAPI.getInstance().startGameServer(
-                serverGroup.toSimple(),
-                this.createServerConfig(cloudServiceConfiguration, waitUniqueID),
-                this.createTemplate(templateName, templateBackend)
-        );
-
-        return CloudServiceStartAwaitListener.awaitStart(waitUniqueID);
+  @Override
+  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
+                                                                     @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+    ServerGroup serverGroup = CloudAPI.getInstance().getServerGroup(group);
+    if (serverGroup == null) {
+      return CompletableFuture.completedFuture(null);
     }
 
-    @NotNull
-    private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
-        return new Template(
-                templateName,
-                EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
-                null,
-                new String[0],
-                new ArrayList<>()
-        );
-    }
+    UUID waitUniqueID = UUID.randomUUID();
+    CloudAPI.getInstance().startGameServer(
+      serverGroup.toSimple(),
+      this.createServerConfig(cloudServiceConfiguration, waitUniqueID),
+      this.createTemplate(templateName, templateBackend)
+    );
 
-    @NotNull
-    private ServerConfig createServerConfig(@NotNull CloudServiceConfiguration cloudServiceConfiguration, @NotNull UUID waitUniqueID) {
-        return new ServerConfig(
-                false,
-                "",
-                new Document("cloudServiceConfiguration", cloudServiceConfiguration).append("ps::wait", waitUniqueID.toString()),
-                System.currentTimeMillis()
-        );
-    }
+    return CloudServiceStartAwaitListener.awaitStart(waitUniqueID);
+  }
 
-    @Override
-    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
-        return CloudAPI.getInstance().getServers()
-                .stream()
-                .filter(ServerInfo::isOnline)
-                .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
+  @NotNull
+  private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
+    return new Template(
+      templateName,
+      EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
+      null,
+      new String[0],
+      new ArrayList<>()
+    );
+  }
 
-    @Override
-    public @NotNull UUID getCurrentServiceUniqueID() {
-        return CloudAPI.getInstance().getServiceId().getUniqueId();
-    }
+  @NotNull
+  private ServerConfig createServerConfig(@NotNull CloudServiceConfiguration cloudServiceConfiguration, @NotNull UUID waitUniqueID) {
+    return new ServerConfig(
+      false,
+      "",
+      new Document("cloudServiceConfiguration", cloudServiceConfiguration).append("ps::wait", waitUniqueID.toString()),
+      System.currentTimeMillis()
+    );
+  }
+
+  @Override
+  public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+    return CloudAPI.getInstance().getServers()
+      .stream()
+      .filter(ServerInfo::isOnline)
+      .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
+      .filter(Objects::nonNull)
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public @NotNull UUID getCurrentServiceUniqueID() {
+    return CloudAPI.getInstance().getServiceId().getUniqueId();
+  }
 }

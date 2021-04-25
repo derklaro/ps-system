@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +29,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class CloudNetV2CloudSystem implements CloudSystem {
 
-    @Override
-    public @NotNull String getIdentifierClass() {
-        return "de.dytanic.cloudnet.api.builders.ApiServerProcessBuilder";
-    }
+  @Override
+  public @NotNull String getIdentifierClass() {
+    return "de.dytanic.cloudnet.api.builders.ApiServerProcessBuilder";
+  }
 
-    @Override
-    public @NotNull String getName() {
-        return "CloudNETV2";
-    }
+  @Override
+  public @NotNull String getName() {
+    return "CloudNETV2";
+  }
 
-    @Override
-    public @NotNull CloudServiceManager getCloudServiceManager() {
-        return CloudNetV2CloudServiceManager.INSTANCE;
-    }
+  @Override
+  public @NotNull CloudServiceManager getCloudServiceManager() {
+    return CloudNetV2CloudServiceManager.INSTANCE;
+  }
 }

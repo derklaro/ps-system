@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,72 +23,70 @@
  */
 package com.github.derklaro.privateservers.api.cloud.configuration;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+@ToString
+@EqualsAndHashCode
 public class CloudServiceConfiguration {
 
-    public CloudServiceConfiguration(boolean publicService, boolean hasWhitelist, boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop, UUID ownerUniqueID, String ownerName) {
-        this.publicService = publicService;
-        this.hasWhitelist = hasWhitelist;
-        this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
-        this.autoSaveBeforeStop = autoSaveBeforeStop;
-        this.whitelistedPlayers = new ArrayList<>();
-        this.ownerUniqueID = ownerUniqueID;
-        this.ownerName = ownerName;
-    }
+  private final boolean autoDeleteAfterOwnerLeave;
+  private final boolean autoSaveBeforeStop;
+  private final Collection<String> whitelistedPlayers;
+  private final UUID ownerUniqueID;
+  private final String ownerName;
+  private boolean publicService;
+  private boolean hasWhitelist;
 
-    private boolean publicService;
+  public CloudServiceConfiguration(boolean publicService, boolean hasWhitelist, boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop, UUID ownerUniqueID, String ownerName) {
+    this.publicService = publicService;
+    this.hasWhitelist = hasWhitelist;
+    this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
+    this.autoSaveBeforeStop = autoSaveBeforeStop;
+    this.whitelistedPlayers = new ArrayList<>();
+    this.ownerUniqueID = ownerUniqueID;
+    this.ownerName = ownerName;
+  }
 
-    private boolean hasWhitelist;
+  public boolean isPublicService() {
+    return this.publicService;
+  }
 
-    private final boolean autoDeleteAfterOwnerLeave;
+  public void setPublicService(boolean publicService) {
+    this.publicService = publicService;
+  }
 
-    private final boolean autoSaveBeforeStop;
+  public boolean isHasWhitelist() {
+    return this.hasWhitelist;
+  }
 
-    private final Collection<String> whitelistedPlayers;
+  public void setHasWhitelist(boolean hasWhitelist) {
+    this.hasWhitelist = hasWhitelist;
+  }
 
-    private final UUID ownerUniqueID;
+  public boolean isAutoDeleteAfterOwnerLeave() {
+    return this.autoDeleteAfterOwnerLeave;
+  }
 
-    private final String ownerName;
+  public boolean isAutoSaveBeforeStop() {
+    return this.autoSaveBeforeStop;
+  }
 
-    public boolean isPublicService() {
-        return publicService;
-    }
+  @NotNull
+  public Collection<String> getWhitelistedPlayers() {
+    return this.whitelistedPlayers;
+  }
 
-    public boolean isHasWhitelist() {
-        return hasWhitelist;
-    }
+  public UUID getOwnerUniqueId() {
+    return this.ownerUniqueID;
+  }
 
-    public boolean isAutoDeleteAfterOwnerLeave() {
-        return autoDeleteAfterOwnerLeave;
-    }
-
-    public boolean isAutoSaveBeforeStop() {
-        return autoSaveBeforeStop;
-    }
-
-    @NotNull
-    public Collection<String> getWhitelistedPlayers() {
-        return whitelistedPlayers;
-    }
-
-    public UUID getOwnerUniqueID() {
-        return ownerUniqueID;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setPublicService(boolean publicService) {
-        this.publicService = publicService;
-    }
-
-    public void setHasWhitelist(boolean hasWhitelist) {
-        this.hasWhitelist = hasWhitelist;
-    }
+  public String getOwnerName() {
+    return this.ownerName;
+  }
 }

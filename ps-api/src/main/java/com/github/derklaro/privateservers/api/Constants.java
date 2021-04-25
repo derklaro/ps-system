@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,10 @@ package com.github.derklaro.privateservers.api;
 
 public final class Constants {
 
-    private Constants() {
-        throw new UnsupportedOperationException();
-    }
+  public static final String WHITELIST_JOIN_PERM = "system.join.whitelist";
+  public static final String WHITELIST_COMMAND_USE_PERM = "system.command.whitelist";
 
-    public static final String WHITELIST_JOIN_PERM = "system.join.whitelist";
-
-    public static final String WHITELIST_COMMAND_USE_PERM = "system.command.whitelist";
+  private Constants() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,46 +42,45 @@ import java.util.concurrent.TimeoutException;
 
 public final class CloudNetV3CloudService extends DefaultCloudService {
 
-    @NotNull
-    public static Optional<CloudService> fromServiceInfoSnapshot(@NotNull ServiceInfoSnapshot serviceInfoSnapshot) {
-        return serviceInfoSnapshot.getProperty(CloudNetV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY).map(serviceConfiguration -> new CloudNetV3CloudService(
-                serviceInfoSnapshot,
-                serviceConfiguration
-        ));
+  private final ServiceInfoSnapshot serviceInfoSnapshot;
+
+  private CloudNetV3CloudService(@NotNull ServiceInfoSnapshot serviceInfoSnapshot, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+    super(serviceInfoSnapshot.getServiceId().getName(), serviceInfoSnapshot.getServiceId().getUniqueId(), cloudServiceConfiguration);
+    this.serviceInfoSnapshot = serviceInfoSnapshot;
+  }
+
+  @NotNull
+  public static Optional<CloudService> fromServiceInfoSnapshot(@NotNull ServiceInfoSnapshot serviceInfoSnapshot) {
+    return serviceInfoSnapshot.getProperty(CloudNetV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY).map(serviceConfiguration -> new CloudNetV3CloudService(
+      serviceInfoSnapshot, serviceConfiguration
+    ));
+  }
+
+  @Override
+  public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
+    return CloudNetV3ConnectionRequest.of(this, targetPlayerUniqueID);
+  }
+
+  @Override
+  public void publishCloudServiceInfoUpdate() {
+    CloudNetV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY.set(this.serviceInfoSnapshot, super.cloudServiceConfiguration);
+    Wrapper.getInstance().publishServiceInfoUpdate(this.serviceInfoSnapshot);
+  }
+
+  @Override
+  public void copyCloudService() {
+    try {
+      this.serviceInfoSnapshot.provider().deployResourcesAsync(false).get(5, TimeUnit.SECONDS);
+    } catch (InterruptedException | ExecutionException | TimeoutException ignored) {
+    }
+  }
+
+  @Override
+  public void shutdown() {
+    if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
+      this.copyCloudService();
     }
 
-    private CloudNetV3CloudService(@NotNull ServiceInfoSnapshot serviceInfoSnapshot, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        super(serviceInfoSnapshot.getServiceId().getName(), serviceInfoSnapshot.getServiceId().getUniqueId(), cloudServiceConfiguration);
-        this.serviceInfoSnapshot = serviceInfoSnapshot;
-    }
-
-    private final ServiceInfoSnapshot serviceInfoSnapshot;
-
-    @Override
-    public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
-        return new CloudNetV3ConnectionRequest(this, targetPlayerUniqueID);
-    }
-
-    @Override
-    public void publishCloudServiceInfoUpdate() {
-        CloudNetV3Constants.CLOUD_SERVICE_CONFIG_PROPERTY.set(this.serviceInfoSnapshot, super.cloudServiceConfiguration);
-        Wrapper.getInstance().publishServiceInfoUpdate(this.serviceInfoSnapshot);
-    }
-
-    @Override
-    public void copyCloudService() {
-        try {
-            this.serviceInfoSnapshot.provider().deployResourcesAsync(false).get(5, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException ignored) {
-        }
-    }
-
-    @Override
-    public void shutdown() {
-        if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
-            this.copyCloudService();
-        }
-
-        CloudNetDriver.getInstance().getCloudServiceProvider(this.serviceInfoSnapshot).stop();
-    }
+    CloudNetDriver.getInstance().getCloudServiceProvider(this.serviceInfoSnapshot).stop();
+  }
 }

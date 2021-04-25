@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,33 +37,33 @@ import org.bukkit.command.PluginCommand;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
-        id = "com.github.derklaro.privateservers.runner",
-        displayName = "PrivateServerRunner",
-        version = "1.1.0",
-        description = "Module for the management on the private servers",
-        authors = "derklaro"
+  id = "com.github.derklaro.privateservers.runner",
+  displayName = "PrivateServerRunner",
+  version = "1.1.0",
+  description = "Module for the management on the private servers",
+  authors = "derklaro"
 )
 public class PrivateServersSpigotRunner {
 
-    public PrivateServersSpigotRunner(@NotNull Plugin plugin) {
-        Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
+  public PrivateServersSpigotRunner(@NotNull Plugin plugin) {
+    Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
+  }
+
+  public void handleCloudSystemPick() {
+    CloudSystem cloudSystem = PrivateServersSpigot.getInstance().getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
+    if (cloudSystem == null || !cloudSystem.getCloudServiceManager().getCurrentCloudService().isPresent()) {
+      return;
     }
 
-    public void handleCloudSystemPick() {
-        CloudSystem cloudSystem = PrivateServersSpigot.getInstance().getCloudSystemDetector().getDetectedCloudSystem().orElse(null);
-        if (cloudSystem == null || !cloudSystem.getCloudServiceManager().getCurrentCloudService().isPresent()) {
-            return;
-        }
+    CloudService cloudService = cloudSystem.getCloudServiceManager().getCurrentCloudService().get();
+    cloudService.createConnectionRequest(cloudService.getOwnerUniqueId()).fire();
 
-        CloudService cloudService = cloudSystem.getCloudServiceManager().getCurrentCloudService().get();
-        cloudService.createConnectionRequest(cloudService.getOwnerUniqueID()).fire();
+    Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(cloudSystem), PrivateServersSpigot.getInstance());
+    Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(cloudSystem), PrivateServersSpigot.getInstance());
 
-        Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(cloudSystem), PrivateServersSpigot.getInstance());
-        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(cloudSystem), PrivateServersSpigot.getInstance());
-
-        PluginCommand command = PrivateServersSpigot.getInstance().getCommand("whitelist");
-        if (command != null) {
-            command.setExecutor(new WhitelistCommand(cloudSystem));
-        }
+    PluginCommand command = PrivateServersSpigot.getInstance().getCommand("whitelist");
+    if (command != null) {
+      command.setExecutor(new WhitelistCommand(cloudSystem));
     }
+  }
 }

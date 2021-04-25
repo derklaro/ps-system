@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,27 +37,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CloudServiceStartAwaitListener implements Listener {
 
-    private static final Map<String, CompletableFuture<CloudService>> FUTURE_MAP = new ConcurrentHashMap<>();
+  private static final Map<String, CompletableFuture<CloudService>> FUTURE_MAP = new ConcurrentHashMap<>();
 
-    @NotNull
-    public static CompletableFuture<CloudService> awaitStart(@NotNull UUID waitUniqueID) {
-        CompletableFuture<CloudService> future = new CompletableFuture<>();
-        FUTURE_MAP.put(waitUniqueID.toString(), future);
-        return future;
+  @NotNull
+  public static CompletableFuture<CloudService> awaitStart(@NotNull UUID waitUniqueID) {
+    CompletableFuture<CloudService> future = new CompletableFuture<>();
+    FUTURE_MAP.put(waitUniqueID.toString(), future);
+    return future;
+  }
+
+  @EventHandler
+  public void handleStart(@NotNull BukkitServerAddEvent event) {
+    String waitUniqueID = event.getServerInfo().getServerConfig().getProperties().getString("ps::wait");
+    if (waitUniqueID == null) {
+      return;
     }
 
-    @EventHandler
-    public void handleStart(@NotNull BukkitServerAddEvent event) {
-        String waitUniqueID = event.getServerInfo().getServerConfig().getProperties().getString("ps::wait");
-        if (waitUniqueID == null) {
-            return;
-        }
-
-        CompletableFuture<CloudService> future = FUTURE_MAP.remove(waitUniqueID);
-        if (future == null) {
-            return;
-        }
-
-        future.complete(CloudNetV2CloudService.fromServerInfo(event.getServerInfo()).orElse(null));
+    CompletableFuture<CloudService> future = FUTURE_MAP.remove(waitUniqueID);
+    if (future == null) {
+      return;
     }
+
+    future.complete(CloudNetV2CloudService.fromServerInfo(event.getServerInfo()).orElse(null));
+  }
 }

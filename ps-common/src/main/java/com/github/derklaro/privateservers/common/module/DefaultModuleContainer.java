@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,93 +25,62 @@ package com.github.derklaro.privateservers.common.module;
 
 import com.github.derklaro.privateservers.api.module.ModuleContainer;
 import com.github.derklaro.privateservers.api.module.ModuleState;
-import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.api.module.annotation.ModuleDescription;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 
 class DefaultModuleContainer implements ModuleContainer {
 
-    DefaultModuleContainer(Module module, Class<?> mainClass, URLClassLoader classLoader, Path path, Object instance) {
-        this.module = module;
-        this.mainClass = mainClass;
-        this.classLoader = classLoader;
-        this.path = path;
-        this.instance = instance;
-        this.state = ModuleState.LOADED;
-    }
+  private final ModuleDescription description;
+  private final Class<?> mainClass;
+  private final Object instance;
+  private final URLClassLoader classLoader;
+  private final Path path;
+  private ModuleState state;
 
-    private final Module module;
+  DefaultModuleContainer(ModuleDescription description, Class<?> mainClass, URLClassLoader classLoader, Path path, Object instance) {
+    this.description = description;
+    this.mainClass = mainClass;
+    this.classLoader = classLoader;
+    this.path = path;
+    this.instance = instance;
+    this.state = ModuleState.LOADED;
+  }
 
-    private final Class<?> mainClass;
+  @NotNull @Override
+  public ModuleDescription getDescription() {
+    return this.description;
+  }
 
-    private final Object instance;
+  @Override
+  public @NotNull ModuleState getState() {
+    return this.state;
+  }
 
-    private final URLClassLoader classLoader;
+  @Override
+  public @NotNull URLClassLoader getClassLoader() {
+    return this.classLoader;
+  }
 
-    private final Path path;
+  @Override
+  public @NotNull Path getModulePath() {
+    return this.path;
+  }
 
-    private ModuleState state;
+  @Override
+  public @NotNull Class<?> getMainClass() {
+    return this.mainClass;
+  }
 
-    @Override
-    public @NotNull String getId() {
-        return this.module.id();
-    }
+  @Override
+  public @NotNull Object getInstance() {
+    return this.instance;
+  }
 
-    @Override
-    public @Nullable String getDisplayName() {
-        return this.module.displayName();
-    }
-
-    @Override
-    public @NotNull String getVersion() {
-        return this.module.version();
-    }
-
-    @Override
-    public @Nullable String getDescription() {
-        return this.module.description();
-    }
-
-    @Override
-    public @NotNull String getWebSite() {
-        return this.module.website();
-    }
-
-    @Override
-    public @NotNull String[] getAuthors() {
-        return this.module.authors();
-    }
-
-    @Override
-    public @NotNull ModuleState getState() {
-        return this.state;
-    }
-
-    @Override
-    public @NotNull URLClassLoader getClassLoader() {
-        return this.classLoader;
-    }
-
-    @Override
-    public @NotNull Path getModulePath() {
-        return this.path;
-    }
-
-    @Override
-    public @NotNull Class<?> getMainClass() {
-        return this.mainClass;
-    }
-
-    @Override
-    public @NotNull Object getInstance() {
-        return this.instance;
-    }
-
-    @Override
-    public void setModuleState(@NotNull ModuleState moduleState) {
-        this.state = moduleState;
-    }
+  @Override
+  public void setModuleState(@NotNull ModuleState moduleState) {
+    this.state = moduleState;
+  }
 }

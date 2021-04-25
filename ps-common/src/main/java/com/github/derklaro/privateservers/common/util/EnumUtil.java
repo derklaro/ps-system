@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,36 +27,40 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class EnumUtil {
 
-    private EnumUtil() {
-        throw new UnsupportedOperationException();
+  private static final Map<Class<? extends Enum<?>>, Map<String, WeakReference<? extends Enum<?>>>> CACHE = new ConcurrentHashMap<>();
+
+  private EnumUtil() {
+    throw new UnsupportedOperationException();
+  }
+
+  public static <T extends Enum<T>> T findEnumField(@NotNull Class<T> enumClass, @NotNull String field, @Nullable T defaultField) {
+    return findEnumField(enumClass, field).orElse(defaultField);
+  }
+
+  private static <T extends Enum<T>> Optional<T> findEnumField(Class<T> enumClass, String field) {
+    Map<String, WeakReference<? extends Enum<?>>> cached = CACHE.computeIfAbsent(enumClass, aClass -> cache(enumClass));
+    WeakReference<? extends Enum<?>> reference = cached.get(field);
+    return reference == null ? Optional.empty() : Optional.ofNullable(enumClass.cast(reference.get()));
+  }
+
+  @NotNull
+  private static <T extends Enum<T>> Map<String, WeakReference<? extends Enum<?>>> cache(Class<T> enumClass) {
+    Map<String, WeakReference<? extends Enum<?>>> out = new HashMap<>();
+    try {
+      Collection<T> instance = EnumSet.allOf(enumClass);
+      instance.forEach(t -> out.put(t.name(), new WeakReference<>(t)));
+    } catch (Throwable ignored) {
     }
 
-    public static <T extends Enum<T>> T findEnumField(@NotNull Class<T> enumClass, @NotNull String field, @Nullable T defaultField) {
-        return findEnumField(enumClass, field).orElse(defaultField);
-    }
-
-    private static final Map<Class<? extends Enum<?>>, Map<String, WeakReference<? extends Enum<?>>>> CACHE = new ConcurrentHashMap<>();
-
-    private static <T extends Enum<T>> Optional<T> findEnumField(Class<T> enumClass, String field) {
-        Map<String, WeakReference<? extends Enum<?>>> cached = CACHE.computeIfAbsent(enumClass, aClass -> cache(enumClass));
-        WeakReference<? extends Enum<?>> reference = cached.get(field);
-        return reference == null ? Optional.empty() : Optional.ofNullable(enumClass.cast(reference.get()));
-    }
-
-    @NotNull
-    private static <T extends Enum<T>> Map<String, WeakReference<? extends Enum<?>>> cache(Class<T> enumClass) {
-        Map<String, WeakReference<? extends Enum<?>>> out = new HashMap<>();
-        try {
-            Collection<T> instance = EnumSet.allOf(enumClass);
-            instance.forEach(t -> out.put(t.name(), new WeakReference<>(t)));
-        } catch (final Throwable ignored) {
-        }
-
-        return out;
-    }
+    return out;
+  }
 }

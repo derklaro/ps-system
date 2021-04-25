@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,22 +33,22 @@ import org.bukkit.metadata.MetadataValue;
 
 public class CommandRemoveNPC implements CommandExecutor {
 
-    private static final MetadataValue NPC_REMOVE = new FixedMetadataValue(PrivateServersSpigot.getInstance(), true);
+  private static final MetadataValue NPC_REMOVE = new FixedMetadataValue(PrivateServersSpigot.getInstance(), true);
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!(commandSender instanceof Player)) {
-            return true;
-        }
-
-        Player player = (Player) commandSender;
-        if (player.hasMetadata("npc_remove")) {
-            player.sendMessage("§7You are already in the npc remove mode!");
-            return true;
-        }
-
-        player.setMetadata("npc_remove", NPC_REMOVE);
-        player.sendMessage("§7You are now in the npc remove mode. Hit a npc to remove it");
-        return true;
+  @Override
+  public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    if (!(commandSender instanceof Player)) {
+      return true;
     }
+
+    Player player = (Player) commandSender;
+    if (player.hasMetadata("npc_remove")) {
+      player.sendMessage("§7You are already in the npc remove mode!");
+      return true;
+    }
+
+    player.setMetadata("npc_remove", NPC_REMOVE);
+    player.sendMessage("§7You are now in the npc remove mode. Hit a npc to remove it");
+    return true;
+  }
 }

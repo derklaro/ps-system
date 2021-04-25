@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,28 +25,31 @@ package com.github.derklaro.privateservers.common.cloud.util;
 
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@ToString
+@EqualsAndHashCode
 public abstract class DefaultConnectionRequest implements ConnectionRequest {
 
-    public DefaultConnectionRequest(CloudService targetService, UUID targetPlayer) {
-        this.targetService = targetService;
-        this.targetPlayer = targetPlayer;
-    }
+  private final CloudService targetService;
+  private final UUID targetPlayer;
 
-    private final CloudService targetService;
+  public DefaultConnectionRequest(CloudService targetService, UUID targetPlayer) {
+    this.targetService = targetService;
+    this.targetPlayer = targetPlayer;
+  }
 
-    private final UUID targetPlayer;
+  @Override
+  public @NotNull CloudService getTargetService() {
+    return this.targetService;
+  }
 
-    @Override
-    public @NotNull CloudService getTargetService() {
-        return this.targetService;
-    }
-
-    @Override
-    public @NotNull UUID getTargetPlayer() {
-        return this.targetPlayer;
-    }
+  @Override
+  public @NotNull UUID getTargetPlayer() {
+    return this.targetPlayer;
+  }
 }

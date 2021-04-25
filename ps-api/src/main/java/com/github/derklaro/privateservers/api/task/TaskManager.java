@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,23 +31,23 @@ import java.util.concurrent.TimeUnit;
 
 public interface TaskManager {
 
-    @NotNull
-    CompletableFuture<Void> scheduleSyncTask(@NotNull Runnable runnable);
+  @NotNull
+  CompletableFuture<Void> scheduleSyncTask(@NotNull Runnable runnable);
 
-    @NotNull
-    CompletableFuture<Void> scheduleSyncTask(@NotNull Runnable runnable, long delay);
+  @NotNull
+  CompletableFuture<Void> scheduleSyncTask(@NotNull Runnable runnable, long delay);
 
-    @NotNull <T> CompletableFuture<T> callSync(@NotNull Callable<T> callable);
+  @NotNull <T> CompletableFuture<T> callSync(@NotNull Callable<T> callable);
 
-    void scheduleSyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
+  void scheduleSyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
 
-    @NotNull
-    CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable);
+  @NotNull
+  CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable);
 
-    @NotNull
-    CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable, long delay);
+  @NotNull
+  CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable, long delay);
 
-    @NotNull <T> CompletableFuture<T> callAsync(@NotNull Callable<T> callable);
+  @NotNull <T> CompletableFuture<T> callAsync(@NotNull Callable<T> callable);
 
-    void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
+  void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
 }

@@ -1,7 +1,8 @@
 os: linux
 language: java
+dist: focal
 jdk:
-  - openjdk8
+  - openjdk11
 
 before_install:
   - chmod +x mvnw

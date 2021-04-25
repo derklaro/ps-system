@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,50 +37,50 @@ import java.util.UUID;
 
 public final class CloudNetV2CloudService extends DefaultCloudService {
 
-    @NotNull
-    public static Optional<CloudService> fromServerInfo(@NotNull ServerInfo serverInfo) {
-        CloudServiceConfiguration configuration = serverInfo.getServerConfig().getProperties().getObject("cloudServiceConfiguration", CloudServiceConfiguration.class);
-        if (configuration == null) {
-            return Optional.empty();
-        }
+  private final ServerInfo serverInfo;
 
-        return Optional.of(new CloudNetV2CloudService(serverInfo, configuration));
+  private CloudNetV2CloudService(@NotNull ServerInfo serverInfo, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+    super(serverInfo.getServiceId().getServerId(), serverInfo.getServiceId().getUniqueId(), cloudServiceConfiguration);
+    this.serverInfo = serverInfo;
+  }
+
+  @NotNull
+  public static Optional<CloudService> fromServerInfo(@NotNull ServerInfo serverInfo) {
+    CloudServiceConfiguration configuration = serverInfo.getServerConfig().getProperties().getObject("cloudServiceConfiguration", CloudServiceConfiguration.class);
+    if (configuration == null) {
+      return Optional.empty();
     }
 
-    private CloudNetV2CloudService(@NotNull ServerInfo serverInfo, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        super(serverInfo.getServiceId().getServerId(), serverInfo.getServiceId().getUniqueId(), cloudServiceConfiguration);
-        this.serverInfo = serverInfo;
+    return Optional.of(new CloudNetV2CloudService(serverInfo, configuration));
+  }
+
+  @Override
+  public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
+    return CloudNetV2ConnectionRequest.of(this, targetPlayerUniqueID);
+  }
+
+  @Override
+  public void publishCloudServiceInfoUpdate() {
+    this.serverInfo.getServerConfig().getProperties().append("cloudServiceConfiguration", super.cloudServiceConfiguration);
+    CloudAPI.getInstance().update(this.serverInfo);
+  }
+
+  @Override
+  public void copyCloudService() {
+    CloudAPI.getInstance().sendCloudCommand("copy " + this.serverInfo.getServiceId().getServerId());
+
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException ignored) {
+    }
+  }
+
+  @Override
+  public void shutdown() {
+    if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
+      this.copyCloudService();
     }
 
-    private final ServerInfo serverInfo;
-
-    @Override
-    public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
-        return new CloudNetV2ConnectionRequest(this, targetPlayerUniqueID);
-    }
-
-    @Override
-    public void publishCloudServiceInfoUpdate() {
-        serverInfo.getServerConfig().getProperties().append("cloudServiceConfiguration", super.cloudServiceConfiguration);
-        CloudAPI.getInstance().update(serverInfo);
-    }
-
-    @Override
-    public void copyCloudService() {
-        CloudAPI.getInstance().sendCloudCommand("copy " + serverInfo.getServiceId().getServerId());
-
-        try {
-            Thread.sleep(5000);
-        } catch (final InterruptedException ignored) {
-        }
-    }
-
-    @Override
-    public void shutdown() {
-        if (super.cloudServiceConfiguration.isAutoSaveBeforeStop()) {
-            this.copyCloudService();
-        }
-
-        CloudAPI.getInstance().stopServer(serverInfo.getServiceId().getServerId());
-    }
+    CloudAPI.getInstance().stopServer(this.serverInfo.getServiceId().getServerId());
+  }
 }

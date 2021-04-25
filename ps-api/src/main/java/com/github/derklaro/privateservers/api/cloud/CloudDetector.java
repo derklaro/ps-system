@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,11 @@ import java.util.Optional;
 
 public interface CloudDetector {
 
-    void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException;
+  void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException;
 
-    void detectCloudSystem() throws CloudSystemAlreadyDetectedException;
+  void detectCloudSystem() throws CloudSystemAlreadyDetectedException;
 
-    boolean isCloudSystemDetected();
+  boolean isCloudSystemDetected();
 
-    @NotNull Optional<CloudSystem> getDetectedCloudSystem();
+  @NotNull Optional<CloudSystem> getDetectedCloudSystem();
 }

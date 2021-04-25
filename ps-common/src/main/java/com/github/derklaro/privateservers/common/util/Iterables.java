@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +31,18 @@ import java.util.function.Predicate;
 
 public final class Iterables {
 
-    private Iterables() {
-        throw new UnsupportedOperationException();
+  private Iterables() {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  public static <T> Optional<T> first(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
+    for (T t : collection) {
+      if (filter.test(t)) {
+        return Optional.of(t);
+      }
     }
 
-    @NotNull
-    public static <T> Optional<T> first(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
-        for (T t : collection) {
-            if (filter.test(t)) {
-                return Optional.of(t);
-            }
-        }
-
-        return Optional.empty();
-    }
+    return Optional.empty();
+  }
 }

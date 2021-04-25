@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +30,10 @@ import static de.dytanic.cloudnet.driver.service.property.DefaultJsonServiceProp
 
 public final class CloudNetV3Constants {
 
-    private CloudNetV3Constants() {
-        throw new UnsupportedOperationException();
-    }
+  public static final ServiceProperty<CloudServiceConfiguration> CLOUD_SERVICE_CONFIG_PROPERTY
+    = createFromType("cloudServiceConfiguration", CloudServiceConfiguration.class);
 
-    public static final ServiceProperty<CloudServiceConfiguration> CLOUD_SERVICE_CONFIG_PROPERTY = createFromType("cloudServiceConfiguration", CloudServiceConfiguration.class);
+  private CloudNetV3Constants() {
+    throw new UnsupportedOperationException();
+  }
 }

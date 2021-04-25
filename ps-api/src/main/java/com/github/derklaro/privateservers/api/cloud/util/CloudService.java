@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,27 +30,27 @@ import java.util.UUID;
 
 public interface CloudService {
 
-    @NotNull String getName();
+  @NotNull String getName();
 
-    @NotNull UUID getUniqueID();
+  @NotNull UUID getServiceUniqueId();
 
-    @NotNull UUID getOwnerUniqueID();
+  @NotNull UUID getOwnerUniqueId();
 
-    @NotNull String getOwnerName();
+  @NotNull String getOwnerName();
 
-    @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
+  @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
 
-    void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
+  void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
 
-    @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
+  @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
 
-    void publishCloudServiceInfoUpdate();
+  void publishCloudServiceInfoUpdate();
 
-    void copyCloudService();
+  void copyCloudService();
 
-    void shutdown();
+  void shutdown();
 
-    boolean equals(@NotNull Object other);
+  boolean equals(@NotNull Object other);
 
-    int hashCode();
+  int hashCode();
 }

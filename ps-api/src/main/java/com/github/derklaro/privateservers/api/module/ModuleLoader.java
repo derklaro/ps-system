@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,15 +33,15 @@ import java.util.Optional;
 
 public interface ModuleLoader {
 
-    void detectModules();
+  void detectModules();
 
-    void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException;
+  void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException;
 
-    void disableModules();
+  void disableModules();
 
-    @NotNull Optional<ModuleContainer> getModuleByInstance(@NotNull Object instance);
+  @NotNull Optional<ModuleContainer> getModuleByInstance(@NotNull Object instance);
 
-    @NotNull Optional<ModuleContainer> getModuleById(@NotNull String id);
+  @NotNull Optional<ModuleContainer> getModuleById(@NotNull String id);
 
-    @NotNull @UnmodifiableView Collection<ModuleContainer> getModules();
+  @NotNull @UnmodifiableView Collection<ModuleContainer> getModules();
 }

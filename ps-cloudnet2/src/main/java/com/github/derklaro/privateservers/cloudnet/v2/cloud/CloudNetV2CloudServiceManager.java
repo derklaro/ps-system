@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,59 +43,54 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
+public class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
-    static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
+  static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
 
-    @Override
-    public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
-                                                                       @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-        ServerProcessBuilder builder = ApiServerProcessBuilder.create(group)
-                .template(this.createTemplate(templateName, templateBackend));
-        builder.getServerConfig().getProperties().append("cloudServiceConfiguration", cloudServiceConfiguration);
-        return this.start(builder);
-    }
+  @Override
+  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
+                                                                     @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
+    ServerProcessBuilder builder = ApiServerProcessBuilder.create(group)
+      .template(this.createTemplate(templateName, templateBackend));
+    builder.getServerConfig().getProperties().append("cloudServiceConfiguration", cloudServiceConfiguration);
+    return this.start(builder);
+  }
 
-    @NotNull
-    private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
-        return new Template(
-                templateName,
-                EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
-                null,
-                new String[0],
-                new ArrayList<>()
-        );
-    }
+  @NotNull
+  private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
+    return new Template(
+      templateName,
+      EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
+      null,
+      new String[0],
+      new ArrayList<>()
+    );
+  }
 
-    @NotNull
-    private CompletableFuture<CloudService> start(@NotNull ServerProcessBuilder builder) {
-        CompletableFuture<CloudService> future = new CompletableFuture<>();
-        builder.startServer().thenAccept(serverProcessMeta -> {
-            ServerInfo serverInfo = CloudAPI.getInstance().getServerInfo(serverProcessMeta.getServiceId().getServerId());
-            if (serverInfo == null) {
-                future.complete(null);
-            } else {
-                future.complete(CloudNetV2CloudService.fromServerInfo(serverInfo).orElse(null));
-            }
-        }).exceptionally(throwable -> {
-            future.completeExceptionally(throwable);
-            return null;
-        });
-        return future;
-    }
+  @NotNull
+  private CompletableFuture<CloudService> start(@NotNull ServerProcessBuilder builder) {
+    return builder.startServer().thenApply(serverProcessMeta -> {
+      ServerInfo serverInfo = CloudAPI.getInstance().getServerInfo(serverProcessMeta.getServiceId().getServerId());
+      if (serverInfo == null) {
+        return null;
+      } else {
+        return CloudNetV2CloudService.fromServerInfo(serverInfo).orElse(null);
+      }
+    });
+  }
 
-    @Override
-    public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
-        return CloudAPI.getInstance().getServers()
-                .stream()
-                .filter(ServerInfo::isOnline)
-                .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
+  @Override
+  public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
+    return CloudAPI.getInstance().getServers()
+      .stream()
+      .filter(ServerInfo::isOnline)
+      .map(e -> CloudNetV2CloudService.fromServerInfo(e).orElse(null))
+      .filter(Objects::nonNull)
+      .collect(Collectors.toList());
+  }
 
-    @Override
-    public @NotNull UUID getCurrentServiceUniqueID() {
-        return CloudAPI.getInstance().getServiceId().getUniqueId();
-    }
+  @Override
+  public @NotNull UUID getCurrentServiceUniqueID() {
+    return CloudAPI.getInstance().getServiceId().getUniqueId();
+  }
 }

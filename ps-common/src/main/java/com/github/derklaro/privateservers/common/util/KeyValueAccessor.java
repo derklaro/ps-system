@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,20 +25,19 @@ package com.github.derklaro.privateservers.common.util;
 
 public class KeyValueAccessor<L, R> {
 
-    public KeyValueAccessor(L left, R right) {
-        this.left = left;
-        this.right = right;
-    }
+  private final L left;
+  private final R right;
 
-    private final L left;
+  public KeyValueAccessor(L left, R right) {
+    this.left = left;
+    this.right = right;
+  }
 
-    private final R right;
+  public L getLeft() {
+    return this.left;
+  }
 
-    public L getLeft() {
-        return left;
-    }
-
-    public R getRight() {
-        return right;
-    }
+  public R getRight() {
+    return this.right;
+  }
 }

@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ package com.github.derklaro.privateservers.api.cloud.exception;
 
 public class CloudSystemAlreadyRegisteredException extends RuntimeException {
 
-    private static final long serialVersionUID = 5639173515905181782L;
+  private static final long serialVersionUID = 5639173515905181782L;
 
-    public CloudSystemAlreadyRegisteredException() {
-        super();
-    }
+  public CloudSystemAlreadyRegisteredException() {
+    super();
+  }
 }

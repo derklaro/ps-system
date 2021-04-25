@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,17 @@
  */
 package com.github.derklaro.privateservers.api.module.exception;
 
+import java.nio.file.Path;
+
 public class ModuleMainClassNotFoundException extends RuntimeException {
 
-    private static final long serialVersionUID = 2719365883380259224L;
+  private static final long serialVersionUID = 2719365883380259224L;
 
-    public ModuleMainClassNotFoundException() {
-        super();
-    }
+  public ModuleMainClassNotFoundException(Path path) {
+    super("Unable to find ps_module.json in " + path);
+  }
+
+  public ModuleMainClassNotFoundException(String mainClass, Path path) {
+    super("Unable to find main-class " + mainClass + " in " + path);
+  }
 }

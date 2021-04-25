@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,24 +27,24 @@ import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.cloudnet.v2.cloud.CloudNetV2CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v2.listeners.CloudServiceListener;
+import com.github.derklaro.privateservers.cloudnet.v2.listeners.CloudNetV2CloudServiceListener;
 import de.dytanic.cloudnet.bridge.CloudServer;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
-        id = "com.github.derklaro.privateservers.cloudnet.v2",
-        displayName = "CloudNetV2PrivateServerModule",
-        version = "1.1.0",
-        description = "Module for private servers cloudnet v2.2 integration",
-        authors = "derklaro"
+  id = "com.github.derklaro.privateservers.cloudnet.v2",
+  displayName = "CloudNetV2PrivateServerModule",
+  version = "1.1.0",
+  description = "Module for private servers cloudnet v2.2 integration",
+  authors = "derklaro"
 )
 public class CloudNetV2Module {
 
-    public CloudNetV2Module(@NotNull Plugin plugin) {
-        CloudSystem cloudSystem = new CloudNetV2CloudSystem();
+  public CloudNetV2Module(@NotNull Plugin plugin) {
+    CloudSystem cloudSystem = new CloudNetV2CloudSystem();
 
-        plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-        Bukkit.getPluginManager().registerEvents(new CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
-    }
+    plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
+    Bukkit.getPluginManager().registerEvents(new CloudNetV2CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
+  }
 }

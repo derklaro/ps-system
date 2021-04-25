@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,26 +34,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerLoginListener implements Listener {
 
-    public PlayerLoginListener(CloudSystem cloudSystem) {
-        this.cloudSystem = cloudSystem;
+  private final CloudSystem cloudSystem;
+
+  public PlayerLoginListener(CloudSystem cloudSystem) {
+    this.cloudSystem = cloudSystem;
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void handle(final @NotNull PlayerLoginEvent event) {
+    if (event.getPlayer().hasPermission(Constants.WHITELIST_JOIN_PERM)) {
+      return;
     }
 
-    private final CloudSystem cloudSystem;
+    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
+      if (cloudServiceConfiguration.getOwnerUniqueId().equals(event.getPlayer().getUniqueId())) {
+        return;
+      }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void handle(final @NotNull PlayerLoginEvent event) {
-        if (event.getPlayer().hasPermission(Constants.WHITELIST_JOIN_PERM)) {
-            return;
-        }
-
-        this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
-            if (cloudServiceConfiguration.getOwnerUniqueID().equals(event.getPlayer().getUniqueId())) {
-                return;
-            }
-
-            if (cloudServiceConfiguration.isHasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
-                event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
-            }
-        });
-    }
+      if (cloudServiceConfiguration.isHasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
+        event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
+      }
+    });
+  }
 }

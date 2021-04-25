@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,21 +25,30 @@ package com.github.derklaro.privateservers.cloudnet.v3.connection;
 
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
+import com.google.common.base.Preconditions;
 import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class CloudNetV3ConnectionRequest extends DefaultConnectionRequest {
 
-    public CloudNetV3ConnectionRequest(CloudService targetService, UUID targetPlayer) {
-        super(targetService, targetPlayer);
-    }
+  protected CloudNetV3ConnectionRequest(CloudService targetService, UUID targetPlayer) {
+    super(targetService, targetPlayer);
+  }
 
-    @Override
-    public void fire() {
-        CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class)
-                .getPlayerExecutor(super.getTargetPlayer())
-                .connect(super.getTargetService().getName());
-    }
+  public static CloudNetV3ConnectionRequest of(@NotNull CloudService targetService, @NotNull UUID player) {
+    Preconditions.checkNotNull(targetService, "targetService");
+    Preconditions.checkNotNull(player, "player");
+
+    return new CloudNetV3ConnectionRequest(targetService, player);
+  }
+
+  @Override
+  public void fire() {
+    CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class)
+      .getPlayerExecutor(super.getTargetPlayer())
+      .connect(super.getTargetService().getName());
+  }
 }

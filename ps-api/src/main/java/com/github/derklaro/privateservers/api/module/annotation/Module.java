@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,23 +25,27 @@ package com.github.derklaro.privateservers.api.module.annotation;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Module {
 
-    @NotNull String id();
+  @NotNull String id();
 
-    @NotNull String displayName() default "";
+  @NotNull String displayName() default "";
 
-    @NotNull String version();
+  @NotNull String version();
 
-    @NotNull String website() default "";
+  @NotNull String website() default "";
 
-    @NotNull String description() default "";
+  @NotNull String description() default "";
 
-    @NotNull String[] authors() default "";
+  @NotNull String[] authors() default "";
 
 }

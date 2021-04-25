@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface CloudSystem {
 
-    @NotNull String getIdentifierClass();
+  @NotNull String getIdentifierClass();
 
-    @NotNull String getName();
+  @NotNull String getName();
 
-    @NotNull CloudServiceManager getCloudServiceManager();
+  @NotNull CloudServiceManager getCloudServiceManager();
 }

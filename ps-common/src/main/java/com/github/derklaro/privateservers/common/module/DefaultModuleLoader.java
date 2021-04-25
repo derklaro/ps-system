@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,164 +26,150 @@ package com.github.derklaro.privateservers.common.module;
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.module.ModuleContainer;
 import com.github.derklaro.privateservers.api.module.ModuleLoader;
-import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.api.module.ModuleState;
+import com.github.derklaro.privateservers.api.module.annotation.ModuleDescription;
 import com.github.derklaro.privateservers.api.module.exception.ModuleMainClassNotFoundException;
-import com.github.derklaro.privateservers.common.util.KeyValueAccessor;
+import com.github.derklaro.privateservers.common.util.Iterables;
+import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 public class DefaultModuleLoader implements ModuleLoader {
 
-    public static final ModuleLoader INSTANCE = new DefaultModuleLoader();
+  public static final ModuleLoader INSTANCE = new DefaultModuleLoader();
+  private static final Path MODULE_PATH = Paths.get("plugins/ps/modules");
 
-    private static final Path MODULE_PATH = Paths.get("plugins/ps/modules");
+  private final Collection<Path> toLoad = new CopyOnWriteArrayList<>();
+  private final Collection<ModuleContainer> moduleContainers = new CopyOnWriteArrayList<>();
 
-    private final Collection<ModuleContainer> moduleContainers = new CopyOnWriteArrayList<>();
-
-    private final Collection<Path> toLoad = new CopyOnWriteArrayList<>();
-
-    @Override
-    public void detectModules() {
-        if (!Files.exists(MODULE_PATH)) {
-            try {
-                Files.createDirectories(MODULE_PATH);
-            } catch (final IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(MODULE_PATH, path -> path.toString().endsWith(".jar"))) {
-            for (Path path : stream) {
-                this.toLoad.add(path);
-            }
-        } catch (final IOException exception) {
-            exception.printStackTrace();
-        }
+  @Override
+  public void detectModules() {
+    if (Files.notExists(MODULE_PATH)) {
+      try {
+        Files.createDirectories(MODULE_PATH);
+      } catch (IOException exception) {
+        exception.printStackTrace();
+      }
     }
 
-    @Override
-    public void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException {
-        for (Path path : this.toLoad) {
-            try {
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{path.toUri().toURL()});
-                List<KeyValueAccessor<Class<?>, Module>> mainClassPossibilities = this.findPossibilityMainClasses(path, classLoader);
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(MODULE_PATH, path -> path.toString().endsWith(".jar"))) {
+      for (Path path : stream) {
+        this.toLoad.add(path);
+      }
+    } catch (IOException exception) {
+      exception.printStackTrace();
+    }
+  }
 
-                if (mainClassPossibilities.size() != 1) {
-                    throw new ModuleMainClassNotFoundException();
-                }
-
-                KeyValueAccessor<Class<?>, Module> keyValueAccessor = mainClassPossibilities.get(0);
-
-                Object instance;
-                try {
-                    instance = keyValueAccessor.getLeft().getDeclaredConstructor(Plugin.class).newInstance(loader);
-                } catch (final NoSuchMethodException exception) {
-                    System.err.println("No constructor with plugin as single argument in module " + path.toString());
-                    continue;
-                } catch (final InstantiationException | IllegalAccessException | InvocationTargetException exception) {
-                    exception.printStackTrace();
-                    continue;
-                }
-
-                ModuleContainer container = new DefaultModuleContainer(
-                        keyValueAccessor.getRight(),
-                        keyValueAccessor.getLeft(),
-                        classLoader,
-                        path,
-                        instance
-                );
-                this.moduleContainers.add(container);
-            } catch (final IOException exception) {
-                exception.printStackTrace();
-            }
+  @Override
+  public void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException {
+    for (Path path : this.toLoad) {
+      try {
+        ModuleDescription description = this.findModuleDescription(path);
+        if (description == null) {
+          throw new ModuleMainClassNotFoundException(path);
         }
 
-        this.toLoad.clear();
-    }
+        URLClassLoader classLoader = AccessController.doPrivileged(
+          (PrivilegedExceptionAction<URLClassLoader>) () -> new URLClassLoader(new URL[]{path.toUri().toURL()}));
 
-    @Override
-    public void disableModules() {
-        for (ModuleContainer moduleContainer : this.moduleContainers) {
-            try {
-                moduleContainer.getClassLoader().close();
-            } catch (final IOException exception) {
-                exception.printStackTrace();
-            }
+        Object instance;
+        try {
+          instance = classLoader.loadClass(description.getMainClass())
+            .getDeclaredConstructor(Plugin.class).newInstance(loader);
+        } catch (ClassNotFoundException exception) {
+          throw new ModuleMainClassNotFoundException(description.getMainClass(), path);
+        } catch (NoSuchMethodException exception) {
+          System.err.println("No constructor with plugin as single argument in module " + path);
+          continue;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException exception) {
+          exception.printStackTrace();
+          continue;
         }
 
-        this.moduleContainers.clear();
+        ModuleContainer container = new DefaultModuleContainer(
+          description,
+          instance.getClass(),
+          classLoader,
+          path,
+          instance
+        );
+        this.moduleContainers.add(container);
+      } catch (PrivilegedActionException exception) {
+        exception.printStackTrace();
+      }
     }
 
-    @Override
-    public @NotNull Optional<ModuleContainer> getModuleByInstance(@NotNull Object instance) {
-        if (instance instanceof ModuleContainer) {
-            return Optional.of((ModuleContainer) instance);
+    this.toLoad.clear();
+  }
+
+  @Override
+  public void disableModules() {
+    for (ModuleContainer moduleContainer : this.moduleContainers) {
+      try {
+        moduleContainer.getClassLoader().close();
+        moduleContainer.setModuleState(ModuleState.DISABLED);
+      } catch (IOException exception) {
+        exception.printStackTrace();
+      }
+    }
+
+    this.moduleContainers.clear();
+  }
+
+  @Override
+  public @NotNull Optional<ModuleContainer> getModuleByInstance(@NotNull Object instance) {
+    if (instance instanceof ModuleContainer) {
+      return Optional.of((ModuleContainer) instance);
+    }
+
+    return Optional.empty();
+  }
+
+  @Override
+  public @NotNull Optional<ModuleContainer> getModuleById(@NotNull String id) {
+    return Iterables.first(this.moduleContainers, moduleContainer -> moduleContainer.getDescription().getId().equals(id));
+  }
+
+  @Override
+  public @NotNull @UnmodifiableView Collection<ModuleContainer> getModules() {
+    return Collections.unmodifiableCollection(this.moduleContainers);
+  }
+
+  @Nullable
+  private ModuleDescription findModuleDescription(@NotNull Path path) {
+    try (JarFile jarFile = new JarFile(path.toFile())) {
+      ZipEntry descriptionEntry = jarFile.getEntry("ps_module.json");
+      if (descriptionEntry != null) {
+        try (Reader reader = new InputStreamReader(jarFile.getInputStream(descriptionEntry), StandardCharsets.UTF_8)) {
+          return new Gson().fromJson(reader, ModuleDescription.class);
         }
-
-        return Optional.empty();
+      }
+    } catch (IOException exception) {
+      exception.printStackTrace();
     }
-
-    @Override
-    public @NotNull Optional<ModuleContainer> getModuleById(@NotNull String id) {
-        for (ModuleContainer moduleContainer : this.moduleContainers) {
-            if (moduleContainer.getId().equals(id)) {
-                return Optional.of(moduleContainer);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public @NotNull @UnmodifiableView Collection<ModuleContainer> getModules() {
-        return Collections.unmodifiableCollection(this.moduleContainers);
-    }
-
-    @NotNull
-    private List<KeyValueAccessor<Class<?>, Module>> findPossibilityMainClasses(@NotNull Path path, @NotNull URLClassLoader classLoader) {
-        List<KeyValueAccessor<Class<?>, Module>> classes = new ArrayList<>();
-
-        try (JarInputStream stream = new JarInputStream(Files.newInputStream(path))) {
-            JarEntry entry;
-            while ((entry = stream.getNextJarEntry()) != null) {
-                if (!entry.getName().endsWith(".class")) {
-                    continue;
-                }
-
-                String className = entry.getName().replace("/", ".");
-                className = className.replaceFirst("(?s)(.*).class", "$1");
-
-                Class<?> clazz;
-                try {
-                    clazz = classLoader.loadClass(className);
-                } catch (final ClassNotFoundException exception) {
-                    continue;
-                }
-
-                Module module = clazz.getAnnotation(Module.class);
-                if (module == null) {
-                    continue;
-                }
-
-                classes.add(new KeyValueAccessor<>(clazz, module));
-            }
-        } catch (final IOException exception) {
-            exception.printStackTrace();
-        }
-
-        return classes;
-    }
+    return null;
+  }
 }

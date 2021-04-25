@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * This file is part of ps-system, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2020 Pasqual K. and contributors
+ * Copyright (c) 2020 - 2021 Pasqual Koschmieder and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,37 +23,27 @@
  */
 package com.github.derklaro.privateservers.api.module;
 
+import com.github.derklaro.privateservers.api.module.annotation.ModuleDescription;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 
 public interface ModuleContainer {
 
-    @NotNull String getId();
+  @NotNull ModuleDescription getDescription();
 
-    @Nullable String getDisplayName();
+  @NotNull ModuleState getState();
 
-    @NotNull String getVersion();
+  @NotNull URLClassLoader getClassLoader();
 
-    @Nullable String getDescription();
+  @NotNull Path getModulePath();
 
-    @NotNull String getWebSite();
+  @NotNull Class<?> getMainClass();
 
-    @NotNull String[] getAuthors();
+  @NotNull Object getInstance();
 
-    @NotNull ModuleState getState();
-
-    @NotNull URLClassLoader getClassLoader();
-
-    @NotNull Path getModulePath();
-
-    @NotNull Class<?> getMainClass();
-
-    @NotNull Object getInstance();
-
-    @ApiStatus.Internal
-    void setModuleState(@NotNull ModuleState moduleState);
+  @ApiStatus.Internal
+  void setModuleState(@NotNull ModuleState moduleState);
 }
