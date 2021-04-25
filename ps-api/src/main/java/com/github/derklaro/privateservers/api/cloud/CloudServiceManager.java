@@ -24,6 +24,7 @@
 package com.github.derklaro.privateservers.api.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import com.github.derklaro.privateservers.api.cloud.listening.ServiceListener;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -54,6 +55,12 @@ public interface CloudServiceManager {
                                                               @NotNull CloudServiceConfiguration cloudServiceConfiguration);
 
   @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices();
+
+  void registerServiceListener(@NotNull ServiceListener listener);
+
+  void unregisterServiceListener(@NotNull ServiceListener listener);
+
+  @NotNull @UnmodifiableView Collection<ServiceListener> getServiceListeners();
 
   interface Unsafe {
 

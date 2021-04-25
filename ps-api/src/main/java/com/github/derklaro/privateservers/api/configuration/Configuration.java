@@ -24,6 +24,7 @@
 package com.github.derklaro.privateservers.api.configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Configuration {
 
@@ -31,6 +32,7 @@ public class Configuration {
   private NpcConfiguration npcConfiguration;
 
   private InventoryConfiguration.MainMenuConfiguration mainMenuConfiguration;
+  private InventoryConfiguration.ServiceTypeStartInventory serviceTemplateStartItems;
   private InventoryConfiguration.PublicServerListConfiguration publicServerListConfiguration;
 
   public Configuration() {
@@ -39,13 +41,31 @@ public class Configuration {
 
     this.mainMenuConfiguration = new InventoryConfiguration.MainMenuConfiguration(
       27,
+      "§b§lPS > §6Main Menu",
       new InventoryConfiguration.ItemLayout(10, "ps.start.service", "CACTUS", -1, "§a§lStart Service", new ArrayList<>()),
       new InventoryConfiguration.ItemLayout(12, "ps.stop.service", "REDSTONE_BLOCK", -1, "§c§lStop Service", new ArrayList<>()),
       new InventoryConfiguration.ItemLayout(14, null, "DIAMOND", -1, "§6§lJoin Service", new ArrayList<>()),
       new InventoryConfiguration.ItemLayout(16, null, "GOLD_INGOT", -1, "§f§lPublic Services", new ArrayList<>())
     );
+    this.serviceTemplateStartItems = new InventoryConfiguration.ServiceTypeStartInventory(
+      9,
+      "§b§lPS > §6Server Type Chooser",
+      new ArrayList<>(Arrays.asList(
+        new InventoryConfiguration.ServiceItemMapping("BedWars", "2x2", "local", false, new InventoryConfiguration.ItemLayout(
+          0, null, "BED", -1, "§cBedWars 2x2", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("BedWars", "8x1", "local", false, new InventoryConfiguration.ItemLayout(
+          2, null, "BED", -1, "§cBedWars 8x1", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "4x2", "local", false, new InventoryConfiguration.ItemLayout(
+          4, null, "GRASS_BLOCK", -1, "§6SkyWars 4x2", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "64x1", "local", false, new InventoryConfiguration.ItemLayout(
+          6, "skywars.big", "GRASS_BLOCK", -1, "§6§lSkyWars 64x1", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("PS", null, "local", true, new InventoryConfiguration.ItemLayout(
+          8, "ps.custom", "IRON_INGOT", -1, "§bCustom Server", new ArrayList<>()
+        ))))
+    );
     this.publicServerListConfiguration = new InventoryConfiguration.PublicServerListConfiguration(
       54,
+      "§b§lPS > §6Public Server List",
       new InventoryConfiguration.ItemLayout(-1, null, "WATCH", -1, "§a§lServer of %owner_name%", new ArrayList<>()),
       new InventoryConfiguration.ItemLayout(-1, null, "COMPASS", -1, "§c§lServer of %owner_name%", new ArrayList<>())
     );
@@ -73,6 +93,14 @@ public class Configuration {
 
   public void setMainMenuConfiguration(InventoryConfiguration.MainMenuConfiguration mainMenuConfiguration) {
     this.mainMenuConfiguration = mainMenuConfiguration;
+  }
+
+  public InventoryConfiguration.ServiceTypeStartInventory getServiceTemplateStartItems() {
+    return serviceTemplateStartItems;
+  }
+
+  public void setServiceTemplateStartItems(InventoryConfiguration.ServiceTypeStartInventory serviceTemplateStartItems) {
+    this.serviceTemplateStartItems = serviceTemplateStartItems;
   }
 
   public InventoryConfiguration.PublicServerListConfiguration getPublicServerListConfiguration() {

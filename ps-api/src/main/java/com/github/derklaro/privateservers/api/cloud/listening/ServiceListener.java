@@ -21,39 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.runner.listeners;
+package com.github.derklaro.privateservers.api.cloud.listening;
 
-import com.github.derklaro.privateservers.api.Constants;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerLoginListener implements Listener {
+public interface ServiceListener {
 
-  private final CloudSystem cloudSystem;
+  void handleServiceRegister(@NotNull CloudService cloudService);
 
-  public PlayerLoginListener(CloudSystem cloudSystem) {
-    this.cloudSystem = cloudSystem;
-  }
+  void handleServerUpdate(@NotNull CloudService cloudService);
 
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void handle(final @NotNull PlayerLoginEvent event) {
-    if (event.getPlayer().hasPermission(Constants.WHITELIST_JOIN_PERM)) {
-      return;
-    }
-
-    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
-      if (cloudServiceConfiguration.getOwnerUniqueId().equals(event.getPlayer().getUniqueId())) {
-        return;
-      }
-
-      if (cloudServiceConfiguration.hasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
-        event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
-      }
-    });
-  }
+  void handleServiceUnregister(@NotNull CloudService cloudService);
 }

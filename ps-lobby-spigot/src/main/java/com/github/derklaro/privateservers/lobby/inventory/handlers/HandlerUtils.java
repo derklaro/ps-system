@@ -21,33 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
+package com.github.derklaro.privateservers.lobby.inventory.handlers;
 
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+public final class HandlerUtils {
 
-public interface CloudService {
+  private HandlerUtils() {
+    throw new UnsupportedOperationException();
+  }
 
-  @NotNull String getName();
+  public static boolean canUse(@NotNull Player player, @NotNull InventoryConfiguration.ItemLayout layout) {
+    return layout.getUsePermission() == null || player.hasPermission(layout.getUsePermission());
+  }
 
-  @NotNull UUID getServiceUniqueId();
-
-  @NotNull UUID getOwnerUniqueId();
-
-  @NotNull String getOwnerName();
-
-  @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
-
-  void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-  @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
-
-  void publishCloudServiceInfoUpdate();
-
-  void copyCloudService();
-
-  void shutdown();
+  public static void notifyNotAllowed(@NotNull Player player) {
+    player.closeInventory();
+    player.sendMessage("You are not allowed to use that"); // todo configurable
+  }
 }

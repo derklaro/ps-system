@@ -23,14 +23,17 @@
  */
 package com.github.derklaro.privateservers.api.configuration;
 
+import java.util.Collection;
 import java.util.List;
 
 public class InventoryConfiguration {
 
   private int inventorySize;
+  private String inventoryTitle;
 
-  public InventoryConfiguration(int inventorySize) {
+  public InventoryConfiguration(int inventorySize, String inventoryTitle) {
     this.inventorySize = inventorySize;
+    this.inventoryTitle = inventoryTitle;
   }
 
   public int getInventorySize() {
@@ -41,6 +44,14 @@ public class InventoryConfiguration {
     this.inventorySize = inventorySize;
   }
 
+  public String getInventoryTitle() {
+    return this.inventoryTitle;
+  }
+
+  public void setInventoryTitle(String inventoryTitle) {
+    this.inventoryTitle = inventoryTitle;
+  }
+
   public static class MainMenuConfiguration extends InventoryConfiguration {
 
     private ItemLayout startServerLayout;
@@ -48,9 +59,9 @@ public class InventoryConfiguration {
     private ItemLayout joinServerLayout;
     private ItemLayout publicServerListLayout;
 
-    public MainMenuConfiguration(int inventorySize, ItemLayout startServerLayout, ItemLayout stopServerLayout,
-                                 ItemLayout joinServerLayout, ItemLayout publicServerListLayout) {
-      super(inventorySize);
+    public MainMenuConfiguration(int inventorySize, String inventoryTitle, ItemLayout startServerLayout,
+                                 ItemLayout stopServerLayout, ItemLayout joinServerLayout, ItemLayout publicServerListLayout) {
+      super(inventorySize, inventoryTitle);
       this.startServerLayout = startServerLayout;
       this.stopServerLayout = stopServerLayout;
       this.joinServerLayout = joinServerLayout;
@@ -95,8 +106,8 @@ public class InventoryConfiguration {
     private ItemLayout openServerLayout;
     private ItemLayout serverWithWhitelistLayout;
 
-    public PublicServerListConfiguration(int inventorySize, ItemLayout openServerLayout, ItemLayout serverWithWhitelistLayout) {
-      super(inventorySize);
+    public PublicServerListConfiguration(int inventorySize, String inventoryTitle, ItemLayout openServerLayout, ItemLayout serverWithWhitelistLayout) {
+      super(inventorySize, inventoryTitle);
       this.openServerLayout = openServerLayout;
       this.serverWithWhitelistLayout = serverWithWhitelistLayout;
     }
@@ -115,6 +126,81 @@ public class InventoryConfiguration {
 
     public void setServerWithWhitelistLayout(ItemLayout serverWithWhitelistLayout) {
       this.serverWithWhitelistLayout = serverWithWhitelistLayout;
+    }
+  }
+
+  public static class ServiceTypeStartInventory extends InventoryConfiguration {
+
+    private Collection<ServiceItemMapping> serviceItems;
+
+    public ServiceTypeStartInventory(int inventorySize, String inventoryTitle, Collection<ServiceItemMapping> serviceItems) {
+      super(inventorySize, inventoryTitle);
+      this.serviceItems = serviceItems;
+    }
+
+    public Collection<ServiceItemMapping> getServiceItems() {
+      return serviceItems;
+    }
+
+    public void setServiceItems(Collection<ServiceItemMapping> serviceItems) {
+      this.serviceItems = serviceItems;
+    }
+  }
+
+  public static class ServiceItemMapping {
+
+    private String groupName;
+    private String templateName;
+    private String templateBackend;
+    private boolean copyAfterStop;
+    private ItemLayout itemLayout;
+
+    public ServiceItemMapping(String groupName, String templateName, String templateBackend, boolean copyAfterStop, ItemLayout itemLayout) {
+      this.groupName = groupName;
+      this.templateName = templateName;
+      this.templateBackend = templateBackend;
+      this.copyAfterStop = copyAfterStop;
+      this.itemLayout = itemLayout;
+    }
+
+    public String getGroupName() {
+      return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+      this.groupName = groupName;
+    }
+
+    public String getTemplateName() {
+      return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+      this.templateName = templateName;
+    }
+
+    public String getTemplateBackend() {
+      return templateBackend;
+    }
+
+    public void setTemplateBackend(String templateBackend) {
+      this.templateBackend = templateBackend;
+    }
+
+    public boolean isCopyAfterStop() {
+      return copyAfterStop;
+    }
+
+    public void setCopyAfterStop(boolean copyAfterStop) {
+      this.copyAfterStop = copyAfterStop;
+    }
+
+    public ItemLayout getItemLayout() {
+      return itemLayout;
+    }
+
+    public void setItemLayout(ItemLayout itemLayout) {
+      this.itemLayout = itemLayout;
     }
   }
 

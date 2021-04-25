@@ -21,33 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
+package com.github.derklaro.privateservers.lobby.inventory;
 
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+@FunctionalInterface
+public interface ClickHandler {
 
-public interface CloudService {
-
-  @NotNull String getName();
-
-  @NotNull UUID getServiceUniqueId();
-
-  @NotNull UUID getOwnerUniqueId();
-
-  @NotNull String getOwnerName();
-
-  @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
-
-  void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
-
-  @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
-
-  void publishCloudServiceInfoUpdate();
-
-  void copyCloudService();
-
-  void shutdown();
+  boolean handleClick(@NotNull Player player, @NotNull Inventory inventory, @NotNull ItemStack itemStack, int slot);
 }

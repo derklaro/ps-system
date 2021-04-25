@@ -24,21 +24,25 @@
 package com.github.derklaro.privateservers.lobby.listeners;
 
 import com.github.derklaro.privateservers.PrivateServersSpigot;
+import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
 import com.github.derklaro.privateservers.lobby.npc.NpcManager;
 import com.github.derklaro.privateservers.lobby.npc.database.NpcDatabase;
 import com.github.juliarn.npc.event.PlayerNPCInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerInteractNPCListener implements Listener {
+public class PlayerListener implements Listener {
 
   private final NpcManager npcManager;
   private final NpcDatabase npcDatabase;
+  private final InventoryHandler inventoryHandler;
 
-  public PlayerInteractNPCListener(NpcManager npcManager, NpcDatabase npcDatabase) {
+  public PlayerListener(NpcManager npcManager, NpcDatabase npcDatabase, InventoryHandler inventoryHandler) {
     this.npcManager = npcManager;
     this.npcDatabase = npcDatabase;
+    this.inventoryHandler = inventoryHandler;
   }
 
   @EventHandler
@@ -56,7 +60,12 @@ public class PlayerInteractNPCListener implements Listener {
     }
 
     if (event.getUseAction() == PlayerNPCInteractEvent.EntityUseAction.INTERACT) {
-      // todo: open inv
+      this.inventoryHandler.openMainInventory(event.getPlayer());
     }
+  }
+
+  @EventHandler
+  public void handleInventoryClick(@NotNull InventoryClickEvent event) {
+    this.inventoryHandler.handleInventoryClick(event);
   }
 }

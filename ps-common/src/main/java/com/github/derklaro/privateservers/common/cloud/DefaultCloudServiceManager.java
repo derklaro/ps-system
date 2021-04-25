@@ -24,6 +24,7 @@
 package com.github.derklaro.privateservers.common.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
+import com.github.derklaro.privateservers.api.cloud.listening.ServiceListener;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.util.Iterables;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class DefaultCloudServiceManager implements CloudServiceManager, CloudServiceManager.Unsafe {
 
   protected final Set<CloudService> cloudServices = ConcurrentHashMap.newKeySet();
+  protected final Set<ServiceListener> serviceListeners = ConcurrentHashMap.newKeySet();
 
   public DefaultCloudServiceManager() {
     this.cloudServices.addAll(this.getAllCurrentlyRunningPrivateServersFromCloudSystem());
@@ -79,26 +81,41 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
     return Collections.unmodifiableSet(this.cloudServices);
   }
 
+  @Override
+  public void registerServiceListener(@NotNull ServiceListener listener) {
+    this.serviceListeners.add(listener);
+  }
+
+  @Override
+  public void unregisterServiceListener(@NotNull ServiceListener listener) {
+    this.serviceListeners.remove(listener);
+  }
+
+  @Override
+  public @NotNull @UnmodifiableView Collection<ServiceListener> getServiceListeners() {
+    return Collections.unmodifiableSet(this.serviceListeners);
+  }
+
   // CloudServiceManager.Unsafe
 
   @Override
   public void handleCloudServiceStart(@NotNull CloudService cloudService) {
-    if (this.cloudServices.contains(cloudService)) {
-      return;
-    }
-
     this.cloudServices.add(cloudService);
+    this.serviceListeners.forEach(listener -> listener.handleServiceRegister(cloudService));
   }
 
   @Override
   public void handleCloudServiceUpdate(@NotNull CloudService cloudService) {
     this.cloudServices.remove(cloudService);
     this.cloudServices.add(cloudService);
+
+    this.serviceListeners.forEach(listener -> listener.handleServerUpdate(cloudService));
   }
 
   @Override
   public void handleCloudServiceStop(@NotNull CloudService cloudService) {
     this.cloudServices.remove(cloudService);
+    this.serviceListeners.forEach(listener -> listener.handleServiceUnregister(cloudService));
   }
 
   // abstract methods

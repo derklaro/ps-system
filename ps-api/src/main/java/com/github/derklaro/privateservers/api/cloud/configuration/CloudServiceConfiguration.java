@@ -25,9 +25,7 @@ package com.github.derklaro.privateservers.api.cloud.configuration;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -40,21 +38,64 @@ public class CloudServiceConfiguration {
   private final Collection<String> whitelistedPlayers;
   private final UUID ownerUniqueID;
   private final String ownerName;
+
+  private final String initialGroup;
+  private final String initialTemplate;
+  private final String initialTemplateBackend;
+
   private boolean publicService;
   private boolean hasWhitelist;
 
-  public CloudServiceConfiguration(boolean publicService, boolean hasWhitelist, boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop, UUID ownerUniqueID, String ownerName) {
-    this.publicService = publicService;
-    this.hasWhitelist = hasWhitelist;
+  public CloudServiceConfiguration(boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop,
+                                   Collection<String> whitelistedPlayers, UUID ownerUniqueID, String ownerName,
+                                   String initialGroup, String initialTemplate, String initialTemplateBackend,
+                                   boolean publicService, boolean hasWhitelist) {
     this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
     this.autoSaveBeforeStop = autoSaveBeforeStop;
-    this.whitelistedPlayers = new ArrayList<>();
+    this.whitelistedPlayers = whitelistedPlayers;
     this.ownerUniqueID = ownerUniqueID;
     this.ownerName = ownerName;
+    this.initialGroup = initialGroup;
+    this.initialTemplate = initialTemplate;
+    this.initialTemplateBackend = initialTemplateBackend;
+    this.publicService = publicService;
+    this.hasWhitelist = hasWhitelist;
+  }
+
+  public boolean isAutoDeleteAfterOwnerLeave() {
+    return autoDeleteAfterOwnerLeave;
+  }
+
+  public boolean isAutoSaveBeforeStop() {
+    return autoSaveBeforeStop;
+  }
+
+  public Collection<String> getWhitelistedPlayers() {
+    return whitelistedPlayers;
+  }
+
+  public UUID getOwnerUniqueID() {
+    return ownerUniqueID;
+  }
+
+  public String getOwnerName() {
+    return ownerName;
+  }
+
+  public String getInitialGroup() {
+    return initialGroup;
+  }
+
+  public String getInitialTemplate() {
+    return initialTemplate;
+  }
+
+  public String getInitialTemplateBackend() {
+    return initialTemplateBackend;
   }
 
   public boolean isPublicService() {
-    return this.publicService;
+    return publicService;
   }
 
   public void setPublicService(boolean publicService) {
@@ -62,31 +103,10 @@ public class CloudServiceConfiguration {
   }
 
   public boolean isHasWhitelist() {
-    return this.hasWhitelist;
+    return hasWhitelist;
   }
 
   public void setHasWhitelist(boolean hasWhitelist) {
     this.hasWhitelist = hasWhitelist;
-  }
-
-  public boolean isAutoDeleteAfterOwnerLeave() {
-    return this.autoDeleteAfterOwnerLeave;
-  }
-
-  public boolean isAutoSaveBeforeStop() {
-    return this.autoSaveBeforeStop;
-  }
-
-  @NotNull
-  public Collection<String> getWhitelistedPlayers() {
-    return this.whitelistedPlayers;
-  }
-
-  public UUID getOwnerUniqueId() {
-    return this.ownerUniqueID;
-  }
-
-  public String getOwnerName() {
-    return this.ownerName;
   }
 }
