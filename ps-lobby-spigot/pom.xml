@@ -83,7 +83,7 @@
         <configuration>
           <relocations>
             <relocation>
-              <pattern>net.jitse.npclib</pattern>
+              <pattern>com.github.juliarn</pattern>
               <shadedPattern>com.github.derklaro.privateservers.relocate.npc.lib</shadedPattern>
             </relocation>
             <relocation>
@@ -91,6 +91,18 @@
               <shadedPattern>com.github.derklaro.privateservers.relocate.gson</shadedPattern>
             </relocation>
           </relocations>
+          <filters>
+            <filter>
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+                <exclude>META-INF/*.SF</exclude>
+                <exclude>META-INF/*.DSA</exclude>
+                <exclude>META-INF/*.RSA</exclude>
+                <exclude>module-info.class</exclude>
+              </excludes>
+            </filter>
+          </filters>
         </configuration>
         <executions>
           <execution>

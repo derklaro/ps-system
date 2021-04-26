@@ -23,11 +23,16 @@
  */
 package com.github.derklaro.privateservers.api.cloud.exception;
 
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
+
 public class CloudSystemAlreadyRegisteredException extends RuntimeException {
 
   private static final long serialVersionUID = 5639173515905181782L;
 
-  public CloudSystemAlreadyRegisteredException() {
-    super();
+  public CloudSystemAlreadyRegisteredException(@NotNull String requiredClass, @NotNull Supplier<CloudSystem> factory) {
+    super("Tried to register cloud system detector for class " + requiredClass + " but it's already present @ " + factory);
   }
 }

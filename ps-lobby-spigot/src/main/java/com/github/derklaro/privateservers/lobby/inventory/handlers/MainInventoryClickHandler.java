@@ -28,8 +28,10 @@ import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
+import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.lobby.inventory.ClickHandler;
 import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -84,10 +86,10 @@ public class MainInventoryClickHandler implements ClickHandler {
 
       CloudService service = this.cloudServiceManager.getCloudServiceByOwnerUniqueID(player.getUniqueId()).orElse(null);
       if (service == null) {
-        player.sendMessage("You have no server running");
+        BukkitComponentRenderer.renderAndSend(player, Message.NO_RUNNING_SERVER.build());
       } else {
         Bukkit.getScheduler().runTaskAsynchronously(PrivateServersSpigot.getInstance(), service::shutdown);
-        player.sendMessage("Stopping your service...");
+        BukkitComponentRenderer.renderAndSend(player, Message.SERVICE_NOW_STOPPING.build());
       }
     } else {
       HandlerUtils.notifyNotAllowed(player);
@@ -101,10 +103,10 @@ public class MainInventoryClickHandler implements ClickHandler {
 
       CloudService cloudService = this.cloudServiceManager.getCloudServiceByOwnerUniqueID(player.getUniqueId()).orElse(null);
       if (cloudService != null) {
-        player.sendMessage("Connecting to that server...");
+        BukkitComponentRenderer.renderAndSend(player, Message.NOW_CONNECTING.build());
         cloudService.createConnectionRequest(player.getUniqueId()).fire();
       } else {
-        player.sendMessage("You have no running service... :/");
+        BukkitComponentRenderer.renderAndSend(player, Message.NO_RUNNING_SERVER.build());
       }
     } else {
       HandlerUtils.notifyNotAllowed(player);

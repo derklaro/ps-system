@@ -24,6 +24,8 @@
 package com.github.derklaro.privateservers.lobby.inventory.handlers;
 
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
+import com.github.derklaro.privateservers.common.translation.Message;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +41,6 @@ public final class HandlerUtils {
 
   public static void notifyNotAllowed(@NotNull Player player) {
     player.closeInventory();
-    player.sendMessage("You are not allowed to use that"); // todo configurable
+    BukkitComponentRenderer.renderAndSend(player, Message.ITEM_USE_NO_PERMISSION.build());
   }
 }

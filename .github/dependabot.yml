@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "02:00"
+    open-pull-requests-limit: 20
+    target-branch: master
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "02:00"
+    open-pull-requests-limit: 20
+    target-branch: master

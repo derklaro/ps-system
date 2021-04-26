@@ -26,6 +26,8 @@ package com.github.derklaro.privateservers.runner.command;
 import com.github.derklaro.privateservers.api.Constants;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.common.translation.Message;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,7 +35,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-// TODO: translations
 public class WhitelistCommand implements CommandExecutor {
 
   private final CloudSystem cloudSystem;
@@ -52,14 +53,12 @@ public class WhitelistCommand implements CommandExecutor {
 
     Player player = (Player) commandSender;
     if (!commandSender.hasPermission(Constants.WHITELIST_COMMAND_USE_PERM) && !player.getUniqueId().equals(cloudService.getOwnerUniqueId())) {
-      commandSender.sendMessage("§cYou are not allowed to use this command");
+      BukkitComponentRenderer.renderAndSend(player, Message.COMMAND_NOT_ALLOWED.build());
       return true;
     }
 
     if (strings.length == 0 || strings.length > 2) {
-      commandSender.sendMessage("§7/whitelist add <name>");
-      commandSender.sendMessage("§7/whitelist remove <name>");
-      commandSender.sendMessage("§7/whitelist list");
+      BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_COMMAND_HELP.build());
       return true;
     }
 
@@ -67,7 +66,7 @@ public class WhitelistCommand implements CommandExecutor {
       Collection<String> whitelistedPlayers = cloudService.getCloudServiceConfiguration().getWhitelistedPlayers();
       StringBuilder builder = new StringBuilder();
 
-      builder.append("§7Whitelisted players (").append(whitelistedPlayers.size()).append("): ");
+      builder.append("§7Whitelist (").append(whitelistedPlayers.size()).append("): ");
       for (String whitelistedPlayer : whitelistedPlayers) {
         builder.append(whitelistedPlayer).append(", ");
       }
@@ -79,32 +78,30 @@ public class WhitelistCommand implements CommandExecutor {
     if (strings.length == 2) {
       if (strings[0].equalsIgnoreCase("add")) {
         if (cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
-          commandSender.sendMessage("§cThis player is already whitelisted");
+          BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_ALREADY.build());
           return true;
         }
 
         cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().add(strings[1]);
         cloudService.publishCloudServiceInfoUpdate();
-        commandSender.sendMessage("§aSuccessfully §7whitelisted player " + strings[1]);
+        BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_COMMAND_ADD.build(strings[1]));
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("remove")) {
         if (!cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().contains(strings[1])) {
-          commandSender.sendMessage("§cThis player is not whitelisted");
+          BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_NOT_ON.build());
           return true;
         }
 
         cloudService.getCloudServiceConfiguration().getWhitelistedPlayers().remove(strings[1]);
         cloudService.publishCloudServiceInfoUpdate();
-        commandSender.sendMessage("§cRemoved §7whitelisted player " + strings[1]);
+        BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_COMMAND_REMOVE.build(strings[1]));
         return true;
       }
     }
 
-    commandSender.sendMessage("§7/whitelist add <name>");
-    commandSender.sendMessage("§7/whitelist remove <name>");
-    commandSender.sendMessage("§7/whitelist list");
+    BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_COMMAND_HELP.build());
     return true;
   }
 }

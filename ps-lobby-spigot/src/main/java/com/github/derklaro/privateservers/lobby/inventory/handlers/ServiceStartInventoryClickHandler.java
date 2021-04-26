@@ -27,7 +27,9 @@ import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
+import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.lobby.inventory.ClickHandler;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -77,8 +79,8 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
           false,
           false
         )
-      ).thenRun(() -> player.sendMessage("Your service was created, you will be connected shortly.."));
-      player.sendMessage("Your service got created, please wait a moment...");
+      ).thenRun(() -> BukkitComponentRenderer.renderAndSend(player, Message.SERVER_CONNECT_SOON.build()));
+      BukkitComponentRenderer.renderAndSend(player, Message.SERVICE_CREATED.build());
     } else {
       HandlerUtils.notifyNotAllowed(player);
     }

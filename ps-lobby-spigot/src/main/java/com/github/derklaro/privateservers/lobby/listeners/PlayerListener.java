@@ -24,9 +24,11 @@
 package com.github.derklaro.privateservers.lobby.listeners;
 
 import com.github.derklaro.privateservers.PrivateServersSpigot;
+import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
 import com.github.derklaro.privateservers.lobby.npc.NpcManager;
 import com.github.derklaro.privateservers.lobby.npc.database.NpcDatabase;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import com.github.juliarn.npc.event.PlayerNPCInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,16 +53,21 @@ public class PlayerListener implements Listener {
       return;
     }
 
-    if (event.getPlayer().hasMetadata("npc_remove") && event.getUseAction() == PlayerNPCInteractEvent.EntityUseAction.ATTACK) {
-      event.getPlayer().removeMetadata("npc_remove", PrivateServersSpigot.getInstance());
-      this.npcManager.removeNpc(event.getNPC().getLocation());
-      this.npcDatabase.removeNpc(event.getNPC().getLocation());
-      event.getPlayer().sendMessage("§aSuccessfully §7removed npc!"); // TODO: configurable
-      return;
-    }
+    switch (event.getUseAction()) {
+      case ATTACK:
+        if (event.getPlayer().hasMetadata("npc_remove")) {
+          this.npcManager.removeNpc(event.getNPC().getLocation());
+          this.npcDatabase.removeNpc(event.getNPC().getLocation());
 
-    if (event.getUseAction() == PlayerNPCInteractEvent.EntityUseAction.INTERACT) {
-      this.inventoryHandler.openMainInventory(event.getPlayer());
+          event.getPlayer().removeMetadata("npc_remove", PrivateServersSpigot.getInstance());
+          BukkitComponentRenderer.renderAndSend(event.getPlayer(), Message.NPC_REMOVE_SUCCESSFUL.build());
+        }
+        break;
+      case INTERACT:
+        this.inventoryHandler.openMainInventory(event.getPlayer());
+        break;
+      default:
+        break;
     }
   }
 

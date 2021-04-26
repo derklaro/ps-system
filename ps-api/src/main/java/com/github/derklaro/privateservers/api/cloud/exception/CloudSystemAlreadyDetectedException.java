@@ -23,11 +23,14 @@
  */
 package com.github.derklaro.privateservers.api.cloud.exception;
 
+import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import org.jetbrains.annotations.NotNull;
+
 public class CloudSystemAlreadyDetectedException extends RuntimeException {
 
   private static final long serialVersionUID = -4867031072188003556L;
 
-  public CloudSystemAlreadyDetectedException() {
-    super();
+  public CloudSystemAlreadyDetectedException(@NotNull CloudSystem detectedSystem) {
+    super("The cloud system " + detectedSystem.getName() + " is already detected, unable to re-detect");
   }
 }

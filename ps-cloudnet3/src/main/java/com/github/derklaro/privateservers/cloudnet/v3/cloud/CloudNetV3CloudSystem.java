@@ -25,9 +25,15 @@ package com.github.derklaro.privateservers.cloudnet.v3.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.cloudnet.v3.listeners.CloudNetV3ServiceListener;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
 import org.jetbrains.annotations.NotNull;
 
 public class CloudNetV3CloudSystem implements CloudSystem {
+
+  public CloudNetV3CloudSystem() {
+    CloudNetDriver.getInstance().getEventManager().registerListener(new CloudNetV3ServiceListener(this));
+  }
 
   @Override
   public @NotNull String getIdentifierClass() {

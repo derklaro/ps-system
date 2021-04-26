@@ -24,13 +24,8 @@
 package com.github.derklaro.privateservers.cloudnet.v2.legacy;
 
 import com.github.derklaro.privateservers.api.Plugin;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud.CloudNetV2CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudNetV2CloudServiceListener;
-import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudServiceStartAwaitListener;
-import de.dytanic.cloudnet.bridge.CloudServer;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
@@ -42,12 +37,9 @@ import org.jetbrains.annotations.NotNull;
 )
 public class CloudNetV2LegacyModule {
 
+  private static final String IDENTITY_CLASS = "de.dytanic.cloudnet.lib.server.info.ServerInfo";
+
   public CloudNetV2LegacyModule(@NotNull Plugin plugin) {
-    CloudSystem cloudSystem = new CloudNetV2CloudSystem();
-
-    plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-
-    Bukkit.getPluginManager().registerEvents(new CloudNetV2CloudServiceListener(cloudSystem), CloudServer.getInstance().getPlugin());
-    Bukkit.getPluginManager().registerEvents(new CloudServiceStartAwaitListener(), CloudServer.getInstance().getPlugin());
+    plugin.getCloudSystemDetector().registerCloudSystem(IDENTITY_CLASS, CloudNetV2CloudSystem::new);
   }
 }

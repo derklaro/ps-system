@@ -74,7 +74,7 @@ public class ModuleAnnotationProcessor extends AbstractProcessor {
 
       Name qualifiedName = ((TypeElement) element).getQualifiedName();
       ModuleDescription description = ModuleDescription.from(element.getAnnotation(Module.class), qualifiedName.toString());
-      // add a file to the output directory
+      // add the module description file to the output directory
       try {
         FileObject object = this.processingEnvironment.getFiler()
           .createResource(StandardLocation.CLASS_OUTPUT, "", "ps_module.json");

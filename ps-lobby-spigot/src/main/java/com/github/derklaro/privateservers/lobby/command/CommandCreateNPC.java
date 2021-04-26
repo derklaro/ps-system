@@ -23,13 +23,57 @@
  */
 package com.github.derklaro.privateservers.lobby.command;
 
+import com.github.derklaro.privateservers.common.translation.Message;
+import com.github.derklaro.privateservers.lobby.npc.NpcManager;
+import com.github.derklaro.privateservers.lobby.npc.database.DatabaseNPCObject;
+import com.github.derklaro.privateservers.lobby.npc.database.NpcDatabase;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.regex.Pattern;
 
 public class CommandCreateNPC implements CommandExecutor {
+
+  private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
+
+  private final NpcManager npcManager;
+  private final NpcDatabase npcDatabase;
+
+  public CommandCreateNPC(NpcManager npcManager, NpcDatabase npcDatabase) {
+    this.npcManager = npcManager;
+    this.npcDatabase = npcDatabase;
+  }
+
   @Override
   public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-    return false;
+    if (!(commandSender instanceof Player)) {
+      return false;
+    }
+
+    Player player = (Player) commandSender;
+    if (!player.hasPermission("ps.command.npc.add")) {
+      BukkitComponentRenderer.renderAndSend(player, Message.COMMAND_NOT_ALLOWED.build());
+      return true;
+    }
+
+    if (strings.length != 1) {
+      BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_HELP.build());
+      return true;
+    }
+
+    String textureUserName = strings[0];
+    if (!NAME_PATTERN.matcher(textureUserName).matches()) {
+      BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_INVALID_USERNAME.build(textureUserName));
+      return true;
+    }
+
+    this.npcDatabase.addNpc(DatabaseNPCObject.fromLocation(player.getLocation(), textureUserName));
+    this.npcManager.createAndSpawnNpc(player.getLocation(), textureUserName);
+
+    BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_SUCCESSFUL.build());
+    return true;
   }
 }

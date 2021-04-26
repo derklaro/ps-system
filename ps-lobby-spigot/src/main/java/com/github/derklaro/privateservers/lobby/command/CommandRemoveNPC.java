@@ -24,6 +24,9 @@
 package com.github.derklaro.privateservers.lobby.command;
 
 import com.github.derklaro.privateservers.PrivateServersSpigot;
+import com.github.derklaro.privateservers.common.translation.Message;
+import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,13 +45,18 @@ public class CommandRemoveNPC implements CommandExecutor {
     }
 
     Player player = (Player) commandSender;
+    if (!player.hasPermission("ps.command.npc.remove")) {
+      BukkitComponentRenderer.renderAndSend(player, Message.COMMAND_NOT_ALLOWED.build());
+      return true;
+    }
+
     if (player.hasMetadata("npc_remove")) {
-      player.sendMessage("§7You are already in the npc remove mode!");
+      BukkitComponentRenderer.renderAndSend(player, Message.NPC_REMOVE_ALREADY_ACTIVATED.build());
       return true;
     }
 
     player.setMetadata("npc_remove", NPC_REMOVE);
-    player.sendMessage("§7You are now in the npc remove mode. Hit a npc to remove it");
+    BukkitComponentRenderer.renderAndSend(player, Message.NPC_REMOVE_MODE_ACTIVATED.build());
     return true;
   }
 }

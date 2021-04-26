@@ -78,7 +78,7 @@ public class PrivateServersLobby {
 
     PluginCommand createNPCCommand = PrivateServersSpigot.getInstance().getCommand("createnpc");
     if (createNPCCommand != null) {
-      createNPCCommand.setExecutor(new CommandCreateNPC());
+      createNPCCommand.setExecutor(new CommandCreateNPC(npcManager, database));
     }
 
     Bukkit.getPluginManager().registerEvents(new PlayerListener(

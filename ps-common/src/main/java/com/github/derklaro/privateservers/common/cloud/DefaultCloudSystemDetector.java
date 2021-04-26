@@ -29,40 +29,40 @@ import com.github.derklaro.privateservers.api.cloud.exception.CloudSystemAlready
 import com.github.derklaro.privateservers.api.cloud.exception.CloudSystemAlreadyRegisteredException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public final class DefaultCloudSystemDetector implements CloudDetector {
 
   public static final CloudDetector DEFAULT_INSTANCE = new DefaultCloudSystemDetector();
-  private final Collection<CloudSystem> allCloudSystems = new CopyOnWriteArrayList<>();
-  private CloudSystem detectedCloudSystem;
+
+  private final AtomicReference<CloudSystem> detectedCloudSystem = new AtomicReference<>();
+  private final Map<String, Supplier<CloudSystem>> cloudSystemFactories = new ConcurrentHashMap<>();
 
   private DefaultCloudSystemDetector() {
   }
 
   @Override
-  public void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException {
-    for (CloudSystem allCloudSystem : this.allCloudSystems) {
-      if (allCloudSystem.getName().equals(cloudSystem.getName())) {
-        throw new CloudSystemAlreadyRegisteredException();
-      }
+  public void registerCloudSystem(@NotNull String requiredClass, @NotNull Supplier<CloudSystem> factory) throws CloudSystemAlreadyRegisteredException {
+    if (this.cloudSystemFactories.putIfAbsent(requiredClass, factory) != null) {
+      throw new CloudSystemAlreadyRegisteredException(requiredClass, factory);
     }
-
-    this.allCloudSystems.add(cloudSystem);
   }
 
   @Override
   public void detectCloudSystem() throws CloudSystemAlreadyDetectedException {
     if (this.isCloudSystemDetected()) {
-      throw new CloudSystemAlreadyDetectedException();
+      throw new CloudSystemAlreadyDetectedException(this.detectedCloudSystem.get());
     }
 
-    for (CloudSystem cloudSystem : this.allCloudSystems) {
+    for (Map.Entry<String, Supplier<CloudSystem>> entry : this.cloudSystemFactories.entrySet()) {
       try {
-        Class.forName(cloudSystem.getIdentifierClass());
-        this.detectedCloudSystem = cloudSystem;
+        Class.forName(entry.getKey());
+        // class is present, we can use this as the running system
+        this.detectedCloudSystem.set(entry.getValue().get());
         break;
       } catch (ClassNotFoundException ignored) {
       }
@@ -71,11 +71,11 @@ public final class DefaultCloudSystemDetector implements CloudDetector {
 
   @Override
   public boolean isCloudSystemDetected() {
-    return this.detectedCloudSystem != null;
+    return this.detectedCloudSystem.get() != null;
   }
 
   @Override
   public @NotNull Optional<CloudSystem> getDetectedCloudSystem() {
-    return Optional.ofNullable(this.detectedCloudSystem);
+    return Optional.ofNullable(this.detectedCloudSystem.get());
   }
 }

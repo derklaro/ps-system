@@ -28,10 +28,11 @@ import com.github.derklaro.privateservers.api.cloud.exception.CloudSystemAlready
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface CloudDetector {
 
-  void registerCloudSystem(@NotNull CloudSystem cloudSystem) throws CloudSystemAlreadyRegisteredException;
+  void registerCloudSystem(@NotNull String requiredClass, @NotNull Supplier<CloudSystem> factory) throws CloudSystemAlreadyRegisteredException;
 
   void detectCloudSystem() throws CloudSystemAlreadyDetectedException;
 

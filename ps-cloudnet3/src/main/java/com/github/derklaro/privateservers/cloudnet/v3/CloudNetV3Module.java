@@ -24,11 +24,8 @@
 package com.github.derklaro.privateservers.cloudnet.v3;
 
 import com.github.derklaro.privateservers.api.Plugin;
-import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.cloudnet.v3.cloud.CloudNetV3CloudSystem;
-import com.github.derklaro.privateservers.cloudnet.v3.listeners.CloudNetV3ServiceListener;
-import de.dytanic.cloudnet.driver.CloudNetDriver;
 import org.jetbrains.annotations.NotNull;
 
 @Module(
@@ -40,10 +37,9 @@ import org.jetbrains.annotations.NotNull;
 )
 public class CloudNetV3Module {
 
-  public CloudNetV3Module(@NotNull Plugin plugin) {
-    CloudSystem cloudSystem = new CloudNetV3CloudSystem();
+  private static final String IDENTITY_CLASS = "de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty";
 
-    plugin.getCloudSystemDetector().registerCloudSystem(cloudSystem);
-    CloudNetDriver.getInstance().getEventManager().registerListener(new CloudNetV3ServiceListener(cloudSystem));
+  public CloudNetV3Module(@NotNull Plugin plugin) {
+    plugin.getCloudSystemDetector().registerCloudSystem(IDENTITY_CLASS, CloudNetV3CloudSystem::new);
   }
 }

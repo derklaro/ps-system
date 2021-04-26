@@ -25,9 +25,18 @@ package com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
+import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudNetV2CloudServiceListener;
+import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudServiceStartAwaitListener;
+import de.dytanic.cloudnet.bridge.CloudServer;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class CloudNetV2CloudSystem implements CloudSystem {
+
+  public CloudNetV2CloudSystem() {
+    Bukkit.getPluginManager().registerEvents(new CloudNetV2CloudServiceListener(this), CloudServer.getInstance().getPlugin());
+    Bukkit.getPluginManager().registerEvents(new CloudServiceStartAwaitListener(), CloudServer.getInstance().getPlugin());
+  }
 
   @Override
   public @NotNull String getIdentifierClass() {
