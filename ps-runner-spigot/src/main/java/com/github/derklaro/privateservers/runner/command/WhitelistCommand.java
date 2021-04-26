@@ -30,15 +30,14 @@ import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.List;
 
-public class WhitelistCommand implements CommandExecutor, TabCompleter {
+public class WhitelistCommand implements TabExecutor {
 
   private final CloudSystem cloudSystem;
 
