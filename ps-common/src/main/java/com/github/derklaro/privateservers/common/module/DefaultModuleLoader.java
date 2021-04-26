@@ -84,7 +84,7 @@ public class DefaultModuleLoader implements ModuleLoader {
   }
 
   @Override
-  public void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException {
+  public void loadModules(@NotNull Plugin loader, @NotNull ClassLoader classLoader) throws ModuleMainClassNotFoundException {
     for (Path path : this.toLoad) {
       try {
         ModuleDescription description = this.findModuleDescription(path);
@@ -92,12 +92,12 @@ public class DefaultModuleLoader implements ModuleLoader {
           throw new ModuleMainClassNotFoundException(path);
         }
 
-        URLClassLoader classLoader = AccessController.doPrivileged(
-          (PrivilegedExceptionAction<URLClassLoader>) () -> new URLClassLoader(new URL[]{path.toUri().toURL()}));
+        URLClassLoader moduleClassLoader = AccessController.doPrivileged(
+          (PrivilegedExceptionAction<URLClassLoader>) () -> new URLClassLoader(new URL[]{path.toUri().toURL()}, classLoader));
 
         Object instance;
         try {
-          instance = classLoader.loadClass(description.getMainClass())
+          instance = moduleClassLoader.loadClass(description.getMainClass())
             .getDeclaredConstructor(Plugin.class).newInstance(loader);
         } catch (ClassNotFoundException exception) {
           throw new ModuleMainClassNotFoundException(description.getMainClass(), path);
@@ -112,7 +112,7 @@ public class DefaultModuleLoader implements ModuleLoader {
         ModuleContainer container = new DefaultModuleContainer(
           description,
           instance.getClass(),
-          classLoader,
+          moduleClassLoader,
           path,
           instance
         );

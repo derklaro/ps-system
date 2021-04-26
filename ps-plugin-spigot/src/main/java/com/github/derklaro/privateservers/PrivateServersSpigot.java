@@ -52,7 +52,7 @@ public class PrivateServersSpigot extends JavaPlugin implements Plugin {
 
   @Override
   public void onEnable() {
-    this.getModuleLoader().loadModules(this);
+    this.getModuleLoader().loadModules(this, this.getClassLoader());
     this.getCloudSystemDetector().detectCloudSystem();
 
     CloudSystem cloudSystem = this.getCloudSystemDetector().getDetectedCloudSystem().orElse(null);

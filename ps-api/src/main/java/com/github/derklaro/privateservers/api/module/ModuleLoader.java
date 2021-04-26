@@ -35,7 +35,7 @@ public interface ModuleLoader {
 
   void detectModules();
 
-  void loadModules(@NotNull Plugin loader) throws ModuleMainClassNotFoundException;
+  void loadModules(@NotNull Plugin loader, @NotNull ClassLoader classLoader) throws ModuleMainClassNotFoundException;
 
   void disableModules();
 
