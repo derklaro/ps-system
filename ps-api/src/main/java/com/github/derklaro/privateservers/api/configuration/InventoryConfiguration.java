@@ -23,9 +23,14 @@
  */
 package com.github.derklaro.privateservers.api.configuration;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.util.Collection;
 import java.util.List;
 
+@ToString
+@EqualsAndHashCode
 public class InventoryConfiguration {
 
   private int inventorySize;
@@ -52,6 +57,8 @@ public class InventoryConfiguration {
     this.inventoryTitle = inventoryTitle;
   }
 
+  @ToString
+  @EqualsAndHashCode(callSuper = true)
   public static class MainMenuConfiguration extends InventoryConfiguration {
 
     private ItemLayout startServerLayout;
@@ -101,6 +108,8 @@ public class InventoryConfiguration {
     }
   }
 
+  @ToString
+  @EqualsAndHashCode(callSuper = true)
   public static class PublicServerListConfiguration extends InventoryConfiguration {
 
     private ItemLayout openServerLayout;
@@ -129,6 +138,8 @@ public class InventoryConfiguration {
     }
   }
 
+  @ToString
+  @EqualsAndHashCode(callSuper = true)
   public static class ServiceTypeStartInventory extends InventoryConfiguration {
 
     private Collection<ServiceItemMapping> serviceItems;
@@ -147,6 +158,8 @@ public class InventoryConfiguration {
     }
   }
 
+  @ToString
+  @EqualsAndHashCode
   public static class ServiceItemMapping {
 
     private String groupName;
@@ -204,6 +217,8 @@ public class InventoryConfiguration {
     }
   }
 
+  @ToString
+  @EqualsAndHashCode
   public static class ItemLayout {
 
     private int slot;

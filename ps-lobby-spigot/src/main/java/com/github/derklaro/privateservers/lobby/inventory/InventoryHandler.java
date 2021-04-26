@@ -124,7 +124,7 @@ public class InventoryHandler {
       inventoryConfiguration.getInventorySize(), inventoryConfiguration.getInventoryTitle());
 
     for (InventoryConfiguration.ServiceItemMapping serviceItem : inventoryConfiguration.getServiceItems()) {
-      Preconditions.checkArgument(serviceItem.getItemLayout().getSlot() > 0, "Slot must be defined");
+      Preconditions.checkArgument(serviceItem.getItemLayout().getSlot() >= 0, "Slot must be defined");
       this.putItem(inventory, serviceItem.getItemLayout());
     }
 
