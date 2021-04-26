@@ -35,12 +35,12 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public abstract class DefaultCloudServiceManager implements CloudServiceManager, CloudServiceManager.Unsafe {
 
-  protected final Set<CloudService> cloudServices = ConcurrentHashMap.newKeySet();
-  protected final Set<ServiceListener> serviceListeners = ConcurrentHashMap.newKeySet();
+  protected final Set<CloudService> cloudServices = new CopyOnWriteArraySet<>();
+  protected final Set<ServiceListener> serviceListeners = new CopyOnWriteArraySet<>();
 
   public DefaultCloudServiceManager() {
     this.cloudServices.addAll(this.getAllCurrentlyRunningPrivateServersFromCloudSystem());
@@ -100,13 +100,15 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
 
   @Override
   public void handleCloudServiceStart(@NotNull CloudService cloudService) {
+    this.cloudServices.removeIf(service -> service.getServiceUniqueId().equals(cloudService.getServiceUniqueId()));
     this.cloudServices.add(cloudService);
+
     this.serviceListeners.forEach(listener -> listener.handleServiceRegister(cloudService));
   }
 
   @Override
   public void handleCloudServiceUpdate(@NotNull CloudService cloudService) {
-    this.cloudServices.remove(cloudService);
+    this.cloudServices.removeIf(service -> service.getServiceUniqueId().equals(cloudService.getServiceUniqueId()));
     this.cloudServices.add(cloudService);
 
     this.serviceListeners.forEach(listener -> listener.handleServerUpdate(cloudService));
@@ -114,7 +116,7 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
 
   @Override
   public void handleCloudServiceStop(@NotNull CloudService cloudService) {
-    this.cloudServices.remove(cloudService);
+    this.cloudServices.removeIf(service -> service.getServiceUniqueId().equals(cloudService.getServiceUniqueId()));
     this.serviceListeners.forEach(listener -> listener.handleServiceUnregister(cloudService));
   }
 

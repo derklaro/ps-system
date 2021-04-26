@@ -32,6 +32,7 @@ import com.github.derklaro.privateservers.configuration.JsonConfigurationLoader;
 import com.github.derklaro.privateservers.event.BukkitEventUtil;
 import com.github.derklaro.privateservers.lobby.command.CommandCreateNpc;
 import com.github.derklaro.privateservers.lobby.command.CommandRemoveNpc;
+import com.github.derklaro.privateservers.lobby.dependencies.ProtocolLibInstaller;
 import com.github.derklaro.privateservers.lobby.event.DatabaseChooseEvent;
 import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
 import com.github.derklaro.privateservers.lobby.listeners.CloudSystemPickedListener;
@@ -62,6 +63,12 @@ public class PrivateServersLobby {
   }
 
   public void handleCloudSystemPick(@NotNull CloudSystem cloudSystem) {
+    ProtocolLibInstaller protocolLibInstaller = new ProtocolLibInstaller();
+    if (!protocolLibInstaller.installProtocolLib()) {
+      System.err.println("Unable to install protocol lib, please install in manually in order to use this plugin");
+      return;
+    }
+
     Configuration configuration = JsonConfigurationLoader.loadConfiguration();
 
     NpcDatabase database = BukkitEventUtil.fireEvent(new DatabaseChooseEvent(

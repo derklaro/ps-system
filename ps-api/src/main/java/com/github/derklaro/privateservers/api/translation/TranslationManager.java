@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class TranslationManager {
 
@@ -54,7 +54,7 @@ public class TranslationManager {
   private static final Path TRANSLATION_PATH = Paths.get("plugins/ps/translations");
 
   private final TranslationRegistry translationRegistry;
-  private final Set<Locale> loadedTranslations = ConcurrentHashMap.newKeySet();
+  private final Set<Locale> loadedTranslations = new CopyOnWriteArraySet<>();
 
   public TranslationManager() {
     this.translationRegistry = TranslationRegistry.create(Key.key("ps", "main"));

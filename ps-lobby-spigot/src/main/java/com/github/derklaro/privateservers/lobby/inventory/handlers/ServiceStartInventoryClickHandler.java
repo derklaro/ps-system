@@ -38,14 +38,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ServiceStartInventoryClickHandler implements ClickHandler {
 
   private final CloudServiceManager cloudServiceManager;
   private final InventoryConfiguration.ServiceTypeStartInventory startConfiguration;
 
-  private final Set<UUID> waitingPlayers = ConcurrentHashMap.newKeySet();
+  private final Set<UUID> waitingPlayers = new CopyOnWriteArraySet<>();
 
   public ServiceStartInventoryClickHandler(CloudServiceManager cloudServiceManager, Configuration configuration) {
     this.cloudServiceManager = cloudServiceManager;
@@ -74,6 +74,8 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
       }
 
       this.waitingPlayers.add(player.getUniqueId()); // disallow service starting for that player until we get a result from the cloud
+      BukkitComponentRenderer.renderAndSend(player, Message.SERVICE_CREATED.build());
+
       this.cloudServiceManager.createCloudService(
         mapping.getGroupName(),
         mapping.getTemplateName(),
@@ -99,7 +101,6 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
           BukkitComponentRenderer.renderAndSend(player, Message.UNABLE_TO_CREATE_SERVICE.build());
         }
       });
-      BukkitComponentRenderer.renderAndSend(player, Message.SERVICE_CREATED.build());
     } else {
       HandlerUtils.notifyNotAllowed(player);
     }

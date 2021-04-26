@@ -67,20 +67,22 @@ public class PublicServersInventoryHandler {
 
     int addedItemsAmount = 0;
     for (CloudService cloudService : manager.getPrivateCloudServices()) {
-      if (++addedItemsAmount >= inventory.getSize()) {
-        break;
-      } else {
-        int resultingSlot;
-        if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
-          resultingSlot = this.inventoryHandler.putItem(inventory,
-            serverListConfiguration.getServerWithWhitelistLayout(), cloudService);
+      if (cloudService.getCloudServiceConfiguration().isPublicService()) {
+        if (++addedItemsAmount >= inventory.getSize()) {
+          break;
         } else {
-          resultingSlot = this.inventoryHandler.putItem(inventory,
-            serverListConfiguration.getOpenServerLayout(), cloudService);
-        }
+          int resultingSlot;
+          if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
+            resultingSlot = this.inventoryHandler.putItem(inventory,
+              serverListConfiguration.getServerWithWhitelistLayout(), cloudService);
+          } else {
+            resultingSlot = this.inventoryHandler.putItem(inventory,
+              serverListConfiguration.getOpenServerLayout(), cloudService);
+          }
 
-        if (resultingSlot >= 0) {
-          newMappings.put(resultingSlot, cloudService);
+          if (resultingSlot >= 0) {
+            newMappings.put(resultingSlot, cloudService);
+          }
         }
       }
     }
