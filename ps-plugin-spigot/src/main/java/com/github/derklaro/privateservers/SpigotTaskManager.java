@@ -89,6 +89,11 @@ public final class SpigotTaskManager implements TaskManager {
   }
 
   @Override
+  public void scheduleSyncRepeatingTask(@NotNull Runnable runnable, long delay, long repeats) {
+    Bukkit.getScheduler().runTaskTimer(PrivateServersSpigot.getInstance(), runnable, delay, repeats);
+  }
+
+  @Override
   public @NotNull CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable) {
     CompletableFuture<Void> future = new CompletableFuture<>();
     Bukkit.getScheduler().runTaskAsynchronously(PrivateServersSpigot.getInstance(), () -> {
@@ -124,5 +129,10 @@ public final class SpigotTaskManager implements TaskManager {
   @Override
   public void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit) {
     Bukkit.getScheduler().runTaskTimerAsynchronously(PrivateServersSpigot.getInstance(), runnable, 0, timeUnit.toSeconds(repeatTime) / 20);
+  }
+
+  @Override
+  public void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long delay, long repeats) {
+    Bukkit.getScheduler().runTaskTimerAsynchronously(PrivateServersSpigot.getInstance(), runnable, delay, repeats);
   }
 }

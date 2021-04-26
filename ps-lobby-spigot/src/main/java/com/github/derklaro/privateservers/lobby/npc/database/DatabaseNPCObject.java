@@ -40,24 +40,26 @@ public final class DatabaseNPCObject {
   private final float yaw;
   private final float pitch;
   private final String world;
+  private final String displayName;
   private final String texturesProfileName;
 
   private transient Location location;
 
-  private DatabaseNPCObject(double x, double y, double z, float yaw, float pitch, String world, String texturesProfileName) {
+  private DatabaseNPCObject(double x, double y, double z, float yaw, float pitch, String world, String displayName, String texturesProfileName) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.yaw = yaw;
     this.pitch = pitch;
     this.world = world;
+    this.displayName = displayName;
     this.texturesProfileName = texturesProfileName;
   }
 
   @NotNull
-  public static DatabaseNPCObject fromLocation(@NotNull Location location, @NotNull String texturesProfileName) {
+  public static DatabaseNPCObject fromLocation(@NotNull Location location, @NotNull String texturesProfileName, @NotNull String displayName) {
     return new DatabaseNPCObject(location.getX(), location.getY(), location.getZ(), location.getYaw(),
-      location.getPitch(), location.getWorld().getName(), texturesProfileName);
+      location.getPitch(), location.getWorld().getName(), displayName, texturesProfileName);
   }
 
   public double getX() {
@@ -82,6 +84,10 @@ public final class DatabaseNPCObject {
 
   public String getWorld() {
     return this.world;
+  }
+
+  public String getDisplayName() {
+    return displayName;
   }
 
   public String getTexturesProfileName() {

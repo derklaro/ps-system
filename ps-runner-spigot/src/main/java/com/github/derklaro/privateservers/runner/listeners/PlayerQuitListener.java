@@ -23,8 +23,10 @@
  */
 package com.github.derklaro.privateservers.runner.listeners;
 
+import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -40,9 +42,15 @@ public class PlayerQuitListener implements Listener {
 
   @EventHandler
   public void handle(@NotNull PlayerQuitEvent event) {
-    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
-      if (cloudServiceConfiguration.isAutoDeleteAfterOwnerLeave() && event.getPlayer().getUniqueId().equals(cloudServiceConfiguration.getOwnerUniqueId())) {
-        this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(CloudService::shutdown);
+    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().ifPresent(cloudService -> {
+      CloudServiceConfiguration configuration = cloudService.getCloudServiceConfiguration();
+      if (event.getPlayer().getUniqueId().equals(configuration.getOwnerUniqueId())) {
+        if (configuration.isAutoDeleteAfterOwnerLeave()) {
+          cloudService.shutdown();
+        } else {
+          Bukkit.getScheduler().scheduleSyncDelayedTask(PrivateServersSpigot.getInstance(),
+            cloudService::shutdown, configuration.getMaxIdleSeconds() * 20L);
+        }
       }
     });
   }

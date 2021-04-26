@@ -35,14 +35,14 @@ import org.bukkit.entity.Player;
 
 import java.util.regex.Pattern;
 
-public class CommandCreateNPC implements CommandExecutor {
+public class CommandCreateNpc implements CommandExecutor {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
   private final NpcManager npcManager;
   private final NpcDatabase npcDatabase;
 
-  public CommandCreateNPC(NpcManager npcManager, NpcDatabase npcDatabase) {
+  public CommandCreateNpc(NpcManager npcManager, NpcDatabase npcDatabase) {
     this.npcManager = npcManager;
     this.npcDatabase = npcDatabase;
   }
@@ -59,7 +59,7 @@ public class CommandCreateNPC implements CommandExecutor {
       return true;
     }
 
-    if (strings.length != 1) {
+    if (strings.length < 2) {
       BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_HELP.build());
       return true;
     }
@@ -70,8 +70,19 @@ public class CommandCreateNPC implements CommandExecutor {
       return true;
     }
 
-    this.npcDatabase.addNpc(DatabaseNPCObject.fromLocation(player.getLocation(), textureUserName));
-    this.npcManager.createAndSpawnNpc(player.getLocation(), textureUserName);
+    StringBuilder displayNameBuilder = new StringBuilder();
+    for (int i = 1; i < strings.length; i++) {
+      displayNameBuilder.append(strings[i]).append(" ");
+    }
+
+    String displayName = displayNameBuilder.substring(0, displayNameBuilder.length() - 1);
+    if (displayName.length() > 16) {
+      BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_DISPLAY_NAME_TOO_LONG.build());
+      return true;
+    }
+
+    this.npcDatabase.addNpc(DatabaseNPCObject.fromLocation(player.getLocation(), textureUserName, displayName));
+    this.npcManager.createAndSpawnNpc(player.getLocation(), textureUserName, displayName);
 
     BukkitComponentRenderer.renderAndSend(player, Message.NPC_ADD_SUCCESSFUL.build());
     return true;

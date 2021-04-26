@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface NpcManager {
 
-  void createAndSpawnNpc(@NotNull Location location, @NotNull String texturePlayerName);
+  void createAndSpawnNpc(@NotNull Location location, @NotNull String texturePlayerName, @NotNull String displayName);
 
   void removeNpc(@NotNull Location location);
 

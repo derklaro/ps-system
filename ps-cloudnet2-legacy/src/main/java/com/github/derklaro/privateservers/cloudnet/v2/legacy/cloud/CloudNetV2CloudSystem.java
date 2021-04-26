@@ -40,7 +40,7 @@ public class CloudNetV2CloudSystem implements CloudSystem {
 
   @Override
   public @NotNull String getIdentifierClass() {
-    return "de.dytanic.cloudnet.lib.server.info.ServerInfo";
+    return "de.dytanic.cloudnet.lib.utility.CollectionWrapper";
   }
 
   @Override

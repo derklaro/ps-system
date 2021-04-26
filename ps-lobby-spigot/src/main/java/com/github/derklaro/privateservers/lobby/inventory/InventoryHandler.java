@@ -56,8 +56,11 @@ public class InventoryHandler {
   protected PublicServersInventoryHandler publicServersInventoryHandler;
 
   public InventoryHandler(Configuration configuration, CloudServiceManager manager) {
+    this.configuration = configuration;
+
     this.mainInventory = this.buildMainInventory(configuration);
     this.startTypeInventory = this.buildStartInventory(configuration);
+    this.publicServersInventoryHandler = new PublicServersInventoryHandler(this, manager);
 
     this.mainInventoryClickHandler = new MainInventoryClickHandler(configuration, this, manager);
     this.serviceStartInventoryClickHandler = new ServiceStartInventoryClickHandler(manager, configuration);
@@ -65,8 +68,6 @@ public class InventoryHandler {
 
     this.publicServersInventoryClickHandler = new PublicServerListClickHandler(configuration, this);
     manager.registerServiceListener(new InventoryRebuildListener(configuration, manager, this.publicServersInventoryHandler));
-
-    this.configuration = configuration;
   }
 
   public void openMainInventory(@NotNull Player player) {
@@ -86,7 +87,7 @@ public class InventoryHandler {
   }
 
   public boolean handleInventoryClick(@NotNull Player player, @NotNull Inventory inventory, @NotNull ItemStack item, int slot) {
-    if (inventory == this.mainInventory) {
+    if (inventory.equals(this.mainInventory)) {
       return this.mainInventoryClickHandler.handleClick(player, inventory, item, slot);
     } else if (inventory.getTitle() != null) {
       if (inventory.getTitle().equals(this.configuration.getPublicServerListConfiguration().getInventoryTitle())) {

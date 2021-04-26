@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-public class CommandRemoveNPC implements CommandExecutor {
+public class CommandRemoveNpc implements CommandExecutor {
 
   private static final MetadataValue NPC_REMOVE = new FixedMetadataValue(PrivateServersSpigot.getInstance(), true);
 

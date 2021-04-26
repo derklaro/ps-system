@@ -51,15 +51,15 @@ public class Configuration {
       9,
       "§b§lPS > §6Server Type Chooser",
       new ArrayList<>(Arrays.asList(
-        new InventoryConfiguration.ServiceItemMapping("BedWars", "2x2", "local", false, new InventoryConfiguration.ItemLayout(
+        new InventoryConfiguration.ServiceItemMapping("BedWars", "2x2", "local", false, -1, true, new InventoryConfiguration.ItemLayout(
           0, null, "BED", -1, "§cBedWars 2x2", new ArrayList<>()
-        )), new InventoryConfiguration.ServiceItemMapping("BedWars", "8x1", "local", false, new InventoryConfiguration.ItemLayout(
+        )), new InventoryConfiguration.ServiceItemMapping("BedWars", "8x1", "local", false, -1, true, new InventoryConfiguration.ItemLayout(
           2, null, "BED", -1, "§cBedWars 8x1", new ArrayList<>()
-        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "4x2", "local", false, new InventoryConfiguration.ItemLayout(
-          4, null, "GRASS_BLOCK", -1, "§6SkyWars 4x2", new ArrayList<>()
-        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "64x1", "local", false, new InventoryConfiguration.ItemLayout(
-          6, "skywars.big", "GRASS_BLOCK", -1, "§6§lSkyWars 64x1", new ArrayList<>()
-        )), new InventoryConfiguration.ServiceItemMapping("PS", null, "local", true, new InventoryConfiguration.ItemLayout(
+        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "4x2", "local", false, -1, true, new InventoryConfiguration.ItemLayout(
+          4, null, "GRASS", -1, "§6SkyWars 4x2", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("SkyWars", "64x1", "local", false, -1, true, new InventoryConfiguration.ItemLayout(
+          6, "skywars.big", "GRASS", -1, "§6§lSkyWars 64x1", new ArrayList<>()
+        )), new InventoryConfiguration.ServiceItemMapping("PS", null, "local", true, 60, false, new InventoryConfiguration.ItemLayout(
           8, "ps.custom", "IRON_INGOT", -1, "§bCustom Server", new ArrayList<>()
         ))))
     );

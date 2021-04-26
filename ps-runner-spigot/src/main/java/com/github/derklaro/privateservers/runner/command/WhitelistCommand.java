@@ -28,14 +28,17 @@ import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.List;
 
-public class WhitelistCommand implements CommandExecutor {
+public class WhitelistCommand implements CommandExecutor, TabCompleter {
 
   private final CloudSystem cloudSystem;
 
@@ -62,17 +65,39 @@ public class WhitelistCommand implements CommandExecutor {
       return true;
     }
 
-    if (strings.length == 1 && strings[0].equalsIgnoreCase("list")) {
-      Collection<String> whitelistedPlayers = cloudService.getCloudServiceConfiguration().getWhitelistedPlayers();
-      StringBuilder builder = new StringBuilder();
+    if (strings.length == 1) {
+      if (strings[0].equalsIgnoreCase("list")) {
+        Collection<String> whitelistedPlayers = cloudService.getCloudServiceConfiguration().getWhitelistedPlayers();
+        StringBuilder builder = new StringBuilder();
 
-      builder.append("§7Whitelist (").append(whitelistedPlayers.size()).append("): ");
-      for (String whitelistedPlayer : whitelistedPlayers) {
-        builder.append(whitelistedPlayer).append(", ");
+        builder.append("§7Whitelist (").append(whitelistedPlayers.size()).append("): ");
+        for (String whitelistedPlayer : whitelistedPlayers) {
+          builder.append(whitelistedPlayer).append(", ");
+        }
+
+        commandSender.sendMessage(builder.substring(0, builder.length() - 2));
+        return true;
       }
 
-      commandSender.sendMessage(builder.substring(0, builder.length() - 2));
-      return true;
+      if (strings[0].equalsIgnoreCase("on")) {
+        if (!cloudService.getCloudServiceConfiguration().hasWhitelist()) {
+          cloudService.getCloudServiceConfiguration().setHasWhitelist(true);
+          cloudService.publishCloudServiceInfoUpdate();
+        }
+
+        BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_NOW_ON.build());
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("off")) {
+        if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
+          cloudService.getCloudServiceConfiguration().setHasWhitelist(false);
+          cloudService.publishCloudServiceInfoUpdate();
+        }
+
+        BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_NOW_OFF.build());
+        return true;
+      }
     }
 
     if (strings.length == 2) {
@@ -103,5 +128,13 @@ public class WhitelistCommand implements CommandExecutor {
 
     BukkitComponentRenderer.renderAndSend(player, Message.WHITELIST_COMMAND_HELP.build());
     return true;
+  }
+
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    if (args.length == 0) {
+      return ImmutableList.of("add", "remove", "on", "off", "list");
+    }
+    return ImmutableList.of();
   }
 }

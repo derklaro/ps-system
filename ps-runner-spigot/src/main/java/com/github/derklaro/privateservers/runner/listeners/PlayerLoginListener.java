@@ -26,6 +26,8 @@ package com.github.derklaro.privateservers.runner.listeners;
 import com.github.derklaro.privateservers.api.Constants;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.translation.ComponentRenderer;
+import com.github.derklaro.privateservers.common.translation.Message;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -46,14 +48,17 @@ public class PlayerLoginListener implements Listener {
       return;
     }
 
-    this.cloudSystem.getCloudServiceManager().getCurrentCloudService().map(CloudService::getCloudServiceConfiguration).ifPresent(cloudServiceConfiguration -> {
-      if (cloudServiceConfiguration.getOwnerUniqueId().equals(event.getPlayer().getUniqueId())) {
-        return;
-      }
+    this.cloudSystem.getCloudServiceManager().getCurrentCloudService()
+      .map(CloudService::getCloudServiceConfiguration)
+      .ifPresent(cloudServiceConfiguration -> {
+        if (cloudServiceConfiguration.getOwnerUniqueId().equals(event.getPlayer().getUniqueId())) {
+          return;
+        }
 
-      if (cloudServiceConfiguration.hasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
-        event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
-      }
-    });
+        if (cloudServiceConfiguration.hasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
+          event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
+          event.setKickMessage(ComponentRenderer.renderToString(Message.NOT_WHITELISTED.build()));
+        }
+      });
   }
 }

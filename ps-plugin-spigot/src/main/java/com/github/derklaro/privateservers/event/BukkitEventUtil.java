@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v2.legacy;
+package com.github.derklaro.privateservers.event;
 
-import com.github.derklaro.privateservers.api.Plugin;
-import com.github.derklaro.privateservers.api.module.annotation.Module;
-import com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud.CloudNetV2CloudSystem;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Module(
-  id = "com.github.derklaro.privateservers.cloudnet.v2.legacy",
-  displayName = "CloudNetV2LegacyPrivateServerModule",
-  version = "1.1.0",
-  description = "Module for private servers cloudnet v2 integration",
-  authors = "derklaro"
-)
-public class CloudNetV2LegacyModule {
+public final class BukkitEventUtil {
 
-  private static final String IDENTITY_CLASS = "de.dytanic.cloudnet.lib.utility.CollectionWrapper";
+  private BukkitEventUtil() {
+    throw new UnsupportedOperationException();
+  }
 
-  public CloudNetV2LegacyModule(@NotNull Plugin plugin) {
-    plugin.getCloudSystemDetector().registerCloudSystem(IDENTITY_CLASS, CloudNetV2CloudSystem::new);
+  public static @NotNull <T extends Event> T fireEvent(@NotNull T event) {
+    Bukkit.getPluginManager().callEvent(event);
+    return event;
   }
 }

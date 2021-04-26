@@ -28,6 +28,7 @@ import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.runner.command.VisibilityCommand;
 import com.github.derklaro.privateservers.runner.command.WhitelistCommand;
 import com.github.derklaro.privateservers.runner.listeners.CloudSystemPickedListener;
 import com.github.derklaro.privateservers.runner.listeners.PlayerLoginListener;
@@ -60,9 +61,18 @@ public class PrivateServersSpigotRunner {
     Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(cloudSystem), PrivateServersSpigot.getInstance());
     Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(cloudSystem), PrivateServersSpigot.getInstance());
 
-    PluginCommand command = PrivateServersSpigot.getInstance().getCommand("whitelist");
-    if (command != null) {
-      command.setExecutor(new WhitelistCommand(cloudSystem));
+    PluginCommand whitelistPluginCommand = PrivateServersSpigot.getInstance().getCommand("whitelist");
+    if (whitelistPluginCommand != null) {
+      WhitelistCommand whitelistCommand = new WhitelistCommand(cloudSystem);
+      whitelistPluginCommand.setExecutor(whitelistCommand);
+      whitelistPluginCommand.setTabCompleter(whitelistCommand);
+    }
+
+    PluginCommand visibilityPluginCommand = PrivateServersSpigot.getInstance().getCommand("visibility");
+    if (visibilityPluginCommand != null) {
+      VisibilityCommand visibilityCommand = new VisibilityCommand(cloudSystem);
+      visibilityPluginCommand.setExecutor(visibilityCommand);
+      visibilityPluginCommand.setTabCompleter(visibilityCommand);
     }
   }
 }

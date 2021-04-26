@@ -39,9 +39,11 @@ import de.dytanic.cloudnet.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
@@ -99,7 +101,9 @@ class CloudNetV3CloudServiceManager extends DefaultCloudServiceManager {
 
   @Override
   public @NotNull Collection<CloudService> getAllCurrentlyRunningPrivateServersFromCloudSystem() {
-    return CloudNetDriver.getInstance().getCloudServiceProvider().getCloudServices()
+    return CloudNetDriver.getInstance().getCloudServiceProvider()
+      .getCloudServicesAsync()
+      .get(20, TimeUnit.SECONDS, Collections.emptyList())
       .stream()
       .filter(e -> e.getProperty(BridgeServiceProperty.IS_ONLINE).orElse(false))
       .map(e -> CloudNetV3CloudService.fromServiceInfoSnapshot(e).orElse(null))

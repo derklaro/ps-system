@@ -35,6 +35,8 @@ public class CloudServiceConfiguration {
 
   private final boolean autoDeleteAfterOwnerLeave;
   private final boolean autoSaveBeforeStop;
+  private final int maxIdleSeconds;
+
   private final Collection<String> whitelistedPlayers;
   private final UUID ownerUniqueId;
   private final String ownerName;
@@ -46,12 +48,13 @@ public class CloudServiceConfiguration {
   private boolean publicService;
   private boolean hasWhitelist;
 
-  public CloudServiceConfiguration(boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop,
+  public CloudServiceConfiguration(boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop, int maxIdleSeconds,
                                    Collection<String> whitelistedPlayers, UUID ownerUniqueId, String ownerName,
                                    String initialGroup, String initialTemplate, String initialTemplateBackend,
                                    boolean publicService, boolean hasWhitelist) {
     this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
     this.autoSaveBeforeStop = autoSaveBeforeStop;
+    this.maxIdleSeconds = maxIdleSeconds;
     this.whitelistedPlayers = whitelistedPlayers;
     this.ownerUniqueId = ownerUniqueId;
     this.ownerName = ownerName;
@@ -68,6 +71,10 @@ public class CloudServiceConfiguration {
 
   public boolean isAutoSaveBeforeStop() {
     return this.autoSaveBeforeStop;
+  }
+
+  public int getMaxIdleSeconds() {
+    return this.maxIdleSeconds > 0 ? this.maxIdleSeconds : 30;
   }
 
   public Collection<String> getWhitelistedPlayers() {

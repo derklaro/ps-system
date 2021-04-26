@@ -24,34 +24,63 @@
 package com.github.derklaro.privateservers.lobby.npc;
 
 import com.github.derklaro.privateservers.PrivateServersSpigot;
+import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
+import com.github.derklaro.privateservers.lobby.npc.runnables.KnockbackRunnable;
+import com.github.derklaro.privateservers.lobby.npc.runnables.LabyModEmoteTask;
 import com.github.juliarn.npc.NPC;
 import com.github.juliarn.npc.NPCPool;
+import com.github.juliarn.npc.modifier.AnimationModifier;
+import com.github.juliarn.npc.modifier.MetadataModifier;
 import com.github.juliarn.npc.profile.Profile;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+import java.util.UUID;
+
 public class DefaultNpcManager implements NpcManager {
+
+  private static final Random RANDOM = new Random();
 
   private final Configuration configuration;
   private final NPCPool npcPool;
 
-  public DefaultNpcManager(Configuration configuration) {
+  public DefaultNpcManager(Configuration configuration, Plugin plugin) {
     this.configuration = configuration;
     this.npcPool = NPCPool.builder(PrivateServersSpigot.getInstance())
       .actionDistance(configuration.getNpcConfiguration().getActionDistance())
       .spawnDistance(configuration.getNpcConfiguration().getSpawnDistance())
       .tabListRemoveTicks(configuration.getNpcConfiguration().getTablistRemovalTicks())
       .build();
+    // initialize tasks
+    new LabyModEmoteTask(configuration, plugin, this);
+    new KnockbackRunnable(configuration, this, plugin);
   }
 
   @Override
-  public void createAndSpawnNpc(@NotNull Location location, @NotNull String texturePlayerName) {
+  public void createAndSpawnNpc(@NotNull Location location, @NotNull String texturePlayerName, @NotNull String displayName) {
+    Profile profile = new Profile(texturePlayerName);
+    profile.complete();
+    profile.setUniqueId(new UUID(RANDOM.nextLong(), 0));
+    profile.setName(ChatColor.translateAlternateColorCodes('&', displayName));
+
     NPC.builder()
       .location(location)
       .lookAtPlayer(this.configuration.getNpcConfiguration().isLookAtPlayer())
       .imitatePlayer(this.configuration.getNpcConfiguration().isImitatePlayer())
-      .profile(new Profile(texturePlayerName))
+      .profile(profile)
+      .spawnCustomizer((npc, player) -> {
+        npc.rotation().queueRotate(location.getYaw(), location.getPitch()).send(player);
+        npc.metadata()
+          .queue(MetadataModifier.EntityMetadata.SKIN_LAYERS, true)
+          .queue(MetadataModifier.EntityMetadata.SNEAKING, false)
+          .send(player);
+        npc.animation()
+          .queue(AnimationModifier.EntityAnimation.SWING_MAIN_ARM)
+          .send(player);
+      })
       .build(this.npcPool);
   }
 
@@ -74,5 +103,9 @@ public class DefaultNpcManager implements NpcManager {
   @Override
   public boolean isManagedNpc(int entityId) {
     return this.npcPool.getNpc(entityId).isPresent();
+  }
+
+  public NPCPool getNpcPool() {
+    return npcPool;
   }
 }

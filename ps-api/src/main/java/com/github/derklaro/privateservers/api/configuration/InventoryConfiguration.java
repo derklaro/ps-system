@@ -166,13 +166,18 @@ public class InventoryConfiguration {
     private String templateName;
     private String templateBackend;
     private boolean copyAfterStop;
+    private boolean deleteOnOwnerLeave;
+    private int maxIdleSeconds;
     private ItemLayout itemLayout;
 
-    public ServiceItemMapping(String groupName, String templateName, String templateBackend, boolean copyAfterStop, ItemLayout itemLayout) {
+    public ServiceItemMapping(String groupName, String templateName, String templateBackend,
+                              boolean copyAfterStop, int maxIdleSeconds, boolean deleteOnOwnerLeave, ItemLayout itemLayout) {
       this.groupName = groupName;
       this.templateName = templateName;
       this.templateBackend = templateBackend;
       this.copyAfterStop = copyAfterStop;
+      this.maxIdleSeconds = maxIdleSeconds;
+      this.deleteOnOwnerLeave = deleteOnOwnerLeave;
       this.itemLayout = itemLayout;
     }
 
@@ -206,6 +211,22 @@ public class InventoryConfiguration {
 
     public void setCopyAfterStop(boolean copyAfterStop) {
       this.copyAfterStop = copyAfterStop;
+    }
+
+    public boolean isDeleteOnOwnerLeave() {
+      return this.deleteOnOwnerLeave;
+    }
+
+    public void setDeleteOnOwnerLeave(boolean deleteOnOwnerLeave) {
+      this.deleteOnOwnerLeave = deleteOnOwnerLeave;
+    }
+
+    public int getMaxIdleSeconds() {
+      return this.maxIdleSeconds;
+    }
+
+    public void setMaxIdleSeconds(int maxIdleSeconds) {
+      this.maxIdleSeconds = maxIdleSeconds;
     }
 
     public ItemLayout getItemLayout() {

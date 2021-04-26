@@ -29,8 +29,9 @@ import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.configuration.JsonConfigurationLoader;
-import com.github.derklaro.privateservers.lobby.command.CommandCreateNPC;
-import com.github.derklaro.privateservers.lobby.command.CommandRemoveNPC;
+import com.github.derklaro.privateservers.event.BukkitEventUtil;
+import com.github.derklaro.privateservers.lobby.command.CommandCreateNpc;
+import com.github.derklaro.privateservers.lobby.command.CommandRemoveNpc;
 import com.github.derklaro.privateservers.lobby.event.DatabaseChooseEvent;
 import com.github.derklaro.privateservers.lobby.inventory.InventoryHandler;
 import com.github.derklaro.privateservers.lobby.listeners.CloudSystemPickedListener;
@@ -53,32 +54,33 @@ import org.jetbrains.annotations.NotNull;
 )
 public class PrivateServersLobby {
 
+  private final Plugin plugin;
+
   public PrivateServersLobby(@NotNull Plugin plugin) {
+    this.plugin = plugin;
     Bukkit.getPluginManager().registerEvents(new CloudSystemPickedListener(this), PrivateServersSpigot.getInstance());
   }
 
   public void handleCloudSystemPick(@NotNull CloudSystem cloudSystem) {
     Configuration configuration = JsonConfigurationLoader.loadConfiguration();
 
-    DatabaseChooseEvent databaseChooseEvent = new DatabaseChooseEvent(new JsonNpcDatabase(), configuration.getDatabaseProvider());
-    Bukkit.getPluginManager().callEvent(databaseChooseEvent);
-
-    NpcDatabase database = databaseChooseEvent.getDatabase();
+    NpcDatabase database = BukkitEventUtil.fireEvent(new DatabaseChooseEvent(
+      new JsonNpcDatabase(), configuration.getDatabaseProvider())).getDatabase();
     database.initialize();
 
-    NpcManager npcManager = new DefaultNpcManager(configuration);
+    NpcManager npcManager = new DefaultNpcManager(configuration, this.plugin);
     for (DatabaseNPCObject npc : database.getAllNPCs()) {
-      npcManager.createAndSpawnNpc(npc.getLocation(), npc.getTexturesProfileName());
+      npcManager.createAndSpawnNpc(npc.getLocation(), npc.getTexturesProfileName(), npc.getDisplayName());
     }
 
     PluginCommand removeNPCCommand = PrivateServersSpigot.getInstance().getCommand("removenpc");
     if (removeNPCCommand != null) {
-      removeNPCCommand.setExecutor(new CommandRemoveNPC());
+      removeNPCCommand.setExecutor(new CommandRemoveNpc());
     }
 
     PluginCommand createNPCCommand = PrivateServersSpigot.getInstance().getCommand("createnpc");
     if (createNPCCommand != null) {
-      createNPCCommand.setExecutor(new CommandCreateNPC(npcManager, database));
+      createNPCCommand.setExecutor(new CommandCreateNpc(npcManager, database));
     }
 
     Bukkit.getPluginManager().registerEvents(new PlayerListener(

@@ -23,6 +23,11 @@
  */
 package com.github.derklaro.privateservers.api.configuration;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
 public class NpcConfiguration {
 
   private int actionDistance;
@@ -33,6 +38,7 @@ public class NpcConfiguration {
   private boolean lookAtPlayer;
 
   private LabyModConfiguration labyModConfiguration;
+  private KnockbackConfiguration knockbackConfiguration;
 
   public NpcConfiguration() {
     this.actionDistance = 20;
@@ -43,6 +49,7 @@ public class NpcConfiguration {
     this.lookAtPlayer = true;
 
     this.labyModConfiguration = new LabyModConfiguration();
+    this.knockbackConfiguration = new KnockbackConfiguration();
   }
 
   public int getActionDistance() {
@@ -93,16 +100,24 @@ public class NpcConfiguration {
     this.labyModConfiguration = labyModConfiguration;
   }
 
+  public KnockbackConfiguration getKnockbackConfiguration() {
+    return knockbackConfiguration;
+  }
+
+  public void setKnockbackConfiguration(KnockbackConfiguration knockbackConfiguration) {
+    this.knockbackConfiguration = knockbackConfiguration;
+  }
+
+  @ToString
+  @EqualsAndHashCode
   public static class LabyModConfiguration {
 
     private int[] emoteIds;
     private int emoteDelayTicks;
-    private boolean sendEmotesSync;
 
     public LabyModConfiguration() {
       this.emoteIds = new int[]{2, 49};
       this.emoteDelayTicks = 20 * 20;
-      this.sendEmotesSync = false;
     }
 
     public int[] getEmoteIds() {
@@ -120,13 +135,54 @@ public class NpcConfiguration {
     public void setEmoteDelayTicks(int emoteDelayTicks) {
       this.emoteDelayTicks = emoteDelayTicks;
     }
+  }
 
-    public boolean isSendEmotesSync() {
-      return this.sendEmotesSync;
+  @ToString
+  @EqualsAndHashCode
+  public static class KnockbackConfiguration {
+
+    private boolean enabled;
+    private String bypassPermission;
+    private double knockbackDistance;
+    private double knockbackStrength;
+
+    public KnockbackConfiguration() {
+      this.enabled = true;
+      this.bypassPermission = "ps.npc.knockback.bypass";
+      this.knockbackDistance = 1.0;
+      this.knockbackStrength = 0.8;
     }
 
-    public void setSendEmotesSync(boolean sendEmotesSync) {
-      this.sendEmotesSync = sendEmotesSync;
+    public boolean isEnabled() {
+      return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+      this.enabled = enabled;
+    }
+
+    public String getBypassPermission() {
+      return bypassPermission;
+    }
+
+    public void setBypassPermission(String bypassPermission) {
+      this.bypassPermission = bypassPermission;
+    }
+
+    public double getKnockbackDistance() {
+      return knockbackDistance;
+    }
+
+    public void setKnockbackDistance(double knockbackDistance) {
+      this.knockbackDistance = knockbackDistance;
+    }
+
+    public double getKnockbackStrength() {
+      return knockbackStrength;
+    }
+
+    public void setKnockbackStrength(double knockbackStrength) {
+      this.knockbackStrength = knockbackStrength;
     }
   }
 }

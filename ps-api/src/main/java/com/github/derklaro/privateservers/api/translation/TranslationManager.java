@@ -59,7 +59,9 @@ public class TranslationManager {
   public TranslationManager() {
     this.translationRegistry = TranslationRegistry.create(Key.key("ps", "main"));
     this.translationRegistry.defaultLocale(DEFAULT_LOCALE);
+  }
 
+  public void initialize() {
     this.loadDefault();
     this.loadCustom();
 

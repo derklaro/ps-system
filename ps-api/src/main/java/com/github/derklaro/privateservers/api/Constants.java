@@ -25,8 +25,9 @@ package com.github.derklaro.privateservers.api;
 
 public final class Constants {
 
-  public static final String WHITELIST_JOIN_PERM = "system.join.whitelist";
-  public static final String WHITELIST_COMMAND_USE_PERM = "system.command.whitelist";
+  public static final String WHITELIST_JOIN_PERM = "ps.whitelist.bypass";
+  public static final String WHITELIST_COMMAND_USE_PERM = "ps.command.whitelist";
+  public static final String VISIBILITY_COMMAND_USE_PERM = "ps.command.visibility";
 
   private Constants() {
     throw new UnsupportedOperationException();

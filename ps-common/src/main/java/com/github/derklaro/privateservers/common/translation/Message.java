@@ -42,9 +42,17 @@ public final class Message {
   );
 
   public static final Args0 WHITELIST_COMMAND_HELP = () -> prefixed(
-    translatable("ps.command.help.1"),
-    translatable("ps.command.help.2"),
-    translatable("ps.command.help.3")
+    translatable("ps.command.whitelist.help.1"),
+    translatable("ps.command.whitelist.help.2"),
+    translatable("ps.command.whitelist.help.3")
+  );
+
+  public static final Args0 WHITELIST_NOW_ON = () -> prefixed(
+    translatable("ps.command.whitelist.now-turned-on")
+  );
+
+  public static final Args0 WHITELIST_NOW_OFF = () -> prefixed(
+    translatable("ps.command.whitelist.now-turned-off")
   );
 
   public static final Args0 WHITELIST_ALREADY = () -> prefixed(
@@ -83,8 +91,24 @@ public final class Message {
     translatable("ps.command.npc.add.not.minecraft.name").args(text(name))
   );
 
+  public static final Args0 NPC_ADD_DISPLAY_NAME_TOO_LONG = () -> prefixed(
+    translatable("ps.command.npc.add.display.name-too-long")
+  );
+
   public static final Args0 NPC_ADD_SUCCESSFUL = () -> prefixed(
     translatable("ps.command.npc.add.successful")
+  );
+
+  public static final Args0 SERVER_NOW_PUBLIC = () -> prefixed(
+    translatable("ps.command.visibility.public")
+  );
+
+  public static final Args0 SERVER_NOW_PRIVATE = () -> prefixed(
+    translatable("ps.command.visibility.private")
+  );
+
+  public static final Args0 VISIBILITY_COMMAND_HELP = () -> prefixed(
+    translatable("ps.command.visibility.help.1")
   );
 
   public static final Args0 ITEM_USE_NO_PERMISSION = () -> prefixed(
@@ -109,6 +133,18 @@ public final class Message {
 
   public static final Args0 SERVER_CONNECT_SOON = () -> prefixed(
     translatable("ps.inventory.start.service.connect-shortly")
+  );
+
+  public static final Args0 UNABLE_TO_CREATE_SERVICE = () -> prefixed(
+    translatable("ps.inventory.start.service.not-possible")
+  );
+
+  public static final Args0 ALREADY_SERVICE_RUNNING = () -> prefixed(
+    translatable("ps.inventory.start.service.already-one-running")
+  );
+
+  public static final Args0 NOT_WHITELISTED = () -> prefixed(
+    translatable("ps.login.not-whitelisted")
   );
 
   private Message() {

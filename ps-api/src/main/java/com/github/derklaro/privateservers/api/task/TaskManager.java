@@ -41,6 +41,8 @@ public interface TaskManager {
 
   void scheduleSyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
 
+  void scheduleSyncRepeatingTask(@NotNull Runnable runnable, long delay, long repeats);
+
   @NotNull
   CompletableFuture<Void> scheduleAsyncTask(@NotNull Runnable runnable);
 
@@ -50,4 +52,6 @@ public interface TaskManager {
   @NotNull <T> CompletableFuture<T> callAsync(@NotNull Callable<T> callable);
 
   void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long repeatTime, @NotNull TimeUnit timeUnit);
+
+  void scheduleAsyncRepeatingTask(@NotNull Runnable runnable, long delay, long repeats);
 }
