@@ -1,0 +1,22 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: junit:junit
+    versions:
+    - 4.13.2
+  - dependency-name: org.spigotmc:spigot-api
+    versions:
+    - 1.16.5-R0.1-SNAPSHOT
+  - dependency-name: org.projectlombok:lombok
+    versions:
+    - 1.18.18
+    - 1.18.20
+  - dependency-name: systems.reformcloud.reformcloud2:reformcloud2-executor-api
+    versions:
+    - 2.10.0
