@@ -25,3 +25,24 @@ jobs:
           check-latest: true
       - name: Build with Maven
         run: mvn -V clean package --file pom.xml
+      - name: Prepare ZIP
+        run: |
+          mkdir -p temp/;
+          cp license.txt temp/license.txt;
+          cp ps-plugin-spigot/target/ps-plugin-spigot.jar temp/plugin-spigot.jar
+
+          mkdir temp/dev;
+          cp */target/*-javadoc.jar temp/dev;
+          cp ps-api/target/ps-api.jar temp/dev/api.jar
+
+          mkdir temp/modules;
+          cp ps-cloudnet2/target/ps-cloudnet2.jar temp/modules/cloudnet2.jar;
+          cp ps-cloudnet2-legacy/target/ps-cloudnet2-legacy.jar temp/modules/cloudnet2-legacy.jar;
+          cp ps-cloudnet3/target/ps-cloudnet3.jar temp/modules/cloudnet3.jar;
+          cp ps-lobby-spigot/target/ps-lobby-spigot.jar temp/modules/lobby-spigot.jar;
+          cp ps-runner-spigot/target/ps-runner-spigot.jar temp/modules/runner-spigot.jar;
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ps-system
+          path: temp/
