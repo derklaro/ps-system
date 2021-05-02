@@ -1,3 +1,5 @@
+defaultTasks 'build', 'test', 'shadowJar'
+
 allprojects {
   group = 'com.github.derklaro'
   version = '1.1.0'
