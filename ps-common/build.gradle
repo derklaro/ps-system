@@ -14,4 +14,6 @@ java {
 shadowJar {
   archiveVersion.set(null)
   archiveFileName.set('ps-common.jar')
+
+  relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
 }

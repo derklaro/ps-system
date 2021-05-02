@@ -15,6 +15,4 @@ java {
 shadowJar {
   archiveVersion.set(null)
   archiveFileName.set('ps-runner-spigot.jar')
-
-  relocate 'net.kyori.adventure', 'com.github.derklaro.privateservers.relocate.adventure'
 }
