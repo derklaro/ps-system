@@ -10,3 +10,10 @@ dependencies {
 java {
   withJavadocJar()
 }
+
+shadowJar {
+  archiveVersion.set(null)
+  archiveFileName.set('ps-api.jar')
+
+  relocate 'net.kyori', 'com.github.derklaro.privateservers.relocate.kyori'
+}

@@ -10,3 +10,8 @@ dependencies {
 java {
   withJavadocJar()
 }
+
+shadowJar {
+  archiveVersion.set(null)
+  archiveFileName.set('ps-api-annotation-processor.jar')
+}

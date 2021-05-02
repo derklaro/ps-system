@@ -12,6 +12,9 @@ java {
 }
 
 shadowJar {
+  archiveVersion.set(null)
+  archiveFileName.set('ps-plugin-spigot.jar')
+
   relocate 'net.kyori', 'com.github.derklaro.privateservers.relocate.kyori'
   relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
 }

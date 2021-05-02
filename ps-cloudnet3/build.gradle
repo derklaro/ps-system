@@ -9,3 +9,8 @@ dependencies {
 java {
   withJavadocJar()
 }
+
+jar {
+  archiveVersion.set(null)
+  archiveFileName.set('ps-cloudnet3.jar')
+}

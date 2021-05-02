@@ -15,6 +15,9 @@ java {
 }
 
 shadowJar {
+  archiveVersion.set(null)
+  archiveFileName.set('ps-lobby-spigot.jar')
+
   relocate 'com.github.juliarn', 'com.github.derklaro.privateservers.relocate.npc.lib'
   relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
 }
