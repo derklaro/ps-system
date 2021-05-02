@@ -1,5 +1,6 @@
 plugins {
-  id "com.github.johnrengelman.shadow" version "7.0.0"
+  id 'com.github.johnrengelman.shadow' version '7.0.0'
+  id 'net.minecrell.plugin-yml.bukkit' version '0.3.0'
 }
 
 dependencies {
@@ -16,4 +17,42 @@ shadowJar {
   archiveFileName.set('ps-plugin-spigot.jar')
 
   relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
+}
+
+bukkit {
+  name = 'PrivateServerSystem'
+  author = 'derklaro'
+  version = project.version
+  website = 'https://github.com/derklaro/ps-system'
+  description = 'An infinitely expandable private server system by derklaro'
+
+  apiVersion = '1.13'
+  softDepend = ['ProtocolLib', 'CloudNetAPI']
+  main = 'com.github.derklaro.privateservers.PrivateServersSpigot'
+
+  commands {
+    whitelist {
+      aliases = ['allowlist', 'wlist', 'alist']
+      description = 'Manage the allowlist of your private server'
+    }
+    visibility {
+      aliases = ['v']
+      description = 'Changes the visibility of the current server, public servers are shown in the server list'
+    }
+    removenpc {
+      aliases = ['rnpc', 'deletenpc', 'dnpc']
+      description = 'Sets you in the mode which allows you to remove npcs by hitting them'
+    }
+    createnpc {
+      aliases = ['cnpc']
+      description = 'Creates a new npc to start/stop/join and list the private servers'
+    }
+    psinfo {
+      aliases = ['pinfo', 'pi']
+      description = 'Gives you information about the current private server'
+    }
+    pssinfo {
+      description = 'Shows you information about the private the server plugin'
+    }
+  }
 }

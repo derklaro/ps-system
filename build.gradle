@@ -2,7 +2,7 @@ defaultTasks 'build', 'test', 'shadowJar'
 
 allprojects {
   group = 'com.github.derklaro'
-  version = '1.1.0'
+  version = "1.1.0-SNAPSHOT-" + getCurrentShortRevision()
 }
 
 subprojects {
@@ -57,5 +57,16 @@ subprojects {
 
   tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+  }
+}
+
+def getCurrentShortRevision() {
+  new ByteArrayOutputStream().withStream { os ->
+    exec {
+      executable = "git"
+      args = ["rev-parse", "HEAD"]
+      standardOutput = os
+    }
+    return os.toString().trim().substring(0, 8)
   }
 }

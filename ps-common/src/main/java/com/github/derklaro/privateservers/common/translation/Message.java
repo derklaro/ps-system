@@ -27,6 +27,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 import static net.kyori.adventure.text.Component.newline;
 import static net.kyori.adventure.text.Component.space;
 import static net.kyori.adventure.text.Component.text;
@@ -98,6 +100,20 @@ public final class Message {
   public static final Args0 NPC_ADD_SUCCESSFUL = () -> prefixed(
     translatable("ps.command.npc.add.successful")
   );
+
+  public static final Args4<String, UUID, Component, Component> PRIVATE_SERVER_INFO = (name, uuid, visibility, whitelist) -> prefixed(
+    translatable("ps.command.info.1").args(text(name), text(uuid.toString())),
+    translatable("ps.command.info.2").args(visibility),
+    translatable("ps.command.info.3").args(whitelist)
+  );
+
+  public static final Args0 VISIBILITY_PUBLIC = () -> translatable("ps.command.info.visibility.public");
+
+  public static final Args0 VISIBILITY_PRIVATE = () -> translatable("ps.command.info.visibility.private");
+
+  public static final Args0 WHITELIST_ON = () -> translatable("ps.command.info.whitelist.on");
+
+  public static final Args0 WHITELIST_OFF = () -> translatable("ps.command.info.whitelist.off");
 
   public static final Args0 SERVER_NOW_PUBLIC = () -> prefixed(
     translatable("ps.command.visibility.public")
@@ -181,5 +197,9 @@ public final class Message {
 
   public interface Args1<A0> {
     Component build(A0 arg0);
+  }
+
+  public interface Args4<A0, A1, A2, A3> {
+    Component build(A0 arg0, A1 arg1, A2 arg2, A3 arg3);
   }
 }

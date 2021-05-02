@@ -28,6 +28,8 @@ public final class Constants {
   public static final String WHITELIST_JOIN_PERM = "ps.whitelist.bypass";
   public static final String WHITELIST_COMMAND_USE_PERM = "ps.command.whitelist";
   public static final String VISIBILITY_COMMAND_USE_PERM = "ps.command.visibility";
+  public static final String SERVER_INFO_COMMAND_USE_PERM = "ps.command.server.info";
+  public static final String SYSTEM_INFO_COMMAND_USE_PERM = "ps.command.system.info";
 
   private Constants() {
     throw new UnsupportedOperationException();

@@ -29,12 +29,14 @@ import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.module.ModuleLoader;
 import com.github.derklaro.privateservers.api.task.TaskManager;
 import com.github.derklaro.privateservers.api.translation.TranslationManager;
+import com.github.derklaro.privateservers.commands.PrivateServerSystemInfoCommand;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudSystemDetector;
 import com.github.derklaro.privateservers.common.module.DefaultModuleLoader;
 import com.github.derklaro.privateservers.event.BukkitEventUtil;
 import com.github.derklaro.privateservers.event.CloudSystemPickedEvent;
 import com.github.derklaro.privateservers.event.TranslationManagerSetupEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +70,14 @@ public class PrivateServersSpigot extends JavaPlugin implements Plugin {
     TranslationManager translationManager = BukkitEventUtil.fireEvent(new TranslationManagerSetupEvent(
       new TranslationManager())).getTranslationManager();
     translationManager.initialize();
+
+    PluginCommand systemInfoCommand = this.getCommand("pssinfo");
+    if (systemInfoCommand != null) {
+      PrivateServerSystemInfoCommand command = new PrivateServerSystemInfoCommand(this.getModuleLoader(), cloudSystem,
+        this.getDescription());
+      systemInfoCommand.setExecutor(command);
+      systemInfoCommand.setTabCompleter(command);
+    }
 
     Bukkit.getPluginManager().callEvent(new CloudSystemPickedEvent(cloudSystem));
   }

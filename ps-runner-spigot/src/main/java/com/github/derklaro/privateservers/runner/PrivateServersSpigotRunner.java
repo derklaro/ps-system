@@ -28,6 +28,7 @@ import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.util.CloudService;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
+import com.github.derklaro.privateservers.runner.command.PrivateServerInfoCommand;
 import com.github.derklaro.privateservers.runner.command.VisibilityCommand;
 import com.github.derklaro.privateservers.runner.command.WhitelistCommand;
 import com.github.derklaro.privateservers.runner.listeners.CloudSystemPickedListener;
@@ -73,6 +74,11 @@ public class PrivateServersSpigotRunner {
       VisibilityCommand visibilityCommand = new VisibilityCommand(cloudSystem);
       visibilityPluginCommand.setExecutor(visibilityCommand);
       visibilityPluginCommand.setTabCompleter(visibilityCommand);
+    }
+
+    PluginCommand privateServerInfoCommand = PrivateServersSpigot.getInstance().getCommand("psinfo");
+    if (privateServerInfoCommand != null) {
+      privateServerInfoCommand.setExecutor(new PrivateServerInfoCommand(cloudSystem));
     }
   }
 }
