@@ -1,0 +1,17 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+dependencies {
+  compileOnly project(':ps-plugin-spigot')
+  annotationProcessor project(':ps-api-annotation-processor')
+  compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+}
+
+java {
+  withJavadocJar()
+}
+
+shadowJar {
+  relocate 'net.kyori.adventure', 'com.github.derklaro.privateservers.relocate.adventure'
+}

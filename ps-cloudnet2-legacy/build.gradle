@@ -1,0 +1,10 @@
+dependencies {
+  annotationProcessor project(':ps-api-annotation-processor')
+  compileOnly project(':ps-common')
+  compileOnly 'de.dytanic.cloudnet:cloudnet-api-bridge:2.1.17'
+  compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+}
+
+java {
+  withJavadocJar()
+}

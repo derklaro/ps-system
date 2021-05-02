@@ -1,0 +1,12 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+dependencies {
+  api 'net.kyori:adventure-api:4.7.0'
+  api 'net.kyori:adventure-text-serializer-legacy:4.7.0'
+}
+
+java {
+  withJavadocJar()
+}

@@ -1,0 +1,17 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+dependencies {
+  api project(':ps-common')
+  compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+}
+
+java {
+  withJavadocJar()
+}
+
+shadowJar {
+  relocate 'net.kyori', 'com.github.derklaro.privateservers.relocate.kyori'
+  relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
+}

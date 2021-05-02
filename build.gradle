@@ -1,0 +1,59 @@
+allprojects {
+  group = 'com.github.derklaro'
+  version = '1.1.0'
+}
+
+subprojects {
+  apply plugin: 'java-library'
+  apply plugin: 'maven-publish'
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+      name = 'spigotmc'
+      url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    maven {
+      name = 'cloudnet-snapshots'
+      url = 'https://repo.cloudnetservice.eu/repository/snapshots/'
+    }
+
+    maven {
+      name = 'cloudnet-releases'
+      url = 'https://cloudnetservice.eu/repositories/'
+    }
+
+    maven {
+      name = 'sonatype-releases'
+      url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+
+    maven {
+      name = 'jitpack'
+      url = 'https://jitpack.io'
+    }
+  }
+
+  dependencies {
+    compileOnly 'org.jetbrains:annotations:20.1.0'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+  }
+
+  sourceCompatibility = '8'
+  targetCompatibility = '8'
+
+  publishing {
+    publications {
+      maven(MavenPublication) {
+        from(components.java)
+      }
+    }
+  }
+
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+  }
+}

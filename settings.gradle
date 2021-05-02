@@ -1,0 +1,11 @@
+rootProject.name = 'privateservers'
+
+include(':ps-api')
+include(':ps-api-annotation-processor')
+include(':ps-common')
+include(':ps-plugin-spigot')
+include(':ps-cloudnet2')
+include(':ps-cloudnet3')
+include(':ps-cloudnet2-legacy')
+include(':ps-lobby-spigot')
+include(':ps-runner-spigot')

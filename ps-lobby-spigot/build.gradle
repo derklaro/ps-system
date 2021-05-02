@@ -1,0 +1,20 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+dependencies {
+  api 'com.github.juliarn:npc-lib:development-SNAPSHOT'
+  api 'com.google.code.gson:gson:2.8.6'
+  compileOnly project(':ps-plugin-spigot')
+  annotationProcessor project(':ps-api-annotation-processor')
+  compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+}
+
+java {
+  withJavadocJar()
+}
+
+shadowJar {
+  relocate 'com.github.juliarn', 'com.github.derklaro.privateservers.relocate.npc.lib'
+  relocate 'com.google.gson', 'com.github.derklaro.privateservers.relocate.gson'
+}
