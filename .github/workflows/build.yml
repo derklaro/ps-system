@@ -28,7 +28,7 @@ jobs:
           cp ps-plugin-spigot/build/libs/ps-plugin-spigot.jar temp/plugin-spigot.jar
 
           mkdir temp/dev;
-          cp */target/*-javadoc.jar temp/dev;
+          cp */build/libs/*-javadoc.jar temp/dev;
           cp ps-api/build/libs/ps-api.jar temp/dev/api.jar
 
           mkdir temp/modules;
