@@ -1,4 +1,4 @@
-defaultTasks 'build', 'test', 'shadowJar'
+defaultTasks 'build', 'test', 'check', 'shadowJar'
 
 allprojects {
   group = 'com.github.derklaro'
@@ -6,6 +6,7 @@ allprojects {
 }
 
 subprojects {
+  apply plugin: 'checkstyle'
   apply plugin: 'java-library'
   apply plugin: 'maven-publish'
 
@@ -25,7 +26,7 @@ subprojects {
 
     maven {
       name = 'cloudnet-releases'
-      url = 'https://cloudnetservice.eu/repositories/'
+      url = 'https://repo.cloudnetservice.eu/repository/releases/'
     }
 
     maven {
@@ -57,6 +58,10 @@ subprojects {
 
   tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+  }
+
+  tasks.withType(Checkstyle) {
+    configFile = project.rootProject.file('checkstyle.xml')
   }
 }
 
