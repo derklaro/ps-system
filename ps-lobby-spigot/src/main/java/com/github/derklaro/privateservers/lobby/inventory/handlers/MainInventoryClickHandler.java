@@ -25,7 +25,7 @@ package com.github.derklaro.privateservers.lobby.inventory.handlers;
 
 import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
 import com.github.derklaro.privateservers.common.translation.Message;
@@ -84,7 +84,7 @@ public class MainInventoryClickHandler implements ClickHandler {
     if (HandlerUtils.canUse(player, stopLayout)) {
       player.closeInventory();
 
-      CloudService service = this.cloudServiceManager.getCloudServiceByOwnerUniqueID(player.getUniqueId()).orElse(null);
+      CloudService service = this.cloudServiceManager.getCloudServiceByOwnerUniqueId(player.getUniqueId()).orElse(null);
       if (service == null) {
         BukkitComponentRenderer.renderAndSend(player, Message.NO_RUNNING_SERVER.build());
       } else {
@@ -101,7 +101,7 @@ public class MainInventoryClickHandler implements ClickHandler {
     if (HandlerUtils.canUse(player, joinLayout)) {
       player.closeInventory();
 
-      CloudService cloudService = this.cloudServiceManager.getCloudServiceByOwnerUniqueID(player.getUniqueId()).orElse(null);
+      CloudService cloudService = this.cloudServiceManager.getCloudServiceByOwnerUniqueId(player.getUniqueId()).orElse(null);
       if (cloudService != null) {
         BukkitComponentRenderer.renderAndSend(player, Message.NOW_CONNECTING.build());
         cloudService.createConnectionRequest(player.getUniqueId()).fire();

@@ -24,8 +24,9 @@
 package com.github.derklaro.privateservers.cloudnet.v2.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.creation.CloudServiceCreateConfiguration;
+import com.github.derklaro.privateservers.api.cloud.service.template.CloudServiceTemplate;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudServiceManager;
 import com.github.derklaro.privateservers.common.util.EnumUtil;
 import de.dytanic.cloudnet.api.CloudAPI;
@@ -34,33 +35,37 @@ import de.dytanic.cloudnet.lib.process.ServerProcessBuilder;
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import de.dytanic.cloudnet.lib.server.template.Template;
 import de.dytanic.cloudnet.lib.server.template.TemplateResource;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 public class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
   static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
 
   @Override
-  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
-                                                                     @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-    ServerProcessBuilder builder = ApiServerProcessBuilder.create(group)
-      .template(this.createTemplate(templateName, templateBackend));
-    builder.getServerConfig().getProperties().append("cloudServiceConfiguration", cloudServiceConfiguration);
+  public @NotNull CompletableFuture<CloudService> createCloudService(
+    @NotNull CloudServiceCreateConfiguration configuration) {
+    ServerProcessBuilder builder = ApiServerProcessBuilder.create(configuration.group());
+    builder
+      // template
+      .template(this.createTemplate(configuration.template()))
+      // configure properties
+      .getServerConfig().getProperties()
+      .append("cloudServiceConfiguration", configuration.privateServerConfiguration());
+    // start the service
     return this.start(builder);
   }
 
   @NotNull
-  private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
+  private Template createTemplate(@NotNull CloudServiceTemplate template) {
     return new Template(
-      templateName,
-      EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
+      template.templateName(),
+      EnumUtil.findEnumField(TemplateResource.class, template.templateBackend().toUpperCase(), TemplateResource.LOCAL),
       null,
       new String[0],
       new ArrayList<>()

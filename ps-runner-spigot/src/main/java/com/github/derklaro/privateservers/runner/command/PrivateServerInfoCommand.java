@@ -27,7 +27,7 @@ import com.github.derklaro.privateservers.api.Constants;
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
 import org.bukkit.command.Command;

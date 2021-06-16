@@ -24,7 +24,8 @@
 package com.github.derklaro.privateservers.cloudnet.v3.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.creation.CloudServiceCreateConfiguration;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudServiceManager;
 import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
@@ -36,8 +37,6 @@ import de.dytanic.cloudnet.driver.service.ServiceTask;
 import de.dytanic.cloudnet.driver.service.ServiceTemplate;
 import de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty;
 import de.dytanic.cloudnet.wrapper.Wrapper;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -46,26 +45,31 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 class CloudNetV3CloudServiceManager extends DefaultCloudServiceManager {
 
   static final DefaultCloudServiceManager INSTANCE = new CloudNetV3CloudServiceManager();
 
   @Override
-  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName, @NotNull String templateBackend,
-                                                                     @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-    ServiceTask serviceTask = CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask(group);
+  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull CloudServiceCreateConfiguration configuration) {
+    ServiceTask serviceTask = CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask(configuration.group());
     if (serviceTask == null) {
       return CompletableFuture.completedFuture(null);
     }
 
     CompletableFuture<CloudService> future = new CompletableFuture<>();
-    this.createCloudService(serviceTask, new ServiceTemplate("PrivateServers", templateName, templateBackend), cloudServiceConfiguration, future);
+    this.createCloudService(
+      serviceTask,
+      new ServiceTemplate("PrivateServers", configuration.template().templateName(), configuration.template().templateBackend()),
+      configuration.privateServerConfiguration(),
+      future
+    );
     return future;
   }
 
   private void createCloudService(@NotNull ServiceTask task, @NotNull ServiceTemplate template,
-                                  @NotNull CloudServiceConfiguration cloudServiceConfiguration, @NotNull CompletableFuture<CloudService> future) {
+    @NotNull CloudServiceConfiguration cloudServiceConfiguration, @NotNull CompletableFuture<CloudService> future) {
     CloudNetDriver.getInstance()
       .getCloudServiceFactory()
       .createCloudServiceAsync(ServiceConfiguration.builder(task)

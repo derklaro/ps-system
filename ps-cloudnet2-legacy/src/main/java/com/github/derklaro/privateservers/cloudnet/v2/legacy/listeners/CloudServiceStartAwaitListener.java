@@ -23,7 +23,7 @@
  */
 package com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners;
 
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud.CloudNetV2CloudService;
 import de.dytanic.cloudnet.bridge.event.bukkit.BukkitServerAddEvent;
 import org.bukkit.event.EventHandler;

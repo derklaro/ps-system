@@ -24,8 +24,8 @@
 package com.github.derklaro.privateservers.cloudnet.v3.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
-import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.connection.ConnectionRequest;
 import com.github.derklaro.privateservers.cloudnet.v3.connection.CloudNetV3ConnectionRequest;
 import com.github.derklaro.privateservers.cloudnet.v3.util.CloudNetV3Constants;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;

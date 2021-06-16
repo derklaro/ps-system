@@ -21,36 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.cloudnet.v2.legacy.connection;
+package com.github.derklaro.privateservers.api.cloud.service;
 
-import com.github.derklaro.privateservers.api.cloud.service.CloudService;
-import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
-import com.google.common.base.Preconditions;
-import de.dytanic.cloudnet.api.CloudAPI;
-import de.dytanic.cloudnet.lib.utility.document.Document;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+public interface ServiceListener {
 
-public class CloudNetV2ConnectionRequest extends DefaultConnectionRequest {
+  void handleServiceRegister(@NotNull CloudService cloudService);
 
-  protected CloudNetV2ConnectionRequest(CloudService targetService, UUID targetPlayer) {
-    super(targetService, targetPlayer);
-  }
+  void handleServerUpdate(@NotNull CloudService cloudService);
 
-  public static CloudNetV2ConnectionRequest of(@NotNull CloudService targetService, @NotNull UUID player) {
-    Preconditions.checkNotNull(targetService, "targetService");
-    Preconditions.checkNotNull(player, "player");
-
-    return new CloudNetV2ConnectionRequest(targetService, player);
-  }
-
-  @Override
-  public void fire() {
-    CloudAPI.getInstance().sendCustomSubProxyMessage(
-      "cloudnet_internal",
-      "sendPlayer",
-      new Document("uniqueId", super.getTargetPlayer()).append("server", super.getTargetService().getName())
-    );
-  }
+  void handleServiceUnregister(@NotNull CloudService cloudService);
 }

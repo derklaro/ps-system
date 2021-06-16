@@ -25,20 +25,20 @@ package com.github.derklaro.privateservers.lobby.inventory.handlers;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import com.github.derklaro.privateservers.api.cloud.service.creation.CloudServiceCreateConfiguration;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
 import com.github.derklaro.privateservers.common.translation.Message;
 import com.github.derklaro.privateservers.lobby.inventory.ClickHandler;
 import com.github.derklaro.privateservers.translation.BukkitComponentRenderer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ServiceStartInventoryClickHandler implements ClickHandler {
 
@@ -68,7 +68,7 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
     if (HandlerUtils.canUse(player, mapping.getItemLayout())) {
       player.closeInventory();
       if (this.waitingPlayers.contains(player.getUniqueId())
-        || this.cloudServiceManager.getCloudServiceByOwnerUniqueID(player.getUniqueId()).isPresent()) {
+        || this.cloudServiceManager.getCloudServiceByOwnerUniqueId(player.getUniqueId()).isPresent()) {
         BukkitComponentRenderer.renderAndSend(player, Message.ALREADY_SERVICE_RUNNING.build());
         return;
       }
@@ -76,11 +76,10 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
       this.waitingPlayers.add(player.getUniqueId()); // disallow service starting for that player until we get a result from the cloud
       BukkitComponentRenderer.renderAndSend(player, Message.SERVICE_CREATED.build());
 
-      this.cloudServiceManager.createCloudService(
-        mapping.getGroupName(),
-        mapping.getTemplateName(),
-        mapping.getTemplateBackend(),
-        new CloudServiceConfiguration(
+      this.cloudServiceManager.createCloudService(CloudServiceCreateConfiguration.builder()
+        .group(mapping.getGroupName())
+        .template(mapping.toTemplate())
+        .privateServerConfiguration(new CloudServiceConfiguration(
           mapping.isDeleteOnOwnerLeave(),
           mapping.isCopyAfterStop(),
           mapping.getMaxIdleSeconds(),
@@ -92,7 +91,8 @@ public class ServiceStartInventoryClickHandler implements ClickHandler {
           mapping.getTemplateBackend(),
           false,
           false
-        )
+        ))
+        .build()
       ).thenAccept(service -> {
         this.waitingPlayers.remove(player.getUniqueId());
         if (service != null) {

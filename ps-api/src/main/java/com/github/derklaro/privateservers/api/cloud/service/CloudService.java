@@ -21,57 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.common.cloud;
+package com.github.derklaro.privateservers.api.cloud.service;
 
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.service.CloudService;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.github.derklaro.privateservers.api.cloud.connection.ConnectionRequest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@ToString
-@EqualsAndHashCode
-public abstract class DefaultCloudService implements CloudService {
+public interface CloudService {
 
-  protected final String name;
-  protected final UUID uniqueID;
-  protected CloudServiceConfiguration cloudServiceConfiguration;
+  @NotNull String getName();
 
-  public DefaultCloudService(String name, UUID uniqueID, CloudServiceConfiguration cloudServiceConfiguration) {
-    this.name = name;
-    this.uniqueID = uniqueID;
-    this.cloudServiceConfiguration = cloudServiceConfiguration;
-  }
+  @NotNull UUID getServiceUniqueId();
 
-  @Override
-  public @NotNull String getName() {
-    return this.name;
-  }
+  @NotNull UUID getOwnerUniqueId();
 
-  @Override
-  public @NotNull UUID getServiceUniqueId() {
-    return this.uniqueID;
-  }
+  @NotNull String getOwnerName();
 
-  @Override
-  public @NotNull UUID getOwnerUniqueId() {
-    return this.cloudServiceConfiguration.getOwnerUniqueId();
-  }
+  @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
 
-  @Override
-  public @NotNull String getOwnerName() {
-    return this.cloudServiceConfiguration.getOwnerName();
-  }
+  void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
 
-  @Override
-  public @NotNull CloudServiceConfiguration getCloudServiceConfiguration() {
-    return this.cloudServiceConfiguration;
-  }
+  @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
 
-  @Override
-  public void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-    this.cloudServiceConfiguration = cloudServiceConfiguration;
-  }
+  void publishCloudServiceInfoUpdate();
+
+  void copyCloudService();
+
+  void shutdown();
 }

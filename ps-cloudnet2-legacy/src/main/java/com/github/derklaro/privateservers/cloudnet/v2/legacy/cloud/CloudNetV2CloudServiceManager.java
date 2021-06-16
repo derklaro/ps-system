@@ -25,7 +25,9 @@ package com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.creation.CloudServiceCreateConfiguration;
+import com.github.derklaro.privateservers.api.cloud.service.template.CloudServiceTemplate;
 import com.github.derklaro.privateservers.cloudnet.v2.legacy.listeners.CloudServiceStartAwaitListener;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudServiceManager;
 import com.github.derklaro.privateservers.common.util.EnumUtil;
@@ -36,23 +38,22 @@ import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import de.dytanic.cloudnet.lib.server.template.Template;
 import de.dytanic.cloudnet.lib.server.template.TemplateResource;
 import de.dytanic.cloudnet.lib.utility.document.Document;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
 
   static final CloudServiceManager INSTANCE = new CloudNetV2CloudServiceManager();
 
   @Override
-  public @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName,
-                                                                     @NotNull String templateBackend, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
-    ServerGroup serverGroup = CloudAPI.getInstance().getServerGroup(group);
+  public @NotNull CompletableFuture<CloudService> createCloudService(
+    @NotNull CloudServiceCreateConfiguration configuration) {
+    ServerGroup serverGroup = CloudAPI.getInstance().getServerGroup(configuration.group());
     if (serverGroup == null) {
       return CompletableFuture.completedFuture(null);
     }
@@ -60,18 +61,18 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
     UUID waitUniqueID = UUID.randomUUID();
     CloudAPI.getInstance().startGameServer(
       serverGroup.toSimple(),
-      this.createServerConfig(cloudServiceConfiguration, waitUniqueID),
-      this.createTemplate(templateName, templateBackend)
+      this.createServerConfig(configuration.privateServerConfiguration(), waitUniqueID),
+      this.createTemplate(configuration.template())
     );
 
     return CloudServiceStartAwaitListener.awaitStart(waitUniqueID);
   }
 
   @NotNull
-  private Template createTemplate(@NotNull String templateName, @NotNull String templateBackend) {
+  private Template createTemplate(@NotNull CloudServiceTemplate template) {
     return new Template(
-      templateName,
-      EnumUtil.findEnumField(TemplateResource.class, templateBackend.toUpperCase(), TemplateResource.LOCAL),
+      template.templateName(),
+      EnumUtil.findEnumField(TemplateResource.class, template.templateBackend().toUpperCase(), TemplateResource.LOCAL),
       null,
       new String[0],
       new ArrayList<>()
@@ -79,7 +80,8 @@ class CloudNetV2CloudServiceManager extends DefaultCloudServiceManager {
   }
 
   @NotNull
-  private ServerConfig createServerConfig(@NotNull CloudServiceConfiguration cloudServiceConfiguration, @NotNull UUID waitUniqueID) {
+  private ServerConfig createServerConfig(@NotNull CloudServiceConfiguration cloudServiceConfiguration,
+    @NotNull UUID waitUniqueID) {
     return new ServerConfig(
       false,
       "",

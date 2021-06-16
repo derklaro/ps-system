@@ -24,8 +24,8 @@
 package com.github.derklaro.privateservers.lobby.inventory;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.listening.ServiceListener;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.ServiceListener;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 

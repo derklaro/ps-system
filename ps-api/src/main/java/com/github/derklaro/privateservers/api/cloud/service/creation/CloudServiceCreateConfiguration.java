@@ -21,16 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.listening;
+package com.github.derklaro.privateservers.api.cloud.service.creation;
 
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
+import com.github.derklaro.privateservers.api.cloud.service.template.CloudServiceTemplate;
+import net.kyori.adventure.util.Buildable;
 import org.jetbrains.annotations.NotNull;
 
-public interface ServiceListener {
+public interface CloudServiceCreateConfiguration
+  extends Buildable<CloudServiceCreateConfiguration, CloudServiceCreateConfiguration.Builder> {
 
-  void handleServiceRegister(@NotNull CloudService cloudService);
+  static Builder builder() {
+    return new DefaultCloudServiceCreateConfiguration.DefaultBuilder();
+  }
 
-  void handleServerUpdate(@NotNull CloudService cloudService);
+  @NotNull String group();
 
-  void handleServiceUnregister(@NotNull CloudService cloudService);
+  @NotNull CloudServiceTemplate template();
+
+  @NotNull CloudServiceConfiguration privateServerConfiguration();
+
+  interface Builder extends Buildable.Builder<CloudServiceCreateConfiguration> {
+
+    @NotNull Builder group(@NotNull String group);
+
+    @NotNull Builder template(@NotNull CloudServiceTemplate template);
+
+    @NotNull Builder privateServerConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
+  }
 }

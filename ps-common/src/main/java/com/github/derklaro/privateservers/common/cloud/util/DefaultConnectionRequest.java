@@ -23,8 +23,8 @@
  */
 package com.github.derklaro.privateservers.common.cloud.util;
 
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
-import com.github.derklaro.privateservers.api.cloud.util.ConnectionRequest;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.connection.ConnectionRequest;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;

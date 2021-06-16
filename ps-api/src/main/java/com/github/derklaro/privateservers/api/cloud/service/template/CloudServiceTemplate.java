@@ -21,17 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.derklaro.privateservers.api.cloud.util;
+package com.github.derklaro.privateservers.api.cloud.service.template;
 
+import net.kyori.adventure.util.Buildable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+public interface CloudServiceTemplate extends Buildable<CloudServiceTemplate, CloudServiceTemplate.Builder> {
 
-public interface ConnectionRequest {
+  static @NotNull CloudServiceTemplate.Builder builder() {
+    return new DefaultCloudServiceTemplate.DefaultBuilder();
+  }
 
-  @NotNull CloudService getTargetService();
+  @NotNull String templateName();
 
-  @NotNull UUID getTargetPlayer();
+  @NotNull String templateBackend();
 
-  void fire();
+  interface Builder extends Buildable.Builder<CloudServiceTemplate> {
+
+    @NotNull Builder templateName(@NotNull String templateName);
+
+    @NotNull Builder templateBackend(@NotNull String templateBackend);
+  }
 }

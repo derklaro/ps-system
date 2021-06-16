@@ -23,11 +23,11 @@
  */
 package com.github.derklaro.privateservers.api.configuration;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
+import com.github.derklaro.privateservers.api.cloud.service.template.CloudServiceTemplate;
 import java.util.Collection;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
@@ -67,7 +67,7 @@ public class InventoryConfiguration {
     private ItemLayout publicServerListLayout;
 
     public MainMenuConfiguration(int inventorySize, String inventoryTitle, ItemLayout startServerLayout,
-                                 ItemLayout stopServerLayout, ItemLayout joinServerLayout, ItemLayout publicServerListLayout) {
+      ItemLayout stopServerLayout, ItemLayout joinServerLayout, ItemLayout publicServerListLayout) {
       super(inventorySize, inventoryTitle);
       this.startServerLayout = startServerLayout;
       this.stopServerLayout = stopServerLayout;
@@ -115,7 +115,8 @@ public class InventoryConfiguration {
     private ItemLayout openServerLayout;
     private ItemLayout serverWithWhitelistLayout;
 
-    public PublicServerListConfiguration(int inventorySize, String inventoryTitle, ItemLayout openServerLayout, ItemLayout serverWithWhitelistLayout) {
+    public PublicServerListConfiguration(int inventorySize, String inventoryTitle, ItemLayout openServerLayout,
+      ItemLayout serverWithWhitelistLayout) {
       super(inventorySize, inventoryTitle);
       this.openServerLayout = openServerLayout;
       this.serverWithWhitelistLayout = serverWithWhitelistLayout;
@@ -169,9 +170,10 @@ public class InventoryConfiguration {
     private boolean deleteOnOwnerLeave;
     private int maxIdleSeconds;
     private ItemLayout itemLayout;
+    private transient CloudServiceTemplate template;
 
     public ServiceItemMapping(String groupName, String templateName, String templateBackend,
-                              boolean copyAfterStop, int maxIdleSeconds, boolean deleteOnOwnerLeave, ItemLayout itemLayout) {
+      boolean copyAfterStop, int maxIdleSeconds, boolean deleteOnOwnerLeave, ItemLayout itemLayout) {
       this.groupName = groupName;
       this.templateName = templateName;
       this.templateBackend = templateBackend;
@@ -235,6 +237,16 @@ public class InventoryConfiguration {
 
     public void setItemLayout(ItemLayout itemLayout) {
       this.itemLayout = itemLayout;
+    }
+
+    public CloudServiceTemplate toTemplate() {
+      if (this.template == null) {
+        this.template = CloudServiceTemplate.builder()
+          .templateName(this.templateName)
+          .templateBackend(this.templateBackend)
+          .build();
+      }
+      return this.template;
     }
   }
 

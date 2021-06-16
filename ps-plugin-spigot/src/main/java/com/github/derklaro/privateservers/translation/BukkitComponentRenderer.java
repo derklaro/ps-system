@@ -24,12 +24,13 @@
 package com.github.derklaro.privateservers.translation;
 
 import com.github.derklaro.privateservers.api.translation.ComponentRenderer;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+import java.util.function.Function;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Method;
-import java.util.function.Function;
 
 public final class BukkitComponentRenderer {
 
@@ -45,11 +46,12 @@ public final class BukkitComponentRenderer {
       // modern bukkit
       try {
         Method getLocale = Player.class.getMethod("getLocale");
-        getLocale.setAccessible(true);
+        MethodHandle getterHandle = MethodHandles.publicLookup().unreflect(getLocale);
+
         localeGetter = player -> {
           try {
-            return (String) getLocale.invoke(player);
-          } catch (ReflectiveOperationException e) {
+            return (String) getterHandle.invoke(player);
+          } catch (Throwable throwable) {
             return null;
           }
         };

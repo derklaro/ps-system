@@ -24,8 +24,8 @@
 package com.github.derklaro.privateservers.common.cloud;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.listening.ServiceListener;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.ServiceListener;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.common.util.Iterables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -53,12 +53,12 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
 
   @Override
   public @NotNull Optional<CloudService> getCurrentCloudService() {
-    return this.getCloudServiceByUniqueID(this.getCurrentServiceUniqueID());
+    return this.getCloudServiceByUniqueId(this.getCurrentServiceUniqueID());
   }
 
   @Override
-  public @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID) {
-    return Iterables.first(this.cloudServices, cloudService -> cloudService.getServiceUniqueId().equals(uniqueID));
+  public @NotNull Optional<CloudService> getCloudServiceByUniqueId(@NotNull UUID uniqueId) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getServiceUniqueId().equals(uniqueId));
   }
 
   @Override
@@ -67,8 +67,8 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
   }
 
   @Override
-  public @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID) {
-    return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerUniqueId().equals(ownerUniqueID));
+  public @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueId(@NotNull UUID ownerUniqueId) {
+    return Iterables.first(this.cloudServices, cloudService -> cloudService.getOwnerUniqueId().equals(ownerUniqueId));
   }
 
   @Override

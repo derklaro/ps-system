@@ -23,7 +23,7 @@
  */
 package com.github.derklaro.privateservers.cloudnet.v2.connection;
 
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.common.cloud.util.DefaultConnectionRequest;
 import com.google.common.base.Preconditions;
 import de.dytanic.cloudnet.api.CloudAPI;

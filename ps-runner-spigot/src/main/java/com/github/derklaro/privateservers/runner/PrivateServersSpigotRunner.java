@@ -26,7 +26,7 @@ package com.github.derklaro.privateservers.runner;
 import com.github.derklaro.privateservers.PrivateServersSpigot;
 import com.github.derklaro.privateservers.api.Plugin;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.api.module.annotation.Module;
 import com.github.derklaro.privateservers.runner.command.PrivateServerInfoCommand;
 import com.github.derklaro.privateservers.runner.command.VisibilityCommand;

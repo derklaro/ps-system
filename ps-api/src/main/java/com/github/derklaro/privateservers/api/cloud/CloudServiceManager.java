@@ -23,16 +23,15 @@
  */
 package com.github.derklaro.privateservers.api.cloud;
 
-import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
-import com.github.derklaro.privateservers.api.cloud.listening.ServiceListener;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnmodifiableView;
-
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.creation.CloudServiceCreateConfiguration;
+import com.github.derklaro.privateservers.api.cloud.service.ServiceListener;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * Cloud service manager which handles all private cloud services which are registered in the cloud
@@ -43,16 +42,15 @@ public interface CloudServiceManager {
 
   @NotNull Optional<CloudService> getCurrentCloudService();
 
-  @NotNull Optional<CloudService> getCloudServiceByUniqueID(@NotNull UUID uniqueID);
+  @NotNull Optional<CloudService> getCloudServiceByUniqueId(@NotNull UUID uniqueId);
 
   @NotNull Optional<CloudService> getCloudServiceByName(@NotNull String name);
 
-  @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueID(@NotNull UUID ownerUniqueID);
+  @NotNull Optional<CloudService> getCloudServiceByOwnerUniqueId(@NotNull UUID ownerUniqueId);
 
   @NotNull Optional<CloudService> getCloudServiceByOwnerName(@NotNull String ownerName);
 
-  @NotNull CompletableFuture<CloudService> createCloudService(@NotNull String group, @NotNull String templateName, @NotNull String templateBackend,
-                                                              @NotNull CloudServiceConfiguration cloudServiceConfiguration);
+  @NotNull CompletableFuture<CloudService> createCloudService(@NotNull CloudServiceCreateConfiguration configuration);
 
   @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices();
 

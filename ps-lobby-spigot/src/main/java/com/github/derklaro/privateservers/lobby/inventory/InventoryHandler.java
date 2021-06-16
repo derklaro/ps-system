@@ -24,7 +24,7 @@
 package com.github.derklaro.privateservers.lobby.inventory;
 
 import com.github.derklaro.privateservers.api.cloud.CloudServiceManager;
-import com.github.derklaro.privateservers.api.cloud.util.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudService;
 import com.github.derklaro.privateservers.api.configuration.Configuration;
 import com.github.derklaro.privateservers.api.configuration.InventoryConfiguration;
 import com.github.derklaro.privateservers.lobby.inventory.handlers.MainInventoryClickHandler;
