@@ -1,7 +1,7 @@
-# Private Server System [![Build Status](https://travis-ci.com/derklaro/ps-system.svg?branch=master)](https://travis-ci.com/derklaro/ps-system)
+# Private Server System ![Build Status](https://github.com/derklaro/ps-system/actions/workflows/build.yml/badge.svg)
 
-This private server system is designed for very complex networks (maybe with their own cloud system). Because of the **
-modular structure** the system is very flexible and has no need to load classes which are not required for the current
+This private server system is designed for very complex networks (maybe with their own cloud system). Because of the
+**modular structure** the system is very flexible and has no need to load classes which are not required for the current
 running environment.
 
 ## How to use
@@ -13,14 +13,14 @@ called `plugins/ps/modules` and upload the lobby as well as the cloud module to 
 
 The following cloud systems are supported:
 
-- [CloudNET V2.1.17](https://github.com/CloudNetService/CloudNet) with the module ps-cloudnet2-legacy.
-- [CloudNET V2.2+](https://github.com/CloudNetService/CloudNet) with the module ps-cloudnet2.
-- [CloudNET V3.3+](https://github.com/CloudNetService/CloudNet-v3) with the module ps-cloudnet3.
+- [CloudNET V2.1.17](https://github.com/CloudNetService/CloudNet) using the module ps-cloudnet2-legacy.
+- [CloudNET V2.2+](https://github.com/CloudNetService/CloudNet/tree/development) using the module ps-cloudnet2.
+- [CloudNET V3.4+](https://github.com/CloudNetService/CloudNet-v3) using the module ps-cloudnet3.
 
 Then create a new
 
-- ServerGroup (if you are using cloudnet 2)
 - Task (if you are using cloudnet 3)
+- ServerGroup (if you are using cloudnet 2)
 
 and restart the lobby server. Now there should be configuration file called `config.json` in the
 `plugins/ps/modules/lobby` folder. Open this file and configure the options you see. Set `ps-group-name` to the just
@@ -28,14 +28,18 @@ created group name.
 
 ##### Private server group/task config
 
-Upload the system, and the cloud module as mentioned above. Then put in the module directory the ps-runner module.
+Upload the system and cloud module as mentioned above. Then put the runner into the modules folder as well.
 
 **Now you are ready to go!**
 
+## Help & Bug-Reports
+
+If you need help or are experiencing any issues using the system, feel free to use the GitHub issue tracker to submit
+[a new ticket](https://github.com/derklaro/ps-system/issues/new).
+
 ## Support our work
 
-If you like the pss and want to support our work you can **star** :star2: the project, leave a (positive)
-review on [SpigotMC]() or join our [Discord](https://discord.gg/uskXdVZ).
+If you like the system and want to support our work you can **star** :star2: the project.
 
 ## Developers
 
@@ -44,7 +48,7 @@ review on [SpigotMC]() or join our [Discord](https://discord.gg/uskXdVZ).
 ```
 git clone https://github.com/derklaro/ps-system.git
 cd ps-system/
-mvn clean package
+gradlew
 ```
 
 ##### Get the api
@@ -65,8 +69,9 @@ Maven dependency:
 
 <dependency>
   <groupId>com.github.derklaro</groupId>
-  <artifactId>ps-system</artifactId>
+  <artifactId>ps-api</artifactId>
   <version>1.1.0</version>
+  <scope>provided</scope>
 </dependency>
 ```
 
@@ -82,7 +87,7 @@ maven {
 Gradle dependency:
 
 ```groovy
-compile group: 'com.github.derklaro', name: 'ps-system', version: '1.1.0'
+compileOnly group: 'com.github.derklaro', name: 'ps-api', version: '1.1.0'
 ```
 
 ##### Implement a new cloud system
@@ -92,5 +97,6 @@ look [here](https://github.com/derklaro/ps-system/ps-cloudnet3/src/main/java/com
 
 ## Licence and copyright notice
 
-The project is licenced under the [MIT Licence](https://github.com/derklaro/ps-system/blob/master/license.txt). All
-files are Copyright (c) 2020 Pasqual K. and all contributors.
+The project is licenced under the terms of the
+[MIT Licence](https://github.com/derklaro/ps-system/blob/master/license.txt). All files are Copyright (c) 2020 Pasqual
+K. and all contributors.
