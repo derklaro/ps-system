@@ -56,7 +56,7 @@ public class PlayerLoginListener implements Listener {
           return;
         }
 
-        if (cloudServiceConfiguration.hasWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
+        if (cloudServiceConfiguration.isWhitelist() && !cloudServiceConfiguration.getWhitelistedPlayers().contains(event.getPlayer().getName())) {
           event.setResult(PlayerLoginEvent.Result.KICK_WHITELIST);
           event.setKickMessage(ComponentRenderer.renderToString(Message.NOT_WHITELISTED.build()));
         }

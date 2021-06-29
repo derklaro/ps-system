@@ -71,7 +71,9 @@ subprojects {
 
   dependencies {
     compileOnly 'org.jetbrains:annotations:21.0.1'
+    // lombok configuration
     compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
   }
 
   sourceCompatibility = '8'

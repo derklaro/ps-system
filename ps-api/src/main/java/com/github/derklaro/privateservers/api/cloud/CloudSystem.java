@@ -26,11 +26,28 @@ package com.github.derklaro.privateservers.api.cloud;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an embedded system which manages services.
+ */
 public interface CloudSystem {
-
+  /**
+   * Get the class which must be present in order for the system to work.
+   *
+   * @return the class which must be present in order for the system to work.
+   */
   @NotNull String getIdentifierClass();
 
+  /**
+   * Get the fully qualified name of this system.
+   *
+   * @return the fully qualified name of this system.
+   */
   @NotNull String getName();
 
+  /**
+   * Get the manager which allows access to the underlying system.
+   *
+   * @return the manager which allows access to the underlying system.
+   */
   @NotNull CloudServiceManager getCloudServiceManager();
 }

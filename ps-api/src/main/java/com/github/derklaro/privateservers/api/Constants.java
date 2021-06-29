@@ -24,6 +24,13 @@
 
 package com.github.derklaro.privateservers.api;
 
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Holds some constants which may be removed or change from version to version. Don't feel save if you use this
+ * class for your plugin!
+ */
+@ApiStatus.Internal
 public final class Constants {
 
   public static final String WHITELIST_JOIN_PERM = "ps.whitelist.bypass";

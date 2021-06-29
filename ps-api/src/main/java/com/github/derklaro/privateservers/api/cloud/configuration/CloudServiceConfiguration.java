@@ -24,14 +24,23 @@
 
 package com.github.derklaro.privateservers.api.cloud.configuration;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Represents a data class which holds all configuration options for a private server.
+ */
+@Data
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class CloudServiceConfiguration {
 
   private final boolean autoDeleteAfterOwnerLeave;
@@ -47,74 +56,9 @@ public class CloudServiceConfiguration {
   private final String initialTemplateBackend;
 
   private boolean publicService;
-  private boolean hasWhitelist;
-
-  public CloudServiceConfiguration(boolean autoDeleteAfterOwnerLeave, boolean autoSaveBeforeStop, int maxIdleSeconds,
-                                   Collection<String> whitelistedPlayers, UUID ownerUniqueId, String ownerName,
-                                   String initialGroup, String initialTemplate, String initialTemplateBackend,
-                                   boolean publicService, boolean hasWhitelist) {
-    this.autoDeleteAfterOwnerLeave = autoDeleteAfterOwnerLeave;
-    this.autoSaveBeforeStop = autoSaveBeforeStop;
-    this.maxIdleSeconds = maxIdleSeconds;
-    this.whitelistedPlayers = whitelistedPlayers;
-    this.ownerUniqueId = ownerUniqueId;
-    this.ownerName = ownerName;
-    this.initialGroup = initialGroup;
-    this.initialTemplate = initialTemplate;
-    this.initialTemplateBackend = initialTemplateBackend;
-    this.publicService = publicService;
-    this.hasWhitelist = hasWhitelist;
-  }
-
-  public boolean isAutoDeleteAfterOwnerLeave() {
-    return this.autoDeleteAfterOwnerLeave;
-  }
-
-  public boolean isAutoSaveBeforeStop() {
-    return this.autoSaveBeforeStop;
-  }
+  private boolean whitelist;
 
   public int getMaxIdleSeconds() {
     return this.maxIdleSeconds > 0 ? this.maxIdleSeconds : 30;
-  }
-
-  public Collection<String> getWhitelistedPlayers() {
-    return this.whitelistedPlayers;
-  }
-
-  public UUID getOwnerUniqueId() {
-    return this.ownerUniqueId;
-  }
-
-  public String getOwnerName() {
-    return this.ownerName;
-  }
-
-  public String getInitialGroup() {
-    return this.initialGroup;
-  }
-
-  public String getInitialTemplate() {
-    return this.initialTemplate;
-  }
-
-  public String getInitialTemplateBackend() {
-    return this.initialTemplateBackend;
-  }
-
-  public boolean isPublicService() {
-    return this.publicService;
-  }
-
-  public void setPublicService(boolean publicService) {
-    this.publicService = publicService;
-  }
-
-  public boolean hasWhitelist() {
-    return this.hasWhitelist;
-  }
-
-  public void setHasWhitelist(boolean hasWhitelist) {
-    this.hasWhitelist = hasWhitelist;
   }
 }

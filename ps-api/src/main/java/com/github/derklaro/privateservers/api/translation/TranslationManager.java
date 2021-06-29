@@ -48,20 +48,43 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * The root translation manager.
+ */
 public class TranslationManager {
-
+  /**
+   * The default locale (english) of the system.
+   */
   protected static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+  /**
+   * The length of {@code .properties}.
+   */
   private static final int PROPERTIES_EXTENSION_LENGTH = ".properties".length();
+  /**
+   * The path of the translation files location.
+   */
   private static final Path TRANSLATION_PATH = Paths.get("plugins/ps/translations");
 
+  /**
+   * The translation registry instance used by this manager.
+   */
   private final TranslationRegistry translationRegistry;
+  /**
+   * The loaded translations of this manager.
+   */
   private final Set<Locale> loadedTranslations = new CopyOnWriteArraySet<>();
 
+  /**
+   * Constructs a new translation manager instance.
+   */
   public TranslationManager() {
     this.translationRegistry = TranslationRegistry.create(Key.key("ps", "main"));
     this.translationRegistry.defaultLocale(DEFAULT_LOCALE);
   }
 
+  /**
+   * Initializes this translation manager. This will load the default and custom translation files.
+   */
   public void initialize() {
     this.loadDefault();
     this.loadCustom();
@@ -69,11 +92,17 @@ public class TranslationManager {
     GlobalTranslator.get().addSource(this.translationRegistry);
   }
 
+  /**
+   * Loads the default translation file compiled into the jar.
+   */
   protected void loadDefault() {
     ResourceBundle bundle = ResourceBundle.getBundle("ps", DEFAULT_LOCALE, UTF8ResourceBundleControl.get());
     this.translationRegistry.registerAll(DEFAULT_LOCALE, bundle, false);
   }
 
+  /**
+   * Loads all custom translation files located in the translations folder.
+   */
   protected void loadCustom() {
     if (Files.notExists(TRANSLATION_PATH)) {
       try {
@@ -104,6 +133,12 @@ public class TranslationManager {
     });
   }
 
+  /**
+   * Loads a specific translation file.
+   *
+   * @param translationFile the file to load.
+   * @return the loaded translations from the path.
+   */
   protected @Nullable Map.Entry<Locale, ResourceBundle> loadTranslationFile(@NotNull Path translationFile) {
     String fileName = translationFile.getFileName().toString();
     String localeString = fileName.substring(0, fileName.length() - PROPERTIES_EXTENSION_LENGTH);

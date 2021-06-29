@@ -78,7 +78,7 @@ public abstract class DefaultCloudServiceManager implements CloudServiceManager,
   }
 
   @Override
-  public @NotNull @UnmodifiableView Collection<CloudService> getPrivateCloudServices() {
+  public @NotNull @UnmodifiableView Collection<CloudService> getCloudServices() {
     return Collections.unmodifiableSet(this.cloudServices);
   }
 

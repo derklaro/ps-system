@@ -27,6 +27,9 @@ package com.github.derklaro.privateservers.api.cloud.exception;
 import com.github.derklaro.privateservers.api.cloud.CloudSystem;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an exception fired when a cloud system is already detected and should be re-detected.
+ */
 public class CloudSystemAlreadyDetectedException extends RuntimeException {
 
   private static final long serialVersionUID = -4867031072188003556L;

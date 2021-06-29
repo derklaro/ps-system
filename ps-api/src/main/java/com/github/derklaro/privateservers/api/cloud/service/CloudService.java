@@ -30,25 +30,74 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Represents a service running in the embedding system.
+ */
 public interface CloudService {
-
+  /**
+   * Get the fully qualified name of the service.
+   *
+   * @return the fully qualified name of the service.
+   */
   @NotNull String getName();
 
+  /**
+   * Get the unique id of the service.
+   *
+   * @return the unique id of the service.
+   */
   @NotNull UUID getServiceUniqueId();
 
+  /**
+   * Get the unique id of the private server owner.
+   *
+   * @return the unique id of the private server owner.
+   */
   @NotNull UUID getOwnerUniqueId();
 
+  /**
+   * Get the name of the private server owner.
+   *
+   * @return the name of the private server owner.
+   */
   @NotNull String getOwnerName();
 
+  /**
+   * Get the configuration of this private service.
+   *
+   * @return the configuration of this private service.
+   */
   @NotNull CloudServiceConfiguration getCloudServiceConfiguration();
 
+  /**
+   * Sets the configuration of this private service. Updating of this service using
+   * {@link #publishCloudServiceInfoUpdate()} is required in order for every other service
+   * to get the change.
+   *
+   * @param cloudServiceConfiguration the new configuration to use
+   */
   void setCloudServiceConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
 
+  /**
+   * Creates a connection request targeting this service.
+   *
+   * @param targetPlayerUniqueID the unique id of the player to connect.
+   * @return the created connection request.
+   */
   @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
 
+  /**
+   * Publishes an update of this service configuration into the embedding system.
+   */
   void publishCloudServiceInfoUpdate();
 
+  /**
+   * Copies all files of this cloud service to the template used to create the service.
+   */
   void copyCloudService();
 
+  /**
+   * Shuts the service down.
+   */
   void shutdown();
 }

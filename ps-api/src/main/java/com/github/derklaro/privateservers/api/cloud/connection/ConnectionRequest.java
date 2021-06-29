@@ -29,11 +29,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Represents a re-usable request of a player to join a specific cloud service.
+ *
+ * @see CloudService#createConnectionRequest(UUID)
+ */
 public interface ConnectionRequest {
-
+  /**
+   * Get the service the player will be connected to when fired.
+   *
+   * @return the service the player will be connected to.
+   */
   @NotNull CloudService getTargetService();
 
+  /**
+   * Get the unique id of the player which should be sent when fired.
+   *
+   * @return the unique id of the player which should be sent.
+   */
   @NotNull UUID getTargetPlayer();
 
+  /**
+   * Fires the request connecting the player to the target service if it still exists.
+   */
   void fire();
 }

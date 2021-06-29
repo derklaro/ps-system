@@ -63,7 +63,7 @@ public class PrivateServerInfoCommand implements CommandExecutor {
       cloudService.getOwnerName(),
       cloudService.getOwnerUniqueId(),
       config.isPublicService() ? Message.VISIBILITY_PUBLIC.build() : Message.VISIBILITY_PRIVATE.build(),
-      config.hasWhitelist() ? Message.WHITELIST_ON.build() : Message.WHITELIST_OFF.build()
+      config.isWhitelist() ? Message.WHITELIST_ON.build() : Message.WHITELIST_OFF.build()
     ));
     return true;
   }

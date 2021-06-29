@@ -32,21 +32,52 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents a module configuration. This configuration will be moved into a module.json during the compile time.
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Module {
-
+  /**
+   * Get the id namespace of the module.
+   *
+   * @return the id namespace of the module.
+   */
   @NotNull String id();
 
+  /**
+   * Get the display name of the module. Empty by default.
+   *
+   * @return the display name of the module.
+   */
   @NotNull String displayName() default "";
 
+  /**
+   * Get the version of the module.
+   *
+   * @return the version of the module.
+   */
   @NotNull String version();
 
+  /**
+   * Get the website of the module. Empty by default.
+   *
+   * @return he website of the module.
+   */
   @NotNull String website() default "";
 
+  /**
+   * Get the description of the module. Empty by default.
+   *
+   * @return the description of the module.
+   */
   @NotNull String description() default "";
 
+  /**
+   * Get the authors of the module. Empty by default.
+   *
+   * @return the authors of the module.
+   */
   @NotNull String[] authors() default "";
-
 }

@@ -31,20 +31,57 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 
+/**
+ * Represents a loaded module in the runtime.
+ */
 public interface ModuleContainer {
-
+  /**
+   * Get the description file of the module.
+   *
+   * @return the description file of the module.
+   */
   @NotNull ModuleDescription getDescription();
 
+  /**
+   * Get the current state of the module.
+   *
+   * @return the current state of the module.
+   */
   @NotNull ModuleState getState();
 
+  /**
+   * Get the class loader used to load the module main class.
+   *
+   * @return the class loader used to load the module main class.
+   */
   @NotNull URLClassLoader getClassLoader();
 
+  /**
+   * Get the path where the module was loaded from.
+   *
+   * @return the path where the module was loaded from.
+   */
   @NotNull Path getModulePath();
 
+  /**
+   * Get the main class of the module.
+   *
+   * @return the main class of the module.
+   */
   @NotNull Class<?> getMainClass();
 
+  /**
+   * Get the instance of the module created during the load.
+   *
+   * @return the instance of the module.
+   */
   @NotNull Object getInstance();
 
+  /**
+   * Sets the current state of this module.
+   *
+   * @param moduleState the new state of the module.
+   */
   @ApiStatus.Internal
   void setModuleState(@NotNull ModuleState moduleState);
 }

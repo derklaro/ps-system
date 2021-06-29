@@ -66,13 +66,13 @@ public class PublicServersInventoryHandler {
     Map<Integer, CloudService> newMappings = new ConcurrentHashMap<>();
 
     int addedItemsAmount = 0;
-    for (CloudService cloudService : manager.getPrivateCloudServices()) {
+    for (CloudService cloudService : manager.getCloudServices()) {
       if (cloudService.getCloudServiceConfiguration().isPublicService()) {
         if (++addedItemsAmount >= inventory.getSize()) {
           break;
         } else {
           int resultingSlot;
-          if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
+          if (cloudService.getCloudServiceConfiguration().isWhitelist()) {
             resultingSlot = this.inventoryHandler.putItem(inventory,
               serverListConfiguration.getServerWithWhitelistLayout(), cloudService);
           } else {

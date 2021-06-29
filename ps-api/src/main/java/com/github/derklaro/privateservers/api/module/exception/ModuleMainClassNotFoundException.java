@@ -26,6 +26,9 @@ package com.github.derklaro.privateservers.api.module.exception;
 
 import java.nio.file.Path;
 
+/**
+ * An exception thrown when the main class of a module can not be found.
+ */
 public class ModuleMainClassNotFoundException extends RuntimeException {
 
   private static final long serialVersionUID = 2719365883380259224L;

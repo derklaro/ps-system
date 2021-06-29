@@ -31,13 +31,37 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * Represents a provider and detector for cloud systems.
+ */
 public interface CloudDetector {
-
+  /**
+   * Registers a new cloud system for detection.
+   *
+   * @param requiredClass the class which is required to run the cloud system.
+   * @param factory the factory to create a new instance of the cloud system.
+   * @throws CloudSystemAlreadyRegisteredException thrown if the cloud system is already registered.
+   */
   void registerCloudSystem(@NotNull String requiredClass, @NotNull Supplier<CloudSystem> factory) throws CloudSystemAlreadyRegisteredException;
 
+  /**
+   * Detects the best cloud system which can currently be ran.
+   *
+   * @throws CloudSystemAlreadyDetectedException thrown if a cloud system is already detected.
+   */
   void detectCloudSystem() throws CloudSystemAlreadyDetectedException;
 
+  /**
+   * Get if a cloud system is already detected.
+   *
+   * @return if a cloud system is already detected.
+   */
   boolean isCloudSystemDetected();
 
+  /**
+   * Get the detected cloud system if one got detected.
+   *
+   * @return the detected cloud system if one got detected.
+   */
   @NotNull Optional<CloudSystem> getDetectedCloudSystem();
 }

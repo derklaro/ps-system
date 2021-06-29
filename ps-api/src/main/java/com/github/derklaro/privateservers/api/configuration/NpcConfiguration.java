@@ -24,11 +24,18 @@
 
 package com.github.derklaro.privateservers.api.configuration;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Represents the configuration for the npcs.
+ */
+@Data
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 public class NpcConfiguration {
 
   private int actionDistance;
@@ -53,62 +60,7 @@ public class NpcConfiguration {
     this.knockbackConfiguration = new KnockbackConfiguration();
   }
 
-  public int getActionDistance() {
-    return this.actionDistance;
-  }
-
-  public void setActionDistance(int actionDistance) {
-    this.actionDistance = actionDistance;
-  }
-
-  public int getSpawnDistance() {
-    return this.spawnDistance;
-  }
-
-  public void setSpawnDistance(int spawnDistance) {
-    this.spawnDistance = spawnDistance;
-  }
-
-  public int getTablistRemovalTicks() {
-    return this.tablistRemovalTicks;
-  }
-
-  public void setTablistRemovalTicks(int tablistRemovalTicks) {
-    this.tablistRemovalTicks = tablistRemovalTicks;
-  }
-
-  public boolean isImitatePlayer() {
-    return this.imitatePlayer;
-  }
-
-  public void setImitatePlayer(boolean imitatePlayer) {
-    this.imitatePlayer = imitatePlayer;
-  }
-
-  public boolean isLookAtPlayer() {
-    return this.lookAtPlayer;
-  }
-
-  public void setLookAtPlayer(boolean lookAtPlayer) {
-    this.lookAtPlayer = lookAtPlayer;
-  }
-
-  public LabyModConfiguration getLabyModConfiguration() {
-    return this.labyModConfiguration;
-  }
-
-  public void setLabyModConfiguration(LabyModConfiguration labyModConfiguration) {
-    this.labyModConfiguration = labyModConfiguration;
-  }
-
-  public KnockbackConfiguration getKnockbackConfiguration() {
-    return this.knockbackConfiguration;
-  }
-
-  public void setKnockbackConfiguration(KnockbackConfiguration knockbackConfiguration) {
-    this.knockbackConfiguration = knockbackConfiguration;
-  }
-
+  @Data
   @ToString
   @EqualsAndHashCode
   public static class LabyModConfiguration {
@@ -120,24 +72,9 @@ public class NpcConfiguration {
       this.emoteIds = new int[]{2, 49};
       this.emoteDelayTicks = 20 * 20;
     }
-
-    public int[] getEmoteIds() {
-      return this.emoteIds;
-    }
-
-    public void setEmoteIds(int[] emoteIds) {
-      this.emoteIds = emoteIds;
-    }
-
-    public int getEmoteDelayTicks() {
-      return this.emoteDelayTicks;
-    }
-
-    public void setEmoteDelayTicks(int emoteDelayTicks) {
-      this.emoteDelayTicks = emoteDelayTicks;
-    }
   }
 
+  @Data
   @ToString
   @EqualsAndHashCode
   public static class KnockbackConfiguration {
@@ -152,38 +89,6 @@ public class NpcConfiguration {
       this.bypassPermission = "ps.npc.knockback.bypass";
       this.knockbackDistance = 1.0;
       this.knockbackStrength = 0.8;
-    }
-
-    public boolean isEnabled() {
-      return this.enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public String getBypassPermission() {
-      return this.bypassPermission;
-    }
-
-    public void setBypassPermission(String bypassPermission) {
-      this.bypassPermission = bypassPermission;
-    }
-
-    public double getKnockbackDistance() {
-      return this.knockbackDistance;
-    }
-
-    public void setKnockbackDistance(double knockbackDistance) {
-      this.knockbackDistance = knockbackDistance;
-    }
-
-    public double getKnockbackStrength() {
-      return this.knockbackStrength;
-    }
-
-    public void setKnockbackStrength(double knockbackStrength) {
-      this.knockbackStrength = knockbackStrength;
     }
   }
 }

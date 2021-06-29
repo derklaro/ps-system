@@ -24,8 +24,16 @@
 
 package com.github.derklaro.privateservers.api.module;
 
+/**
+ * The states a module can be in.
+ */
 public enum ModuleState {
-
+  /**
+   * The module is enabled and loaded.
+   */
   ENABLED,
+  /**
+   * The module is loaded but currently disabled.
+   */
   DISABLED
 }

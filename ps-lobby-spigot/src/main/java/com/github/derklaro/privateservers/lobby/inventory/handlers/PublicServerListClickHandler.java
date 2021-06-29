@@ -60,7 +60,7 @@ public class PublicServerListClickHandler implements ClickHandler {
 
   private boolean shouldSend(@NotNull Player player, @NotNull CloudService cloudService) {
     InventoryConfiguration.ItemLayout itemLayout;
-    if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
+    if (cloudService.getCloudServiceConfiguration().isWhitelist()) {
       itemLayout = this.configuration.getServerWithWhitelistLayout();
     } else {
       itemLayout = this.configuration.getOpenServerLayout();

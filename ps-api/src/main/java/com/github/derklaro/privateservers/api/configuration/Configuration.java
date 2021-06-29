@@ -24,9 +24,19 @@
 
 package com.github.derklaro.privateservers.api.configuration;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Represents the main configuration file for the system.
+ */
+@Data
+@ToString
+@EqualsAndHashCode
 public class Configuration {
 
   private String databaseProvider;
@@ -70,45 +80,5 @@ public class Configuration {
       new InventoryConfiguration.ItemLayout(-1, null, "WATCH", -1, "§a§lServer of %owner_name%", new ArrayList<>()),
       new InventoryConfiguration.ItemLayout(-1, null, "COMPASS", -1, "§c§lServer of %owner_name%", new ArrayList<>())
     );
-  }
-
-  public String getDatabaseProvider() {
-    return this.databaseProvider;
-  }
-
-  public void setDatabaseProvider(String databaseProvider) {
-    this.databaseProvider = databaseProvider;
-  }
-
-  public NpcConfiguration getNpcConfiguration() {
-    return this.npcConfiguration;
-  }
-
-  public void setNpcConfiguration(NpcConfiguration npcConfiguration) {
-    this.npcConfiguration = npcConfiguration;
-  }
-
-  public InventoryConfiguration.MainMenuConfiguration getMainMenuConfiguration() {
-    return this.mainMenuConfiguration;
-  }
-
-  public void setMainMenuConfiguration(InventoryConfiguration.MainMenuConfiguration mainMenuConfiguration) {
-    this.mainMenuConfiguration = mainMenuConfiguration;
-  }
-
-  public InventoryConfiguration.ServiceTypeStartInventory getServiceTemplateStartItems() {
-    return this.serviceTemplateStartItems;
-  }
-
-  public void setServiceTemplateStartItems(InventoryConfiguration.ServiceTypeStartInventory serviceTemplateStartItems) {
-    this.serviceTemplateStartItems = serviceTemplateStartItems;
-  }
-
-  public InventoryConfiguration.PublicServerListConfiguration getPublicServerListConfiguration() {
-    return this.publicServerListConfiguration;
-  }
-
-  public void setPublicServerListConfiguration(InventoryConfiguration.PublicServerListConfiguration publicServerListConfiguration) {
-    this.publicServerListConfiguration = publicServerListConfiguration;
   }
 }

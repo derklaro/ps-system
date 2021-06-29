@@ -26,11 +26,28 @@ package com.github.derklaro.privateservers.api.cloud.service;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a common listener for service state changes.
+ */
 public interface ServiceListener {
-
+  /**
+   * Called when a new service registers into the system.
+   *
+   * @param cloudService the cloud service registered.
+   */
   void handleServiceRegister(@NotNull CloudService cloudService);
 
+  /**
+   * Called when any change happens to a cloud service.
+   *
+   * @param cloudService the changed service.
+   */
   void handleServerUpdate(@NotNull CloudService cloudService);
 
+  /**
+   * Called when a service unregisters from the system.
+   *
+   * @param cloudService the unregistered service.
+   */
   void handleServiceUnregister(@NotNull CloudService cloudService);
 }

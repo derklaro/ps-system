@@ -80,8 +80,8 @@ public class WhitelistCommand implements TabExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("on")) {
-        if (!cloudService.getCloudServiceConfiguration().hasWhitelist()) {
-          cloudService.getCloudServiceConfiguration().setHasWhitelist(true);
+        if (!cloudService.getCloudServiceConfiguration().isWhitelist()) {
+          cloudService.getCloudServiceConfiguration().setWhitelist(true);
           cloudService.publishCloudServiceInfoUpdate();
         }
 
@@ -90,8 +90,8 @@ public class WhitelistCommand implements TabExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("off")) {
-        if (cloudService.getCloudServiceConfiguration().hasWhitelist()) {
-          cloudService.getCloudServiceConfiguration().setHasWhitelist(false);
+        if (cloudService.getCloudServiceConfiguration().isWhitelist()) {
+          cloudService.getCloudServiceConfiguration().setWhitelist(false);
           cloudService.publishCloudServiceInfoUpdate();
         }
 

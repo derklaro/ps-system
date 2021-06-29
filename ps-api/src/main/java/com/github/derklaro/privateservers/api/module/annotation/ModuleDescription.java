@@ -24,9 +24,14 @@
 
 package com.github.derklaro.privateservers.api.module.annotation;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Represents a written file based of a {@link Module} annotation.
+ */
+@Data
 @ToString
 @EqualsAndHashCode
 public class ModuleDescription {
@@ -39,46 +44,8 @@ public class ModuleDescription {
   private final String mainClass;
   private final String[] authors;
 
-  public ModuleDescription(String id, String displayName, String version, String website, String description, String mainClass, String[] authors) {
-    this.id = id;
-    this.displayName = displayName;
-    this.version = version;
-    this.website = website;
-    this.description = description;
-    this.mainClass = mainClass;
-    this.authors = authors;
-  }
-
   public static ModuleDescription from(Module annotation, String mainClass) {
     return new ModuleDescription(annotation.id(), annotation.displayName(), annotation.version(),
       annotation.website(), annotation.description(), mainClass, annotation.authors());
-  }
-
-  public String getId() {
-    return this.id;
-  }
-
-  public String getDisplayName() {
-    return this.displayName;
-  }
-
-  public String getVersion() {
-    return this.version;
-  }
-
-  public String getWebsite() {
-    return this.website;
-  }
-
-  public String getDescription() {
-    return this.description;
-  }
-
-  public String getMainClass() {
-    return this.mainClass;
-  }
-
-  public String[] getAuthors() {
-    return this.authors;
   }
 }

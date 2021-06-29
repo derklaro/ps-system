@@ -27,20 +27,51 @@ package com.github.derklaro.privateservers.api.cloud.service.template;
 import net.kyori.adventure.util.Buildable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a template which holds files for a service.
+ */
 public interface CloudServiceTemplate extends Buildable<CloudServiceTemplate, CloudServiceTemplate.Builder> {
-
+  /**
+   * Creates a new builder instance for a template.
+   *
+   * @return a new builder instance for a template.
+   */
   static @NotNull CloudServiceTemplate.Builder builder() {
     return new DefaultCloudServiceTemplate.DefaultBuilder();
   }
 
+  /**
+   * Get the name of the template.
+   *
+   * @return the name of the template.
+   */
   @NotNull String templateName();
 
+  /**
+   * Get the backend name of the template.
+   *
+   * @return the backend name of the template.
+   */
   @NotNull String templateBackend();
 
+  /**
+   * Represents a builder for a template.
+   */
   interface Builder extends Buildable.Builder<CloudServiceTemplate> {
-
+    /**
+     * Sets the name of the template.
+     *
+     * @param templateName the name of the template.
+     * @return the same instance of this class, for chaining.
+     */
     @NotNull Builder templateName(@NotNull String templateName);
 
+    /**
+     * Sets the name of the backend the template is located in.
+     *
+     * @param templateBackend the name of the backend the template is located in.
+     * @return the same instance of this class, for chaining.
+     */
     @NotNull Builder templateBackend(@NotNull String templateBackend);
   }
 }

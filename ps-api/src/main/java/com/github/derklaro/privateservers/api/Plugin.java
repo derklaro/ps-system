@@ -29,11 +29,31 @@ import com.github.derklaro.privateservers.api.module.ModuleLoader;
 import com.github.derklaro.privateservers.api.task.TaskManager;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a plugin running on any platform. It holds general abstractions for common api methods which may be
+ * required for different platforms or modules.
+ */
 public interface Plugin {
-
+  /**
+   * Get the task manager instance of the platform the plugin is running on.
+   *
+   * @return the task manager instance.
+   */
   @NotNull TaskManager getTaskManager();
 
+  /**
+   * Get the embedded cloud system detector, used to identify which underlying sub-system should be used to
+   * start and manage services. The detector will (when initialized) also hold the current detected cloud system
+   * instance.
+   *
+   * @return the embedded cloud system detector.
+   */
   @NotNull CloudDetector getCloudSystemDetector();
 
+  /**
+   * Get the loader for the modules which loaded all modules supporting the base system.
+   *
+   * @return the current module loader instance.
+   */
   @NotNull ModuleLoader getModuleLoader();
 }

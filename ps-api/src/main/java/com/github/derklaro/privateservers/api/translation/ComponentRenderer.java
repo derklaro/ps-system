@@ -28,37 +28,82 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.kyori.adventure.translation.Translator;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
+/**
+ * A renderer for components. Not part of the public api, don't feel safe when using one of these methods in your plugin.
+ */
+@ApiStatus.Internal
 public final class ComponentRenderer {
 
   private ComponentRenderer() {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * Renders a component to a minecraft message string.
+   *
+   * @param component the component to render.
+   * @return the rendered component as a string.
+   */
   public static @NotNull String renderToString(@NotNull Component component) {
     return LegacyComponentSerializer.legacySection().serialize(render(component));
   }
 
+  /**
+   * Renders a component to a minecraft message string.
+   *
+   * @param component the component to render.
+   * @param locale the locale to use while rendering.
+   * @return the rendered component as a string.
+   */
   public static @NotNull String renderToString(@NotNull Component component, @Nullable String locale) {
     return LegacyComponentSerializer.legacySection().serialize(render(component, locale));
   }
 
+  /**
+   * Renders a component to a minecraft message string.
+   *
+   * @param component the component to render.
+   * @param locale the locale to use while rendering.
+   * @return the rendered component as a string.
+   */
   public static @NotNull String renderToString(@NotNull Component component, @Nullable Locale locale) {
     return LegacyComponentSerializer.legacySection().serialize(render(component, locale));
   }
 
+  /**
+   * Renders a component to a component.
+   *
+   * @param component the component to render.
+   * @return the rendered component.
+   */
   public static @NotNull Component render(@NotNull Component component) {
     return render(component, Locale.getDefault());
   }
 
+  /**
+   * Renders a component to a component.
+   *
+   * @param component the component to render.
+   * @param locale the locale to use while rendering.
+   * @return the rendered component.
+   */
   public static @NotNull Component render(@NotNull Component component, @Nullable String locale) {
     return render(component, parseLocale(locale));
   }
 
+  /**
+   * Renders a component to a component.
+   *
+   * @param component the component to render.
+   * @param locale the locale to use while rendering.
+   * @return the rendered component.
+   */
   public static @NotNull Component render(@NotNull Component component, @Nullable Locale locale) {
     if (locale == null) {
       locale = Locale.getDefault();
@@ -70,6 +115,12 @@ public final class ComponentRenderer {
     return GlobalTranslator.render(component, locale);
   }
 
+  /**
+   * Parses the input to a locale.
+   *
+   * @param input the locale input.
+   * @return the parsed locale or null.
+   */
   private static @Nullable Locale parseLocale(@Nullable String input) {
     return input == null ? null : Translator.parseLocale(input);
   }

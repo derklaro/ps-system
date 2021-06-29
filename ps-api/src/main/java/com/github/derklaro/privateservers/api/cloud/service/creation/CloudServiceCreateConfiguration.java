@@ -29,25 +29,67 @@ import com.github.derklaro.privateservers.api.cloud.service.template.CloudServic
 import net.kyori.adventure.util.Buildable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a service configuration which is used to create a new service.
+ */
 public interface CloudServiceCreateConfiguration
   extends Buildable<CloudServiceCreateConfiguration, CloudServiceCreateConfiguration.Builder> {
-
+  /**
+   * Get a new builder instance for the configuration.
+   *
+   * @return a new builder instance.
+   */
   static Builder builder() {
     return new DefaultCloudServiceCreateConfiguration.DefaultBuilder();
   }
 
+  /**
+   * Get the group of which the server should be.
+   *
+   * @return the group of which the server should be.
+   */
   @NotNull String group();
 
+  /**
+   * Get the template which should be used to create the new cloud service.
+   *
+   * @return the template which should be used to create the new cloud service.
+   */
   @NotNull CloudServiceTemplate template();
 
+  /**
+   * Get the initial configuration for the new cloud service.
+   *
+   * @return the initial configuration for the new cloud service.
+   */
   @NotNull CloudServiceConfiguration privateServerConfiguration();
 
+  /**
+   * Represents a builder for a create configuration.
+   */
   interface Builder extends Buildable.Builder<CloudServiceCreateConfiguration> {
-
+    /**
+     * Sets the group which should be used to create the service on.
+     *
+     * @param group the group which should be used to create the service on.
+     * @return the same instance of this class, for chaining.
+     */
     @NotNull Builder group(@NotNull String group);
 
+    /**
+     * Sets the template which should be used to create the cloud service from.
+     *
+     * @param template the template which should be used to create the cloud service from.
+     * @return the same instance of this class, for chaining.
+     */
     @NotNull Builder template(@NotNull CloudServiceTemplate template);
 
+    /**
+     * Sets the initial configuration of the private service.
+     *
+     * @param cloudServiceConfiguration the initial configuration to use when creating the service.
+     * @return the same instance of this class, for chaining.
+     */
     @NotNull Builder privateServerConfiguration(@NotNull CloudServiceConfiguration cloudServiceConfiguration);
   }
 }
