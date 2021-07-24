@@ -30,7 +30,7 @@ defaultTasks 'build', 'test', 'check', 'shadowJar'
 
 allprojects {
   group = 'com.github.derklaro'
-  version = "1.1.0-SNAPSHOT-" + getCurrentShortRevision()
+  version = "2.0.0-SNAPSHOT-" + getCurrentShortRevision()
 }
 
 subprojects {
