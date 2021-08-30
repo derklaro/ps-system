@@ -6,7 +6,7 @@ updates:
       interval: daily
       time: "02:00"
     open-pull-requests-limit: 20
-    target-branch: master
+    target-branch: dev/2.0.0
 
   - package-ecosystem: gradle
     directory: "/"
@@ -14,4 +14,4 @@ updates:
       interval: daily
       time: "02:00"
     open-pull-requests-limit: 20
-    target-branch: master
+    target-branch: dev/2.0.0
