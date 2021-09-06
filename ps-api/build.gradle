@@ -27,7 +27,7 @@ plugins {
 }
 
 dependencies {
-  api 'net.kyori:adventure-api:4.8.1'
+  api 'net.kyori:adventure-api:4.9.0'
   api 'net.kyori:adventure-text-serializer-legacy:4.8.1'
 }
 
