@@ -49,8 +49,12 @@ public class PlayerQuitListener implements Listener {
         if (configuration.isAutoDeleteAfterOwnerLeave()) {
           cloudService.shutdown();
         } else {
-          Bukkit.getScheduler().scheduleSyncDelayedTask(PrivateServersSpigot.getInstance(),
-            cloudService::shutdown, configuration.getMaxIdleSeconds() * 20L);
+          Bukkit.getScheduler().scheduleSyncDelayedTask(PrivateServersSpigot.getInstance(), () -> {
+            // recheck if the owner is online again
+            if (Bukkit.getPlayer(configuration.getOwnerUniqueId()) == null) {
+              cloudService.shutdown();
+            }
+          }, configuration.getMaxIdleSeconds() * 20L);
         }
       }
     });
