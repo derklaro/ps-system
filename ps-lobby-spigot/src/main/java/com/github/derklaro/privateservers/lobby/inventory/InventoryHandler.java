@@ -197,6 +197,13 @@ public class InventoryHandler {
       .replace("%service_uuid%", service.getServiceUniqueId().toString())
       .replace("%service_group%", service.getCloudServiceConfiguration().getInitialGroup())
       .replace("%service_template%", service.getCloudServiceConfiguration().getInitialTemplate())
-      .replace("%service_template_backend%", service.getCloudServiceConfiguration().getInitialTemplateBackend());
+      .replace("%service_template_backend%", service.getCloudServiceConfiguration().getInitialTemplateBackend())
+      .replace("%service_host%", service.getServiceInfo().getAddress().getAddress().getHostAddress())
+      .replace("%service_port%", Integer.toString(service.getServiceInfo().getAddress().getPort()))
+      .replace("%motd%", service.getServiceInfo().getMessageOfTheDay())
+      .replace("%state%", service.getServiceInfo().getState())
+      .replace("%online_count%", Integer.toString(service.getServiceInfo().getOnlineCount()))
+      .replace("%max_player_count%", Integer.toString(service.getServiceInfo().getMaximumPlayerCount()))
+      .replace("%max_heap_memory%", Integer.toString(service.getServiceInfo().getHeapMemory()));
   }
 }

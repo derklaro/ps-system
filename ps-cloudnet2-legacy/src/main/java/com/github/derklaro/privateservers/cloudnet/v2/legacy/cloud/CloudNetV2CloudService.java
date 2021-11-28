@@ -27,6 +27,7 @@ package com.github.derklaro.privateservers.cloudnet.v2.legacy.cloud;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.cloud.connection.ConnectionRequest;
 import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudServiceInfo;
 import com.github.derklaro.privateservers.cloudnet.v2.legacy.connection.CloudNetV2ConnectionRequest;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;
 import de.dytanic.cloudnet.api.CloudAPI;
@@ -40,10 +41,12 @@ import java.util.UUID;
 public final class CloudNetV2CloudService extends DefaultCloudService {
 
   private final ServerInfo serverInfo;
+  private final CloudServiceInfo serviceInfo;
 
   private CloudNetV2CloudService(@NotNull ServerInfo serverInfo, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
     super(serverInfo.getServiceId().getServerId(), serverInfo.getServiceId().getUniqueId(), cloudServiceConfiguration);
     this.serverInfo = serverInfo;
+    this.serviceInfo = new CloudNetV2CloudServiceInfo(serverInfo);
   }
 
   @NotNull
@@ -59,6 +62,11 @@ public final class CloudNetV2CloudService extends DefaultCloudService {
   @Override
   public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
     return CloudNetV2ConnectionRequest.of(this, targetPlayerUniqueID);
+  }
+
+  @Override
+  public @NotNull CloudServiceInfo getServiceInfo() {
+    return this.serviceInfo;
   }
 
   @Override

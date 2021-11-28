@@ -87,6 +87,13 @@ public interface CloudService {
   @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID);
 
   /**
+   * Get a wrapper around more specific information of this service.
+   *
+   * @return a wrapper around more specific information of this service.
+   */
+  @NotNull CloudServiceInfo getServiceInfo();
+
+  /**
    * Publishes an update of this service configuration into the embedding system.
    */
   void publishCloudServiceInfoUpdate();

@@ -27,6 +27,7 @@ package com.github.derklaro.privateservers.cloudnet.v3.cloud;
 import com.github.derklaro.privateservers.api.cloud.configuration.CloudServiceConfiguration;
 import com.github.derklaro.privateservers.api.cloud.connection.ConnectionRequest;
 import com.github.derklaro.privateservers.api.cloud.service.CloudService;
+import com.github.derklaro.privateservers.api.cloud.service.CloudServiceInfo;
 import com.github.derklaro.privateservers.cloudnet.v3.connection.CloudNetV3ConnectionRequest;
 import com.github.derklaro.privateservers.cloudnet.v3.util.CloudNetV3Constants;
 import com.github.derklaro.privateservers.common.cloud.DefaultCloudService;
@@ -43,11 +44,13 @@ import java.util.concurrent.TimeoutException;
 
 public final class CloudNetV3CloudService extends DefaultCloudService {
 
+  private final CloudServiceInfo cloudServiceInfo;
   private final ServiceInfoSnapshot serviceInfoSnapshot;
 
   private CloudNetV3CloudService(@NotNull ServiceInfoSnapshot serviceInfoSnapshot, @NotNull CloudServiceConfiguration cloudServiceConfiguration) {
     super(serviceInfoSnapshot.getServiceId().getName(), serviceInfoSnapshot.getServiceId().getUniqueId(), cloudServiceConfiguration);
     this.serviceInfoSnapshot = serviceInfoSnapshot;
+    this.cloudServiceInfo = new CloudNetV3CloudServiceInfo(serviceInfoSnapshot);
   }
 
   @NotNull
@@ -60,6 +63,11 @@ public final class CloudNetV3CloudService extends DefaultCloudService {
   @Override
   public @NotNull ConnectionRequest createConnectionRequest(@NotNull UUID targetPlayerUniqueID) {
     return CloudNetV3ConnectionRequest.of(this, targetPlayerUniqueID);
+  }
+
+  @Override
+  public @NotNull CloudServiceInfo getServiceInfo() {
+    return this.cloudServiceInfo;
   }
 
   @Override
