@@ -25,6 +25,10 @@
 package com.github.derklaro.privateservers.lobby.dependencies;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.UnknownDependencyException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
@@ -48,10 +52,15 @@ public class ProtocolLibInstaller {
     } else {
       if (this.downloadProtocolLib()) {
         try {
-          return Bukkit.getPluginManager().loadPlugin(TARGET_PATH.toFile()) != null;
-        } catch (Exception ignored) {
+          Plugin protocolLib = Bukkit.getPluginManager().loadPlugin(TARGET_PATH.toFile());
+          if (protocolLib != null) {
+            Bukkit.getPluginManager().enablePlugin(protocolLib);
+            return protocolLib.isEnabled();
+          }
+        } catch (InvalidDescriptionException | InvalidPluginException | UnknownDependencyException ignored) {
         }
       }
+      // unable to download, load or enable
       return false;
     }
   }
