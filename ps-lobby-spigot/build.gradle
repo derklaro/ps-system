@@ -31,7 +31,7 @@ dependencies {
   api 'com.google.code.gson:gson:2.8.9'
   compileOnly project(':ps-plugin-spigot')
   annotationProcessor project(':ps-api-annotation-processor')
-  compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+  compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
 }
 
 java {
