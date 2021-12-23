@@ -27,7 +27,7 @@ plugins {
 }
 
 dependencies {
-  api 'com.github.juliarn:npc-lib:development-SNAPSHOT'
+  api 'com.github.juliarn:npc-lib:2.6-RELEASE'
   api 'com.google.code.gson:gson:2.8.9'
   compileOnly project(':ps-plugin-spigot')
   annotationProcessor project(':ps-api-annotation-processor')
