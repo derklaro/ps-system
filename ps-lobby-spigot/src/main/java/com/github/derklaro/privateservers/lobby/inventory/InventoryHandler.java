@@ -37,6 +37,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -82,19 +83,28 @@ public class InventoryHandler {
   public void handleInventoryClick(@NotNull InventoryClickEvent event) {
     ItemStack itemStack = event.getCurrentItem();
     if (event.getWhoClicked() instanceof Player && itemStack != null && itemStack.hasItemMeta()) {
-      event.setCancelled(this.handleInventoryClick((Player) event.getWhoClicked(), event.getClickedInventory(),
+      event.setCancelled(this.handleInventoryClick(
+        (Player) event.getWhoClicked(),
+        event.getView(),
+        event.getClickedInventory(),
         itemStack, event.getSlot()));
     }
   }
 
-  public boolean handleInventoryClick(@NotNull Player player, @NotNull Inventory inventory, @NotNull ItemStack item, int slot) {
-    if (inventory.equals(this.mainInventory)) {
-      return this.mainInventoryClickHandler.handleClick(player, inventory, item, slot);
-    } else if (inventory.getTitle() != null) {
-      if (inventory.getTitle().equals(this.configuration.getPublicServerListConfiguration().getInventoryTitle())) {
-        return this.publicServersInventoryClickHandler.handleClick(player, inventory, item, slot);
-      } else if (inventory.getTitle().equals(this.configuration.getServiceTemplateStartItems().getInventoryTitle())) {
-        return this.serviceStartInventoryClickHandler.handleClick(player, inventory, item, slot);
+  public boolean handleInventoryClick(
+    @NotNull Player player,
+    @NotNull InventoryView view,
+    @NotNull Inventory clickedInventory,
+    @NotNull ItemStack item,
+    int slot
+  ) {
+    if (clickedInventory.equals(this.mainInventory)) {
+      return this.mainInventoryClickHandler.handleClick(player, clickedInventory, item, slot);
+    } else if (view.getTitle() != null) {
+      if (view.getTitle().equals(this.configuration.getPublicServerListConfiguration().getInventoryTitle())) {
+        return this.publicServersInventoryClickHandler.handleClick(player, clickedInventory, item, slot);
+      } else if (view.getTitle().equals(this.configuration.getServiceTemplateStartItems().getInventoryTitle())) {
+        return this.serviceStartInventoryClickHandler.handleClick(player, clickedInventory, item, slot);
       }
     }
 
