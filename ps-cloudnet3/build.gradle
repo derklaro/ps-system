@@ -25,7 +25,7 @@
 dependencies {
   annotationProcessor project(':ps-api-annotation-processor')
   compileOnly project(':ps-common')
-  compileOnly 'de.dytanic.cloudnet:cloudnet-driver:3.4.2-RELEASE'
+  compileOnly 'de.dytanic.cloudnet:cloudnet-driver:3.4.3-RELEASE'
   compileOnly 'de.dytanic.cloudnet:cloudnet-bridge:3.4.3-RELEASE'
   compileOnly 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.2-RELEASE'
 }
