@@ -5,6 +5,8 @@ This private server system is designed for very complex networks (maybe with the
 running environment.
 
 ## How to use
+##### Download
+You can Download the latest build from here: https://github.com/derklaro/ps-system/actions
 
 ##### Lobby config
 
