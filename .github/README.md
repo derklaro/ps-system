@@ -95,7 +95,7 @@ compileOnly group: 'com.github.derklaro', name: 'ps-api', version: '1.1.0'
 ##### Implement a new cloud system
 
 If you need an example how to implement a new cloud system, just take a
-look [here](https://github.com/derklaro/ps-system/ps-cloudnet3/src/main/java/com/github/derklaro/privateservers/cloudnet/v3)
+look [here](https://github.com/derklaro/ps-system/tree/dev/2.0.0/ps-cloudnet3/src/main/java/com/github/derklaro/privateservers/cloudnet/v3)
 
 ## Licence and copyright notice
 
