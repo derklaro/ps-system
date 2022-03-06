@@ -34,6 +34,10 @@ Upload the system and cloud module as mentioned above. Then put the runner into 
 
 **Now you are ready to go!**
 
+## FAQ
+Q: My template is not loaded!
+A: Make sure This template is added to your group. You can check this by typing `groups group <NAME_OF_GROUP>` and checking under the `Templates` section.
+
 ## Help & Bug-Reports
 
 If you need help or are experiencing any issues using the system, feel free to use the GitHub issue tracker to submit
