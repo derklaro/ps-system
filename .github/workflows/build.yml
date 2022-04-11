@@ -47,7 +47,7 @@ jobs:
           cp ps-runner-spigot/build/libs/ps-runner-spigot.jar temp/modules/runner-spigot.jar;
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ps-system
           path: temp/
