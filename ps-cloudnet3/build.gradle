@@ -27,7 +27,7 @@ dependencies {
   compileOnly project(':ps-common')
   compileOnly 'de.dytanic.cloudnet:cloudnet-driver:3.4.3-RELEASE'
   compileOnly 'de.dytanic.cloudnet:cloudnet-bridge:3.4.3-RELEASE'
-  compileOnly 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.3-RELEASE'
+  compileOnly 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.5-RELEASE'
 }
 
 java {
