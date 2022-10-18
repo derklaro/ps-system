@@ -24,6 +24,11 @@ rootProject.name = 'privateservers'
  * THE SOFTWARE.
  */
 
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+rootProject.name = "ps-system"
+
 // api
 include(':ps-api')
 include(':ps-api-annotation-processor')
